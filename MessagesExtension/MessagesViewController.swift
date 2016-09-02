@@ -9,50 +9,8 @@
 import UIKit
 import Messages
 
-class PreviewView : UIView {
-    var image : UIImage?
-    var imageView = UIImageView()
-
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-        self.addSubview(imageView)
-//        self.imageView.layer.borderWidth = 2.0
-//        self.imageView.backgroundColor = UIColor.blue
-//        self.layer.borderWidth = 1.0
-    }
-
-    func setImage(newImage : UIImage) {
-        self.image = newImage
-        sizeImageView()
-        DispatchQueue.main.async {
-            print("image rect: \(self.imageView.frame)")
-            self.imageView.image = newImage
-        }
-    }
-
-    func sizeImageView() {
-        if let newImage = self.image {
-            self.imageView.frame = CGRect(x: 0, y: 0, width: self.frame.width, height: self.frame.height)
-            let picProportion = newImage.size.height/newImage.size.width
-            let frameProportion = self.frame.height/self.frame.width
-            if picProportion < frameProportion {
-                let newHeight = self.frame.height * picProportion
-                imageView.frame.size.height = newHeight
-                imageView.frame.origin.y = (self.frame.height - newHeight)/2
-            } else {
-                let newWidth = self.frame.width * picProportion
-                imageView.frame.size.width = newWidth
-                imageView.frame.origin.x = (self.frame.width - newWidth)/2
-            }
-        }
-    }
-}
-
 class MessagesViewController: MSMessagesAppViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     @IBOutlet var previewView : PreviewView!
-//    var imageView = UIImageView()
-    var messageView = UITextView()
-    var curImage = UIImage(named: "rounded ghost")
 
     // MARK: View Methods -------------------------------------------------------------------------------------------------
     override func viewDidLoad() {
@@ -68,8 +26,6 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         //requestPresentationStyle(.expanded)
-
-        self.messageView.isHidden = true
     }
 
     // MARK: Conversation Methods -------------------------------------------------------------------------------------------------
@@ -81,28 +37,21 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
         if let message = conversation.selectedMessage {
             // Use this method to trigger UI updates in response to the message.
              print(message.url)
-            if let url = message.url {
-                let path = url.absoluteString
-                _ = Just.get(path, params: [:]) { (result) in
-                    print("Just.get returned")
-                    if let error = result?.error {
-                         print("Error: \(error)")
-                        DispatchQueue.main.async {
-                            print("show message view")
-                           self.messageView.isHidden = false
-                        }
-                    } else {
-                        if let data = result?.content {
-                            if let image = UIImage(data: data) {
-                                DispatchQueue.main.async {
-                                    print("show image view")
-                                    self.previewView.setImage(newImage: image)
-                                    self.messageView.isHidden = true
-                                }
+            if let url = message.url, message.senderParticipantIdentifier != activeConversation?.localParticipantIdentifier {
+                ServerManager.sharedInstance.fileExists(url: url, completion: { (success) in
+                    if success {
+                        let path = url.absoluteString
+                        ServerManager.sharedInstance.downloadFile(path: path, completion: { (imageOpt, errorText) in
+                            if let image = imageOpt {
+                                self.previewView.setImage(newImage: image)
+                            } else {
+                                self.previewView.setText(message: errorText!)
                             }
-                        }
+                        })
+                    } else {
+                        self.previewView.setText(message: "That picture has expired, thanks to GhostPics!\n\nUse GhostPics to send your own expiring photos to protect your own secrets.")
                     }
-                }
+                })
             }
         }
     }
@@ -166,7 +115,7 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
         layout.caption = "Tap to see the Ghost pic I sent you!"
         message.layout = layout
 
-        self.previewView.setImage(newImage: image)
+       // self.previewView.setImage(newImage: image)
         return message
     }
 
@@ -174,8 +123,8 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
     @IBAction func sendGhost(_ sender : UIButton) {
         guard let conversation = activeConversation else { fatalError("Expected a conversation") }
 
-        if let image = curImage {
-            ServerManager.sharedInstance.saveFile(image) { (fileName) in
+        if let image = previewView.image {
+            ServerManager.sharedInstance.uploadFile(image) { (fileName) in
                 if let imageId = fileName {
                     if let message = self.composeMessage(conversation, image: image, idString: imageId) {
                         // Add the message to the conversation.
@@ -207,7 +156,6 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
             self.previewView.setImage(newImage: image)
-            curImage = image
         }
         picker.dismiss(animated: true) {
             print("dismissed")
@@ -223,30 +171,5 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
 
     // MARK: Convenience Methods -------------------------------------------------------------------------------------------------
 
-    func createAnimation(_ image : UIImage) -> UIImage? {
-        return image
-        //        var animationImage : UIImage?
-        //        var images = [UIImage]()
-        //
-        //        // Create background image
-        //        UIGraphicsBeginImageContext(image.size)
-        //        if let context = UIGraphicsGetCurrentContext() {
-        //            UIGraphicsPushContext(context)
-        //            let rectPath = UIBezierPath(rect: CGRect(origin: CGPoint(x: 0, y:0), size:image.size))
-        //            UIColor.gray.setFill()
-        //            rectPath.fill()
-        //            UIGraphicsPopContext()
-        //        }
-        //
-        //        // Create animation array
-        //        if let bgImage = UIGraphicsGetImageFromCurrentImageContext() {
-        //            // Create animation
-        //            images.append(bgImage)
-        //            images.append(image)
-        //            images.append(bgImage)
-        //            animationImage = UIImage.animatedImage(with: images, duration: 3.0)
-        //        }
-        //        UIGraphicsEndImageContext()
-        //        return animationImage
-    }
+
 }
