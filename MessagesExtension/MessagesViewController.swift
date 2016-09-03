@@ -8,14 +8,19 @@
 
 import UIKit
 import Messages
+import MobileCoreServices
 
 class MessagesViewController: MSMessagesAppViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    @IBOutlet var sendButton : UIButton!
     @IBOutlet var previewView : PreviewView!
+    @IBOutlet var filters : UISegmentedControl!
+    @IBOutlet var filterTitle : UILabel!
+    @IBOutlet var filterValue : UISlider!
+    @IBOutlet var valueTitle : UILabel!
 
     // MARK: View Methods -------------------------------------------------------------------------------------------------
     override func viewDidLoad() {
         super.viewDidLoad()
-
     }
 
     override func didReceiveMemoryWarning() {
@@ -28,6 +33,11 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
         //requestPresentationStyle(.expanded)
     }
 
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        updateView(to: self.presentationStyle)
+    }
+
     // MARK: Conversation Methods -------------------------------------------------------------------------------------------------
     override func willBecomeActive(with conversation: MSConversation) {
         // Called when the extension is about to move from the inactive to active state.
@@ -38,10 +48,14 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
             // Use this method to trigger UI updates in response to the message.
              print(message.url)
             if let url = message.url, message.senderParticipantIdentifier != activeConversation?.localParticipantIdentifier {
+                self.previewView.startActivityFeedback(completed: nil)
                 ServerManager.sharedInstance.fileExists(url: url, completion: { (success) in
                     if success {
                         let path = url.absoluteString
-                        ServerManager.sharedInstance.downloadFile(path: path, completion: { (imageOpt, errorText) in
+                        ServerManager.sharedInstance.downloadFile(path: path,
+                        progress: { (percent) in
+                            self.previewView.setProgress(percent: percent)
+                        }, completion: { (imageOpt, errorText) in
                             if let image = imageOpt {
                                 self.previewView.setImage(newImage: image)
                             } else {
@@ -87,10 +101,29 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
         // Called before the extension transitions to a new presentation style.
 
         // Use this method to prepare for the change in presentation style.
+        print("will transition: \(presentationStyle)")
     }
 
     override func didTransition(to presentationStyle: MSMessagesAppPresentationStyle) {
+        updateView(to: presentationStyle)
+    }
+
+    func updateView(to presentationStyle: MSMessagesAppPresentationStyle) {
         // Called after the extension transitions to a new presentation style.
+        if presentationStyle == .compact {
+            filterTitle.isHidden = true
+            filters.isHidden = true
+            filterValue.isHidden = true
+            valueTitle.isHidden = true
+
+            previewView.frame.origin.y = sendButton.frame.origin.y + sendButton.frame.height + 8
+            previewView.frame.size.height = self.view.frame.height - previewView.frame.origin.y - 8
+        } else {
+            filterTitle.isHidden = false
+            filterValue.isHidden = false
+            filters.isHidden = false
+            valueTitle.isHidden = false
+        }
 
         // Use this method to finalize any behaviors associated with the change in presentation style.
         previewView.sizeImageView()
@@ -103,7 +136,6 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
             print("bad url string")
             return nil
         }
-        print("url: \(urlPath)")
         guard let url = components.url else {
             print("bad url components")
             return nil
@@ -112,10 +144,8 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
         message.shouldExpire = true
 
         let layout = MSMessageTemplateLayout()
-        layout.caption = "Tap to see the Ghost pic I sent you!"
+        layout.caption = "I sent you a Ghost Pic! Tap to see it before it expires!"
         message.layout = layout
-
-       // self.previewView.setImage(newImage: image)
         return message
     }
 
@@ -123,25 +153,38 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
     @IBAction func sendGhost(_ sender : UIButton) {
         guard let conversation = activeConversation else { fatalError("Expected a conversation") }
 
-        if let image = previewView.image {
-            ServerManager.sharedInstance.uploadFile(image) { (fileName) in
-                if let imageId = fileName {
-                    if let message = self.composeMessage(conversation, image: image, idString: imageId) {
-                        // Add the message to the conversation.
-                        conversation.insert(message) { error in
-                            if let error = error {
-                                print(error)
-                            }
+        self.previewView.startActivityFeedback(
+        completed: {
+            let _ = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: false, block: { (timer) in
+                DispatchQueue.main.async {
+                    ServerManager.sharedInstance.uploadFile(self.previewView.image,
+                    progress: { (percent) in
+                        DispatchQueue.main.async {
+                            self.previewView.setProgress(percent: percent)
                         }
-                        self.dismiss()
-                    }
+                    }, completion: { (fileName) in
+                        if let imageId = fileName {
+                             if let message = self.composeMessage(conversation, image: self.previewView.image, idString: imageId) {
+                                // Add the message to the conversation.
+                                conversation.insert(message) { error in
+                                    if let error = error {
+                                        print(error)
+                                    }
+                                }
+                                self.dismiss()
+                            }
+                        } else {
+                            self.previewView.setText(message: "Could not prepare image")
+                        }
+                    })
                 }
-            }
-        }
+            })
+        })
     }
 
     @IBAction func pickPhoto(button : UIButton) {
         let picker = UIImagePickerController()
+        picker.mediaTypes = [kUTTypeImage as String]//, kUTTypeMovie as String]
         picker.delegate = self
         if button.tag == 3 {
             if UIImagePickerController.isSourceTypeAvailable(.camera) {
@@ -156,6 +199,7 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
             self.previewView.setImage(newImage: image)
+            filters.selectedSegmentIndex = 0
         }
         picker.dismiss(animated: true) {
             print("dismissed")
@@ -168,6 +212,30 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
         }
     }
 
+    @IBAction func changeFilter(segs : UISegmentedControl) {
+         if segs.selectedSegmentIndex == 0 {
+            filterValue.isHidden = true
+            valueTitle.isHidden = true
+        } else {
+            filterValue.isHidden = false
+            valueTitle.isHidden = false
+            switch segs.selectedSegmentIndex {
+            case 1:
+                valueTitle.text = "Speed"
+                filterValue.value = 4
+            case 2:
+                valueTitle.text = "Count"
+                filterValue.value = 8
+            default:
+                break
+            }
+        }
+        self.previewView.filterImage(filterIndex: segs.selectedSegmentIndex, value: Int(filterValue.value))
+   }
+
+    @IBAction func changeFilterValue(slider : UISlider) {
+        self.previewView.filterImage(filterIndex: filters.selectedSegmentIndex, value: Int(filterValue.value))
+    }
 
     // MARK: Convenience Methods -------------------------------------------------------------------------------------------------
 

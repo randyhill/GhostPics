@@ -27,9 +27,12 @@ class ServerManager {
 
     }
 
-    func uploadFile(_ image: UIImage, completion : @escaping (_ fileName: String?)->()) {
+    func uploadFile(_ image: UIImage, progress : @escaping (Float)->(), completion : @escaping (_ fileName: String?)->()) {
         if let imageData = UIImageJPEGRepresentation(image, 1) {
-            if var fileId = Just.post(cUploadURL, files: ["image" : .data("image.jpg", imageData, nil)]).text {
+            if var fileId = Just.post(cUploadURL, files: ["image" : .data("image.jpg", imageData, nil)], asyncProgressHandler: {(p) in
+                print("Bytes: \(p.bytesProcessed) Expected: \(p.bytesExpectedToProcess) Percent: \(p.percent)")
+                progress(p.percent)
+            }).text {
                 // fileId string should be 12 characters, plus quotes
                 if fileId.characters.count > 12 {
                     // Remove quotes
@@ -56,8 +59,11 @@ class ServerManager {
         }
     }
 
-    func downloadFile(path : String, completion : @escaping (_ image : UIImage?, _ error: String?)->()) {
-        _ = Just.get(path, params: [:]) { (result) in
+    func downloadFile(path : String, progress : @escaping (Float)->(), completion : @escaping (_ image : UIImage?, _ error: String?)->()) {
+        _ = Just.get(path, params: [:], asyncProgressHandler: {(p) in
+            print("Bytes: \(p.bytesProcessed) Expected: \(p.bytesExpectedToProcess) Percent: \(p.percent)")
+            progress(p.percent)
+        }) { (result) in
             print("dowwnload file returned")
             if let code = result?.statusCode, code == 200   {
                 if let data = result?.content, let image = UIImage(data: data)  {
@@ -75,12 +81,3 @@ class ServerManager {
         }
     }
 }
-
-//
-//extension NSMutableData {
-//    func appendString(_ string : String) {
-//        string.withCString {
-//            self.append($0, length: Int(strlen($0)) + 1)
-//        }
-//    }
-//}
