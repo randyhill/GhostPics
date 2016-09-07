@@ -9,10 +9,10 @@
 import UIKit
 
 class PreviewView : UIView {
-    private var _image : ImageContainer?
+    private var _imageContainer : ImageContainer?
     var image : UIImage {
         get {
-            return _image!.getImage(filter: .None, value: 0)
+            return _imageContainer!.getImage(filter: .None, value: 0)
         }
     }
 
@@ -26,6 +26,15 @@ class PreviewView : UIView {
         super.init(coder: aDecoder)
        // _image = ImageContainer(image: UIImage(named: "rounded ghost")!)
         textView.font = UIFont.boldSystemFont(ofSize: 20.0)
+    }
+
+    func initFromData(data : NSData) {
+        _imageContainer = ImageContainer(data: data)
+        self.setImage(newImage: _imageContainer!.getImage())
+    }
+
+    func asData() -> NSData? {
+        return _imageContainer!.asData()
     }
 
     func clearViews() {
@@ -69,18 +78,18 @@ class PreviewView : UIView {
         DispatchQueue.main.async {
             self.clearViews()
             self.addSubview(self.imageView)
-            self._image = ImageContainer(image: newImage)
+            self._imageContainer = ImageContainer(image: newImage)
             self.sizeImageView()
             self.imageView.image = newImage
         }
     }
 
     func sizeImageView() {
-        if let newImage = self._image {
-            // Start with image view frame size, and resize to be proportionate to image.
-            // Pick the dimension that will fit within image view frame, and shrink to that size.
+        // Start with image view frame size, and resize to be proportionate to image.
+        // Pick the dimension that will fit within image view frame, and shrink to that size.
+        if let size = _imageContainer?.size {
             self.imageView.frame = CGRect(x: 0, y: 0, width: self.frame.width, height: self.frame.height)
-            let picProportion = newImage.size.height/newImage.size.width
+            let picProportion = size.height/size.width
             let newWidth = self.frame.height / picProportion
             if newWidth < self.frame.width {
                 self.imageView.frame.size.width = newWidth
@@ -94,9 +103,10 @@ class PreviewView : UIView {
     }
 
     func filterImage(filterIndex : Int, value : Int) {
-        if let filteredImage = _image?.getImage(filter: ImageFilterType.fromInt(filterIndex: filterIndex), value: value) {
+        if let filteredImage = _imageContainer?.getImage(filter: ImageFilterType.fromInt(filterIndex: filterIndex), value: value) {
             self.imageView.image = filteredImage
         }
+
     }
 
     // MARK: Text Methods -------------------------------------------------------------------------------------------------

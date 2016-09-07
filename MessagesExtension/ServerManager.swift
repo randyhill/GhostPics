@@ -27,22 +27,20 @@ class ServerManager {
 
     }
 
-    func uploadFile(_ image: UIImage, progress : @escaping (Float)->(), completion : @escaping (_ fileName: String?)->()) {
-        if let imageData = UIImageJPEGRepresentation(image, 1) {
-            if var fileId = Just.post(cUploadURL, files: ["image" : .data("image.jpg", imageData, nil)], asyncProgressHandler: {(p) in
-                print("Bytes: \(p.bytesProcessed) Expected: \(p.bytesExpectedToProcess) Percent: \(p.percent)")
-                progress(p.percent)
-            }).text {
-                // fileId string should be 12 characters, plus quotes
-                if fileId.characters.count > 12 {
-                    // Remove quotes
-                    fileId.remove(at: fileId.index(before: fileId.endIndex))
-                    fileId.remove(at: fileId.startIndex)
-                    print(fileId)
-                    completion(fileId)
-                } else {
-                    completion(nil)
-                }
+    func uploadFile(_ imageData: NSData, progress : @escaping (Float)->(), completion : @escaping (_ fileName: String?)->()) {
+        if var fileId = Just.post(cUploadURL, files: ["image" : .data("image.jpg", imageData as Data, nil)], asyncProgressHandler: {(p) in
+            print("Bytes: \(p.bytesProcessed) Expected: \(p.bytesExpectedToProcess) Percent: \(p.percent)")
+            progress(p.percent)
+        }).text {
+            // fileId string should be 12 characters, plus quotes
+            if fileId.characters.count > 12 {
+                // Remove quotes
+                fileId.remove(at: fileId.index(before: fileId.endIndex))
+                fileId.remove(at: fileId.startIndex)
+                print(fileId)
+                completion(fileId)
+            } else {
+                completion(nil)
             }
         }
     }
@@ -59,15 +57,15 @@ class ServerManager {
         }
     }
 
-    func downloadFile(path : String, progress : @escaping (Float)->(), completion : @escaping (_ image : UIImage?, _ error: String?)->()) {
+    func downloadFile(path : String, progress : @escaping (Float)->(), completion : @escaping (_ data : Data?, _ error: String?)->()) {
         _ = Just.get(path, params: [:], asyncProgressHandler: {(p) in
             print("Bytes: \(p.bytesProcessed) Expected: \(p.bytesExpectedToProcess) Percent: \(p.percent)")
             progress(p.percent)
         }) { (result) in
             print("dowwnload file returned")
             if let code = result?.statusCode, code == 200   {
-                if let data = result?.content, let image = UIImage(data: data)  {
-                    return completion(image, nil)
+                if let data = result?.content {
+                    return completion(data, nil)
                 } else {
                     return completion(nil, "That image appears to have expired")
                 }

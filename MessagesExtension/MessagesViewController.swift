@@ -18,9 +18,33 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
     @IBOutlet var filterValue : UISlider!
     @IBOutlet var valueTitle : UILabel!
 
+    var globals = Shared.sharedInstance
+    var store = StoreManager.sharedInstance
+
     // MARK: View Methods -------------------------------------------------------------------------------------------------
     override func viewDidLoad() {
         super.viewDidLoad()
+        store.loadStore()
+
+        let notificationCenter = NotificationCenter.default
+        notificationCenter.addObserver(self, selector: #selector(restoreSucceeded), name: NSNotification.Name(rawValue: kInAppRestoreCompleted), object: nil)
+        notificationCenter.addObserver(self, selector: #selector(restoreFailed), name: NSNotification.Name(rawValue: kInAppRestoreFailed), object: nil)
+        notificationCenter.addObserver(self, selector: #selector(purchaseFailed), name: NSNotification.Name(rawValue: kInAppPurchaseFailed), object: nil)
+    }
+    let kInAppRestoreCompleted = "kInAppRestoreCompleted"
+    let kInAppRestoreFailed = "kInAppRestoreFailed"
+    let kInAppPurchaseFailed = "kInAppPurchaseFailed"
+
+    func restoreSucceeded(notification: NSNotification) {
+        print("Purchase success")
+        globals.activated = true
+        self.showAlert(title: "GhostPics Activated", message: "Your purchase was successful!")
+    }
+    func restoreFailed(notification: NSNotification) {
+        self.showAlert(title: "Purchase Error", message: "Your purchase was unable to be completed")
+    }
+    func purchaseFailed(notification: NSNotification) {
+        self.showAlert(title: "GhostPics Activated", message: "Your purchase was unable to be completed!")
     }
 
     override func didReceiveMemoryWarning() {
@@ -55,15 +79,17 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
                         ServerManager.sharedInstance.downloadFile(path: path,
                         progress: { (percent) in
                             self.previewView.setProgress(percent: percent)
-                        }, completion: { (imageOpt, errorText) in
-                            if let image = imageOpt {
-                                self.previewView.setImage(newImage: image)
+                        }, completion: { (imageDataOpt, errorText) in
+                            if let imageData = imageDataOpt {
+                                self.previewView.initFromData(data: imageData as NSData)
+                                self.enableDisableControls(enableThem: false)
                             } else {
                                 self.previewView.setText(message: errorText!)
                             }
                         })
                     } else {
                         self.previewView.setText(message: "That picture has expired, thanks to GhostPics!\n\nUse GhostPics to send your own expiring photos to protect your own secrets.")
+                        self.enableDisableControls(enableThem: true)
                     }
                 })
             }
@@ -78,6 +104,7 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
         // Use this method to release shared resources, save user data, invalidate timers,
         // and store enough state information to restore your extension to its current state
         // in case it is terminated later.
+        globals.save()
     }
 
     override func didReceive(_ message: MSMessage, conversation: MSConversation) {
@@ -150,21 +177,33 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
     }
 
     // MARK: Actions -------------------------------------------------------------------------------------------------
-    @IBAction func sendGhost(_ sender : UIButton) {
+    @IBAction func sendButton(_ sender : UIButton) {
+        if globals.activated || globals.imagesSentCount < globals.evaluationImageLimit {
+            sendGhost()
+        } else {
+            self.showQuestionAlert(title: "Evaluation Complete", question: "Evaluation is limited to sending \(globals.evaluationImageLimit) GhostPics. Do you want to remove this limit ?", okTitle: "Yes", cancelTitle: "No", completion: { (accepted) in
+                if accepted {
+                    _ = self.store.startPurchase(productIDs: [kActivationKey])
+                }
+            })
+        }
+     }
+
+    func sendGhost() {
         guard let conversation = activeConversation else { fatalError("Expected a conversation") }
 
         self.previewView.startActivityFeedback(
-        completed: {
+            completed: {
             let _ = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: false, block: { (timer) in
                 DispatchQueue.main.async {
-                    ServerManager.sharedInstance.uploadFile(self.previewView.image,
+                    ServerManager.sharedInstance.uploadFile(self.previewView.asData()!,
                     progress: { (percent) in
                         DispatchQueue.main.async {
                             self.previewView.setProgress(percent: percent)
                         }
                     }, completion: { (fileName) in
                         if let imageId = fileName {
-                             if let message = self.composeMessage(conversation, image: self.previewView.image, idString: imageId) {
+                            if let message = self.composeMessage(conversation, image: self.previewView.image, idString: imageId) {
                                 // Add the message to the conversation.
                                 conversation.insert(message) { error in
                                     if let error = error {
@@ -173,6 +212,8 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
                                 }
                                 self.dismiss()
                             }
+                            self.globals.imagesSentCount += 1
+                            self.globals.save()
                         } else {
                             self.previewView.setText(message: "Could not prepare image")
                         }
@@ -239,5 +280,11 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
 
     // MARK: Convenience Methods -------------------------------------------------------------------------------------------------
 
+    func enableDisableControls(enableThem : Bool) {
+        filters.isHidden = !enableThem
+        filterValue.isHidden = !enableThem
+        filterTitle.isHidden = !enableThem
+        valueTitle.isHidden = !enableThem
+    }
 
 }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11198.2" systemVersion="15G31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="FX5-3q-7bF">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11198.2" systemVersion="15G1004" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="FX5-3q-7bF">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11161"/>
@@ -26,7 +26,7 @@
                                 </constraints>
                                 <state key="normal" title="Send"/>
                                 <connections>
-                                    <action selector="sendGhost:" destination="FX5-3q-7bF" eventType="touchUpInside" id="Sfo-q1-9rw"/>
+                                    <action selector="sendButton:" destination="FX5-3q-7bF" eventType="touchUpInside" id="9j5-yg-Szx"/>
                                 </connections>
                             </button>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="GhostPics" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4k8-SX-uA7">
@@ -38,16 +38,6 @@
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button hidden="YES" opaque="NO" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6Fi-BT-II9">
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="54" id="7yD-5u-RJw"/>
-                                    <constraint firstAttribute="height" constant="30" id="nTI-rh-YqI"/>
-                                </constraints>
-                                <state key="normal" title="Camera"/>
-                                <connections>
-                                    <action selector="pickPhotoWithButton:" destination="FX5-3q-7bF" eventType="touchUpInside" id="z3v-3I-H2Y"/>
-                                </connections>
-                            </button>
                             <button opaque="NO" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ouj-Cf-FIg">
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="VDu-6f-1eF"/>
@@ -114,10 +104,8 @@
                             <constraint firstItem="lFw-rh-pLy" firstAttribute="leading" secondItem="ouj-Cf-FIg" secondAttribute="trailing" constant="8" id="ah7-G8-dKq"/>
                             <constraint firstItem="lFw-rh-pLy" firstAttribute="top" secondItem="eda-mc-3jP" secondAttribute="bottom" id="eGG-UR-GV8"/>
                             <constraint firstItem="lFw-rh-pLy" firstAttribute="trailing" secondItem="iQV-Mb-dVQ" secondAttribute="trailingMargin" id="fQm-Bu-KV4"/>
-                            <constraint firstItem="ouj-Cf-FIg" firstAttribute="leading" secondItem="6Fi-BT-II9" secondAttribute="trailing" constant="14" id="gYe-ZE-mTg"/>
                             <constraint firstItem="PEb-ta-QzN" firstAttribute="top" secondItem="4k8-SX-uA7" secondAttribute="bottom" constant="8" id="jcz-7c-4QE"/>
                             <constraint firstItem="FaR-0B-E3w" firstAttribute="top" secondItem="PEb-ta-QzN" secondAttribute="bottom" constant="10" id="qRz-zh-SkH"/>
-                            <constraint firstItem="6Fi-BT-II9" firstAttribute="top" secondItem="eda-mc-3jP" secondAttribute="bottom" id="tG6-rF-KGE"/>
                             <constraint firstItem="ouj-Cf-FIg" firstAttribute="top" secondItem="eda-mc-3jP" secondAttribute="bottom" id="w5y-E9-LeP"/>
                             <constraint firstItem="zOK-4R-DTM" firstAttribute="leading" secondItem="PEb-ta-QzN" secondAttribute="trailing" constant="8" id="wcn-oH-Ga6"/>
                             <constraint firstItem="FaR-0B-E3w" firstAttribute="leading" secondItem="iQV-Mb-dVQ" secondAttribute="leadingMargin" id="y6u-2O-6S3"/>

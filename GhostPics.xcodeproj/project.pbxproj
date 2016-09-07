@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D81695EA1D7F5392001C0B5F /* AnimationFileClasses.swift in Sources */ = {isa = PBXBuildFile; fileRef = D81695E91D7F5392001C0B5F /* AnimationFileClasses.swift */; };
+		D81695EC1D7F971B001C0B5F /* Shared.swift in Sources */ = {isa = PBXBuildFile; fileRef = D81695EB1D7F971B001C0B5F /* Shared.swift */; };
+		D81695F01D7F9C21001C0B5F /* StoreManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D81695EF1D7F9C21001C0B5F /* StoreManager.swift */; };
 		D860DB3F1D7A3EFF001DEA75 /* rounded ghost.png in Resources */ = {isa = PBXBuildFile; fileRef = D860DB3B1D7A3E9A001DEA75 /* rounded ghost.png */; };
 		D860DB401D7A3F05001DEA75 /* flat ghost.jpg in Resources */ = {isa = PBXBuildFile; fileRef = D860DB3A1D7A3E9A001DEA75 /* flat ghost.jpg */; };
 		D8855BC91D79E8C5009C33B2 /* PreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8855BC81D79E8C5009C33B2 /* PreviewView.swift */; };
@@ -46,6 +49,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		D81695E91D7F5392001C0B5F /* AnimationFileClasses.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnimationFileClasses.swift; sourceTree = "<group>"; };
+		D81695EB1D7F971B001C0B5F /* Shared.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Shared.swift; sourceTree = "<group>"; };
+		D81695EF1D7F9C21001C0B5F /* StoreManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StoreManager.swift; sourceTree = "<group>"; };
 		D860DB3A1D7A3E9A001DEA75 /* flat ghost.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = "flat ghost.jpg"; path = "Images/flat ghost.jpg"; sourceTree = SOURCE_ROOT; };
 		D860DB3B1D7A3E9A001DEA75 /* rounded ghost.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "rounded ghost.png"; path = "Images/rounded ghost.png"; sourceTree = SOURCE_ROOT; };
 		D8855BC81D79E8C5009C33B2 /* PreviewView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreviewView.swift; sourceTree = "<group>"; };
@@ -126,10 +132,13 @@
 		D8B278311D78CBD100B8AC25 /* MessagesExtension */ = {
 			isa = PBXGroup;
 			children = (
+				D81695EF1D7F9C21001C0B5F /* StoreManager.swift */,
+				D81695EB1D7F971B001C0B5F /* Shared.swift */,
 				D8B278471D78CC4D00B8AC25 /* MainInterface.storyboard */,
 				D8B278321D78CBD100B8AC25 /* MessagesViewController.swift */,
 				D8855BC81D79E8C5009C33B2 /* PreviewView.swift */,
 				D8855BCC1D7A35ED009C33B2 /* ImageContainer.swift */,
+				D81695E91D7F5392001C0B5F /* AnimationFileClasses.swift */,
 				D8B278431D78CC3E00B8AC25 /* ServerManager.swift */,
 				D8B278441D78CC3E00B8AC25 /* Just.swift */,
 				D860DB3E1D7A3EA7001DEA75 /* Resources */,
@@ -245,7 +254,10 @@
 				D8B278461D78CC3E00B8AC25 /* Just.swift in Sources */,
 				D8855BC91D79E8C5009C33B2 /* PreviewView.swift in Sources */,
 				D8855BCD1D7A35ED009C33B2 /* ImageContainer.swift in Sources */,
+				D81695EA1D7F5392001C0B5F /* AnimationFileClasses.swift in Sources */,
 				D8B278451D78CC3E00B8AC25 /* ServerManager.swift in Sources */,
+				D81695F01D7F9C21001C0B5F /* StoreManager.swift in Sources */,
+				D81695EC1D7F971B001C0B5F /* Shared.swift in Sources */,
 				D8B278331D78CBD100B8AC25 /* MessagesViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
