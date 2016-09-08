@@ -16,7 +16,8 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
     @IBOutlet var filters : UISegmentedControl!
     @IBOutlet var filterTitle : UILabel!
     @IBOutlet var filterValue : UISlider!
-    @IBOutlet var valueTitle : UILabel!
+    @IBOutlet var valueLow : UILabel!
+    @IBOutlet var valueHigh : UILabel!
 
     var globals = Shared.sharedInstance
     var store = StoreManager.sharedInstance
@@ -55,6 +56,7 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         //requestPresentationStyle(.expanded)
+        setUIMode(previewOnly: true, completion: nil)
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -71,26 +73,26 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
         if let message = conversation.selectedMessage {
             // Use this method to trigger UI updates in response to the message.
              print(message.url)
-            if let url = message.url, message.senderParticipantIdentifier != activeConversation?.localParticipantIdentifier {
-                self.previewView.startActivityFeedback(completed: nil)
-                ServerManager.sharedInstance.fileExists(url: url, completion: { (success) in
-                    if success {
-                        let path = url.absoluteString
-                        ServerManager.sharedInstance.downloadFile(path: path,
-                        progress: { (percent) in
-                            self.previewView.setProgress(percent: percent)
-                        }, completion: { (imageDataOpt, errorText) in
-                            if let imageData = imageDataOpt {
-                                self.previewView.initFromData(data: imageData as NSData)
-                                self.enableDisableControls(enableThem: false)
-                            } else {
-                                self.previewView.setText(message: errorText!)
-                            }
-                        })
-                    } else {
-                        self.previewView.setText(message: "That picture has expired, thanks to GhostPics!\n\nUse GhostPics to send your own expiring photos to protect your own secrets.")
-                        self.enableDisableControls(enableThem: true)
-                    }
+            if let url = message.url, conversation.localParticipantIdentifier != message.senderParticipantIdentifier  {
+                self.setUIMode(previewOnly: true, completion: {
+                    self.previewView.startActivityFeedback(completed: nil)
+                    ServerManager.sharedInstance.fileExists(url: url, completion: { (success) in
+                        if success {
+                            let path = url.absoluteString
+                            ServerManager.sharedInstance.downloadFile(path: path,
+                                                                      progress: { (percent) in
+                                                                        self.previewView.setProgress(percent: percent)
+                                }, completion: { (imageDataOpt, errorText) in
+                                    if let imageData = imageDataOpt {
+                                        self.previewView.initFromData(data: imageData as NSData)
+                                    } else {
+                                        self.previewView.setText(message: errorText!)
+                                    }
+                            })
+                        } else {
+                            self.previewView.setText(message: "That picture has expired, thanks to GhostPics!\n\nUse GhostPics to use expiring photos to protect your secrets.")
+                        }
+                    })
                 })
             }
         }
@@ -135,22 +137,18 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
         updateView(to: presentationStyle)
     }
 
+    var viewStyle = MSMessagesAppPresentationStyle.compact
     func updateView(to presentationStyle: MSMessagesAppPresentationStyle) {
         // Called after the extension transitions to a new presentation style.
+        var hideExtraControls = true
+        viewStyle = presentationStyle
         if presentationStyle == .compact {
-            filterTitle.isHidden = true
-            filters.isHidden = true
-            filterValue.isHidden = true
-            valueTitle.isHidden = true
-
             previewView.frame.origin.y = sendButton.frame.origin.y + sendButton.frame.height + 8
             previewView.frame.size.height = self.view.frame.height - previewView.frame.origin.y - 8
         } else {
-            filterTitle.isHidden = false
-            filterValue.isHidden = false
-            filters.isHidden = false
-            valueTitle.isHidden = false
+            hideExtraControls = isPreview
         }
+        setUIMode(previewOnly: hideExtraControls, completion: nil)
 
         // Use this method to finalize any behaviors associated with the change in presentation style.
         previewView.sizeImageView()
@@ -192,33 +190,35 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
     func sendGhost() {
         guard let conversation = activeConversation else { fatalError("Expected a conversation") }
 
-        self.previewView.startActivityFeedback(
-            completed: {
-            let _ = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: false, block: { (timer) in
-                DispatchQueue.main.async {
-                    ServerManager.sharedInstance.uploadFile(self.previewView.asData()!,
-                    progress: { (percent) in
+        setUIMode(previewOnly: true, completion: {
+            self.previewView.startActivityFeedback(
+                completed: {
+                    let _ = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: false, block: { (timer) in
                         DispatchQueue.main.async {
-                            self.previewView.setProgress(percent: percent)
-                        }
-                    }, completion: { (fileName) in
-                        if let imageId = fileName {
-                            if let message = self.composeMessage(conversation, image: self.previewView.image, idString: imageId) {
-                                // Add the message to the conversation.
-                                conversation.insert(message) { error in
-                                    if let error = error {
-                                        print(error)
+                            ServerManager.sharedInstance.uploadFile(self.previewView.asData()!,
+                                                                    progress: { (percent) in
+                                                                        DispatchQueue.main.async {
+                                                                            self.previewView.setProgress(percent: percent)
+                                                                        }
+                                }, completion: { (fileName) in
+                                    if let imageId = fileName {
+                                        if let message = self.composeMessage(conversation, image: self.previewView.image, idString: imageId) {
+                                            // Add the message to the conversation.
+                                            conversation.insert(message) { error in
+                                                if let error = error {
+                                                    print(error)
+                                                }
+                                            }
+                                            self.dismiss()
+                                        }
+                                        self.globals.imagesSentCount += 1
+                                        self.globals.save()
+                                    } else {
+                                        self.previewView.setText(message: "Could not prepare image")
                                     }
-                                }
-                                self.dismiss()
-                            }
-                            self.globals.imagesSentCount += 1
-                            self.globals.save()
-                        } else {
-                            self.previewView.setText(message: "Could not prepare image")
+                            })
                         }
                     })
-                }
             })
         })
     }
@@ -245,33 +245,38 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
         picker.dismiss(animated: true) {
             print("dismissed")
         }
+        self.setUIMode(previewOnly: false, completion: nil)
     }
 
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         picker.dismiss(animated: true) {
             print("dismissed")
         }
+        self.setUIMode(previewOnly: false, completion: nil)
     }
 
     @IBAction func changeFilter(segs : UISegmentedControl) {
+        var hideValues = false
          if segs.selectedSegmentIndex == 0 {
-            filterValue.isHidden = true
-            valueTitle.isHidden = true
+            hideValues = true
         } else {
-            filterValue.isHidden = false
-            valueTitle.isHidden = false
             switch segs.selectedSegmentIndex {
             case 1:
-                valueTitle.text = "Speed"
+                valueLow.text = "Slow"
+                valueHigh.text = "Fast"
                 filterValue.value = 4
             case 2:
-                valueTitle.text = "Count"
+                valueLow.text = "Small"
+                valueHigh.text = "Big"
                 filterValue.value = 8
             default:
                 break
             }
         }
-        self.previewView.filterImage(filterIndex: segs.selectedSegmentIndex, value: Int(filterValue.value))
+        filterValue.isHidden = hideValues
+        valueLow.isHidden = hideValues
+        valueHigh.isHidden = hideValues
+      self.previewView.filterImage(filterIndex: segs.selectedSegmentIndex, value: Int(filterValue.value))
    }
 
     @IBAction func changeFilterValue(slider : UISlider) {
@@ -280,11 +285,22 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
 
     // MARK: Convenience Methods -------------------------------------------------------------------------------------------------
 
-    func enableDisableControls(enableThem : Bool) {
-        filters.isHidden = !enableThem
-        filterValue.isHidden = !enableThem
-        filterTitle.isHidden = !enableThem
-        valueTitle.isHidden = !enableThem
+    // Hide controls when in preivew mode, or when copact size
+    private var isPreview = false
+    func setUIMode(previewOnly : Bool, completion: (@escaping ()->())?) {
+        self.isPreview = previewOnly
+        let previewStyle = (viewStyle == .compact) ? true : previewOnly
+        DispatchQueue.main.async {
+            print("preview style: \(previewStyle)")
+            self.filters.isHidden = previewStyle
+            self.filterTitle.isHidden = previewStyle
+            let valuesHidden = (self.filters.selectedSegmentIndex == 0) ? true : previewStyle
+            self.filterValue.isHidden = valuesHidden
+            self.valueLow.isHidden = valuesHidden
+            self.valueHigh.isHidden = valuesHidden
+            self.sendButton.isHidden = previewOnly
+            completion?()
+        }
     }
 
 }

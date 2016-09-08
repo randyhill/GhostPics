@@ -28,15 +28,6 @@ class ImageContainer {
     }
 
     func getImage(filter : ImageFilterType, value: Int) -> UIImage {
-//        switch (filter) {
-//        case .Flash:
-//            _animation =  FlashAnimation(baseImage: _baseImage!, value: value)
-//        case .Blinds:
-//            _animation =  BlindsAnimation(baseImage: _baseImage!, value : value)
-//        default:
-//            _animation = AnimationClass(baseImage: _baseImage!, filterType: filter, value: value)
-//            break
-//        }
         _animation = AnimationClass(baseImage: _baseImage!, filterType: filter, value: value)
        return _animation!.asImage()!
     }

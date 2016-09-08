@@ -40,12 +40,10 @@ struct AnimationHeader {
     var type : ImageFilterType = .None
     var value : Int
     var duration : Double = 0.0
-    //var imageCount : Int = 0
     var imageSize  = 0
 
     init(type : ImageFilterType, duration : Double, size: Int, value: Int) {
         self.type = type
-        //self.imageCount = count
         self.duration = duration
         self.imageSize = size
         self.value = value
@@ -56,10 +54,6 @@ struct AnimationHeader {
     func calcCheckSum() -> Double {
         return Double(type.rawValue + imageSize + value) + duration
     }
-
-//    init() {
-//
-//    }
 
     func printIt() {
         print("Tag: \(headerTag), checkSum: \(checkSum), type: \(type), size: \(imageSize)")
@@ -108,35 +102,14 @@ class AnimationClass {
             print("Failed type check")
             return
         }
-//        guard header.imageCount > 0 && header.imageCount <= 3 else {
-//            print("Failed Animation file image count")
-//            return
-//        }
         type = header.type
         _duration = header.duration
 
-        // Images
-//        if header.imageCount > 0 {
-            // Get image sizes
-//            var imageSizes = [Int](repeating: 0, count: header.imageCount)
-//            let arraySize = header.imageCount * MemoryLayout<Int>.size
-//            data.getBytes(&imageSizes, range: NSMakeRange(headerSize, arraySize))
-
-            // Get image
-            _images.removeAll()
-           // var imageOffset = headerSize
-            let subData = data.subdata(with: NSMakeRange(headerSize, header.imageSize))
-            if let image = UIImage(data: subData) {
-                createImages(baseImage: image, filterType: header.type, value: header.value)
-            }
-
-//            for imageSize in imageSizes {
-//                let subData = data.subdata(with: NSMakeRange(imageOffset, imageSize))
-//                let image = UIImage(data: subData)
-//                _images.append(image!)
-//                imageOffset += imageSize
-//            }
- //       }
+        _images.removeAll()
+        let subData = data.subdata(with: NSMakeRange(headerSize, header.imageSize))
+        if let image = UIImage(data: subData) {
+            createImages(baseImage: image, filterType: header.type, value: header.value)
+        }
     }
 
     func asImage() -> UIImage? {
@@ -147,31 +120,11 @@ class AnimationClass {
     }
 
     func asData(baseImage : UIImage) -> NSData? {
-        // Create array of NSData versions of images
-//        var imageDataArray = [Data]()
-//        for image in _images {
-//            if let imageData = UIImageJPEGRepresentation(image, 1.0) {
-//                imageDataArray.append(imageData)
-//            }
-//        }
-
-        // Write header.
         if let imageData = UIImageJPEGRepresentation(baseImage, 1.0) {
             var header = AnimationHeader(type: type, duration: _duration, size: imageData.count, value: value)
             let headerData = encode(value: &header)
             let data = NSMutableData(data: headerData as Data)
-
-            // Write out image sizes
-//            for imageData in imageDataArray {
-//                var imageLength = imageData.count
-//                let imageSizeData = encode(value: &imageLength)
-//                data.append(imageSizeData as Data)
-//            }
-
-            //  Write image
-            //for imageData in imageDataArray {
-                data.append(imageData)
-           // }
+            data.append(imageData)
             return data
         }
         return nil
@@ -189,10 +142,7 @@ class AnimationClass {
         data.getBytes(pointer, length: length)
         return pointer.move()
     }
-//}
-//
-//// MARK: Flash Class -------------------------------------------------------------------------------------------------
-//class FlashAnimation : AnimationClass {
+
     func flashAnimation(baseImage: UIImage, value: Int) {
         self.type = .Flash
         _duration = 10.0/Double(value)
@@ -217,13 +167,10 @@ class AnimationClass {
         _images.append(baseImage)
         _images.append(bgImage)
     }
-//}
-//
-//// MARK: Blinds Class -------------------------------------------------------------------------------------------------
-//class BlindsAnimation : AnimationClass {
+
     func blindsAnimation(baseImage: UIImage, value: Int) {
         type = .Blinds
-        let sliceHeight = baseImage.size.height/CGFloat(value)
+        let sliceHeight = baseImage.size.height/CGFloat(22 - value)
         _duration = 2.0
 
         if let newImage = createBlindImage(image: baseImage, offset: 0, slices: CGFloat(value)) {
