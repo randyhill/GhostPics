@@ -35,7 +35,6 @@
                                     <constraint firstAttribute="width" constant="88.5" id="nJZ-kS-CVo"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ouj-Cf-FIg">
@@ -49,15 +48,14 @@
                                 </connections>
                             </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SaY-cy-MIG" customClass="PreviewView" customModule="MessagesExtension" customModuleProvider="target">
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="backgroundColor" red="0.90196079019999997" green="0.90196079019999997" blue="0.90196079019999997" alpha="1" colorSpace="calibratedRGB"/>
                             </view>
-                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Filter" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PEb-ta-QzN">
+                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Effect" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PEb-ta-QzN">
                                 <constraints>
                                     <constraint firstAttribute="height" constant="21" id="8to-1f-T9G"/>
-                                    <constraint firstAttribute="width" constant="39" id="V6L-OV-KUe"/>
+                                    <constraint firstAttribute="width" constant="46" id="V6L-OV-KUe"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="textColor"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <segmentedControl hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="zOK-4R-DTM">
@@ -65,7 +63,9 @@
                                     <segment title="None"/>
                                     <segment title="Flash"/>
                                     <segment title="Blinds"/>
+                                    <segment title="Fade"/>
                                 </segments>
+                                <color key="tintColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                 <connections>
                                     <action selector="changeFilterWithSegs:" destination="FX5-3q-7bF" eventType="valueChanged" id="Woc-hM-pcW"/>
                                 </connections>
@@ -84,7 +84,6 @@
                                     <constraint firstAttribute="width" constant="42" id="9Xb-9k-9gd"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Clear" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IUm-ss-Lmp">
@@ -93,7 +92,6 @@
                                     <constraint firstAttribute="height" constant="21" id="hgV-db-t1s"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Fast" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iL7-M8-Zlj">
@@ -104,7 +102,6 @@
                                     <constraint firstAttribute="height" constant="21" id="zMs-ao-Y2H"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.80000000000000004" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="J9z-sM-Hf7">
@@ -118,11 +115,10 @@
                                     <constraint firstAttribute="width" constant="42" id="R0d-Nx-jBD"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                         </subviews>
-                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="backgroundColor" red="0.90196079019999997" green="0.90196079019999997" blue="0.90196079019999997" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstItem="iL7-M8-Zlj" firstAttribute="trailing" secondItem="iQV-Mb-dVQ" secondAttribute="trailingMargin" id="0mk-Tn-J7L"/>
                             <constraint firstItem="PEb-ta-QzN" firstAttribute="leading" secondItem="iQV-Mb-dVQ" secondAttribute="leadingMargin" id="1JF-9R-gMb"/>
@@ -150,7 +146,7 @@
                             <constraint firstItem="FaR-0B-E3w" firstAttribute="top" secondItem="PEb-ta-QzN" secondAttribute="bottom" constant="14" id="qRz-zh-SkH"/>
                             <constraint firstItem="J9z-sM-Hf7" firstAttribute="leading" secondItem="IUm-ss-Lmp" secondAttribute="trailing" constant="5" id="vwU-Vw-i2U"/>
                             <constraint firstItem="ouj-Cf-FIg" firstAttribute="top" secondItem="eda-mc-3jP" secondAttribute="bottom" constant="4" id="w5y-E9-LeP"/>
-                            <constraint firstItem="zOK-4R-DTM" firstAttribute="leading" secondItem="PEb-ta-QzN" secondAttribute="trailing" constant="8" id="wcn-oH-Ga6"/>
+                            <constraint firstItem="zOK-4R-DTM" firstAttribute="leading" secondItem="PEb-ta-QzN" secondAttribute="trailing" constant="1" id="wcn-oH-Ga6"/>
                             <constraint firstItem="FaR-0B-E3w" firstAttribute="leading" secondItem="iQV-Mb-dVQ" secondAttribute="leadingMargin" id="y6u-2O-6S3"/>
                             <constraint firstItem="SaY-cy-MIG" firstAttribute="leading" secondItem="iQV-Mb-dVQ" secondAttribute="leadingMargin" constant="-16" id="yju-hW-yQ6"/>
                         </constraints>

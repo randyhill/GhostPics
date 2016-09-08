@@ -21,7 +21,8 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
     @IBOutlet var valueHigh : UILabel!
     @IBOutlet var alphaLow : UILabel!
     @IBOutlet var alphaHigh : UILabel!
-    let asphaltColor = UIColor(red: 0x34/255, green: 0x49/255, blue: 0x5E/255, alpha: 1.0)
+    let asphaltColor = UIColor.darkGray
+        //UIColor(red: 0x34/255, green: 0x49/255, blue: 0x5E/255, alpha: 1.0)
 
     var globals = Shared.sharedInstance
     var store = StoreManager.sharedInstance
@@ -36,8 +37,8 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
         notificationCenter.addObserver(self, selector: #selector(restoreFailed), name: NSNotification.Name(rawValue: kInAppRestoreFailed), object: nil)
         notificationCenter.addObserver(self, selector: #selector(purchaseFailed), name: NSNotification.Name(rawValue: kInAppPurchaseFailed), object: nil)
 
-        self.view.backgroundColor = asphaltColor
-        self.previewView.backgroundColor = asphaltColor
+//        self.view.backgroundColor = asphaltColor
+//        self.previewView.backgroundColor = asphaltColor
     }
     let kInAppRestoreCompleted = "kInAppRestoreCompleted"
     let kInAppRestoreFailed = "kInAppRestoreFailed"
@@ -97,7 +98,7 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
                                     }
                             })
                         } else {
-                            self.previewView.setText(message: "That picture has expired, thanks to GhostPics!\n\nUse GhostPics to use expiring photos to protect your secrets.")
+                            self.previewView.setText(message: "That picture has expired, thanks to GhostPics!\n\nUse GhostPics's expiring photos to protect your secrets!")
                         }
                     })
                 })
@@ -268,14 +269,19 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
         case 1:
             valueLow.text = "Slow"
             valueHigh.text = "Fast"
-            filterValue.value = 4
+            filterValue.value = 6
             filterAlpha.value = 0.8
         case 2:
             valueLow.text = "Small"
             valueHigh.text = "Big"
-            filterValue.value = 8
+            filterValue.value = 14
             filterAlpha.value = 0.8
-        default:
+        case 3:
+            valueLow.text = "Slow"
+            valueHigh.text = "Fast"
+            filterValue.value = 6
+            filterAlpha.value = 0.8
+       default:
             break
         }
         setUIMode(previewOnly: false, completion: nil)

@@ -26,6 +26,7 @@ class PreviewView : UIView {
         super.init(coder: aDecoder)
        // _image = ImageContainer(image: UIImage(named: "rounded ghost")!)
         textView.font = UIFont.boldSystemFont(ofSize: 20.0)
+        textView.backgroundColor = UIColor(red: 230/255.0, green: 230/255.0, blue: 230/255.0, alpha: 1.0)
     }
 
     func initFromData(data : NSData) {

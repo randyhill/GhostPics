@@ -36,7 +36,7 @@ class Shared {
     static let sharedInstance = Shared()
 
     var imagesSentCount = 0
-    var evaluationImageLimit = 10
+    var evaluationImageLimit = 20
     var activated = false
 
     class func postNotification(name : String, userInfo: [String: Any]?, object: AnyObject?) {

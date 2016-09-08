@@ -10,7 +10,7 @@ import UIKit
 
 // MARK: Enums -------------------------------------------------------------------------------------------------
 enum ImageFilterType : Int {
-    case None = 0, Flash, Blinds
+    case None = 0, Flash, Blinds, Fade
 
     static func fromInt(filterIndex : Int) -> ImageFilterType {
         switch filterIndex {
@@ -20,13 +20,15 @@ enum ImageFilterType : Int {
             return .Flash
         case 2:
             return .Blinds
+        case 3:
+            return .Fade
         default :
             return .None
         }
     }
 
     static func isValid(intValue : Int ) -> Bool {
-        if intValue >= 0 && intValue <= 2 {
+        if intValue >= ImageFilterType.None.rawValue && intValue <= ImageFilterType.Fade.rawValue {
             return true
         }
         return false
@@ -83,6 +85,8 @@ class AnimationClass {
             blindsAnimation(baseImage: baseImage, value: value, alpha: alpha)
         case .Flash:
             flashAnimation(baseImage: baseImage, value: value, alpha: alpha)
+        case .Fade:
+            fadeAnimation(baseImage: baseImage, value: value, alpha: alpha)
         default:
             baseAnimation(baseImage: baseImage, value: value, alpha: alpha)
         }
@@ -148,7 +152,7 @@ class AnimationClass {
     }
 
     func flashAnimation(baseImage: UIImage, value: Int, alpha: CGFloat) {
-        let color = UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: alpha)
+        let color = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: alpha)
         self.type = .Flash
         _duration = 10.0/Double(value)
 
@@ -156,6 +160,7 @@ class AnimationClass {
         UIGraphicsBeginImageContext(baseImage.size)
         if let context = UIGraphicsGetCurrentContext() {
             UIGraphicsPushContext(context)
+            baseImage.draw(at: CGPoint(x: 0, y: 0))
             let rectPath = UIBezierPath(rect: CGRect(origin: CGPoint(x: 0, y:0), size: baseImage.size))
             color.setFill()
             rectPath.fill()
@@ -173,9 +178,46 @@ class AnimationClass {
         _images.append(bgImage)
     }
 
+    func fadeAnimation(baseImage: UIImage, value: Int, alpha: CGFloat) {
+        self.type = .Fade
+        _duration = 10.0/Double(value)
+
+        // Create array of alpha values for fade progression
+        let transitions = 20
+        let startAlpha : CGFloat = 0.0
+        let fadeDistance = CGFloat(1.0 - startAlpha)/CGFloat(transitions)
+        var fadeValues = [CGFloat]()
+        var startFade = startAlpha
+        for _ in 0 ... transitions {
+            fadeValues += [startFade]
+            startFade += fadeDistance
+        }
+
+        // Create faded versions of base image
+        for fadeValue in fadeValues {
+            let color = UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: fadeValue)
+
+            // Create background
+            UIGraphicsBeginImageContext(baseImage.size)
+            if let context = UIGraphicsGetCurrentContext() {
+                UIGraphicsPushContext(context)
+                baseImage.draw(at: CGPoint(x: 0, y: 0))
+                let rectPath = UIBezierPath(rect: CGRect(origin: CGPoint(x: 0, y:0), size: baseImage.size))
+                color.setFill()
+                rectPath.fill()
+                UIGraphicsPopContext()
+            }
+            guard let bgImage = UIGraphicsGetImageFromCurrentImageContext() else {
+                UIGraphicsEndImageContext()
+                return
+            }
+            UIGraphicsEndImageContext()
+            _images.append(bgImage)
+        }
+    }
+
     func blindsAnimation(baseImage: UIImage, value: Int, alpha: CGFloat) {
         type = .Blinds
-        //let sliceHeight = baseImage.size.height/CGFloat(22 - value)
         _duration = 1.0
         let slices = CGFloat(22 - value)
         let blindHeight = baseImage.size.height/slices
@@ -204,15 +246,12 @@ class AnimationClass {
         if let newImage = createBlindImage(image: baseImage, blindHeight: blindHeight, offset: 3*blindHeight/4, slices: CGFloat(value), alpha: alpha) {
             _images += [newImage]
         }
-//        if let newImage = createBlindImage(image: baseImage, blindHeight: blindHeight, offset: blindHeight, slices: CGFloat(value), alpha: alpha) {
-//            _images += [newImage]
-//        }
    }
 
     // Create image with blinds drawn over it
     func createBlindImage(image : UIImage, blindHeight: CGFloat, offset: CGFloat, slices : CGFloat, alpha: CGFloat) -> UIImage? {
 
-        let color = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: alpha)
+        let color = UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: alpha)
         var grayRect = CGRect(x: 0, y: offset, width: image.size.width, height: blindHeight)
         UIGraphicsBeginImageContext(image.size)
         guard let context = UIGraphicsGetCurrentContext() else {
