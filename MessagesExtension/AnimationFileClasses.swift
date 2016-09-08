@@ -39,20 +39,22 @@ struct AnimationHeader {
     var checkSum : Double = 0.0
     var type : ImageFilterType = .None
     var value : Int
+    var alpha : CGFloat
     var duration : Double = 0.0
     var imageSize  = 0
 
-    init(type : ImageFilterType, duration : Double, size: Int, value: Int) {
+    init(type : ImageFilterType, duration : Double, size: Int, value: Int, alpha: CGFloat) {
         self.type = type
         self.duration = duration
         self.imageSize = size
         self.value = value
+        self.alpha = alpha
         self.checkSum = calcCheckSum()
         print("imagesize: \(self.imageSize)")
     }
 
     func calcCheckSum() -> Double {
-        return Double(type.rawValue + imageSize + value) + duration
+        return Double(type.rawValue + imageSize + value) + duration + Double(alpha)
     }
 
     func printIt() {
@@ -66,31 +68,33 @@ class AnimationClass {
     internal var _duration = 0.0
     var type : ImageFilterType = .None
     var value = 0
+    var alpha : CGFloat = 0.0
 
-    init(baseImage: UIImage, filterType: ImageFilterType, value: Int) {
-        type = filterType
+    init(baseImage: UIImage, filterType: ImageFilterType, value: Int, alpha: CGFloat) {
+        self.type = filterType
         self.value = value
-        createImages(baseImage: baseImage, filterType: filterType, value: value)
+        self.alpha = alpha
+        createImages(baseImage: baseImage, filterType: filterType, value: value, alpha: alpha)
     }
 
-    func createImages(baseImage: UIImage, filterType: ImageFilterType, value: Int) {
+    func createImages(baseImage: UIImage, filterType: ImageFilterType, value: Int, alpha: CGFloat) {
         switch type {
         case .Blinds:
-            blindsAnimation(baseImage: baseImage, value: value)
+            blindsAnimation(baseImage: baseImage, value: value, alpha: alpha)
         case .Flash:
-            flashAnimation(baseImage: baseImage, value: value)
+            flashAnimation(baseImage: baseImage, value: value, alpha: alpha)
         default:
-            baseAnimation(baseImage: baseImage, value: value)
+            baseAnimation(baseImage: baseImage, value: value, alpha: alpha)
         }
     }
 
-    func baseAnimation(baseImage: UIImage, value: Int) {
+    func baseAnimation(baseImage: UIImage, value: Int, alpha: CGFloat) {
         _images.append(baseImage)
     }
 
     init(data : NSData) {
         // Get header
-        var header = AnimationHeader(type: .None, duration: 0.0, size: 0, value: 0)
+        var header = AnimationHeader(type: .None, duration: 0.0, size: 0, value: 0, alpha: 0.0)
         let headerSize = MemoryLayout<AnimationHeader>.size
         data.getBytes(&header, length: headerSize)
 
@@ -108,7 +112,7 @@ class AnimationClass {
         _images.removeAll()
         let subData = data.subdata(with: NSMakeRange(headerSize, header.imageSize))
         if let image = UIImage(data: subData) {
-            createImages(baseImage: image, filterType: header.type, value: header.value)
+            createImages(baseImage: image, filterType: header.type, value: header.value, alpha: header.alpha)
         }
     }
 
@@ -121,7 +125,7 @@ class AnimationClass {
 
     func asData(baseImage : UIImage) -> NSData? {
         if let imageData = UIImageJPEGRepresentation(baseImage, 1.0) {
-            var header = AnimationHeader(type: type, duration: _duration, size: imageData.count, value: value)
+            var header = AnimationHeader(type: type, duration: _duration, size: imageData.count, value: value, alpha: alpha)
             let headerData = encode(value: &header)
             let data = NSMutableData(data: headerData as Data)
             data.append(imageData)
@@ -143,7 +147,8 @@ class AnimationClass {
         return pointer.move()
     }
 
-    func flashAnimation(baseImage: UIImage, value: Int) {
+    func flashAnimation(baseImage: UIImage, value: Int, alpha: CGFloat) {
+        let color = UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: alpha)
         self.type = .Flash
         _duration = 10.0/Double(value)
 
@@ -152,7 +157,7 @@ class AnimationClass {
         if let context = UIGraphicsGetCurrentContext() {
             UIGraphicsPushContext(context)
             let rectPath = UIBezierPath(rect: CGRect(origin: CGPoint(x: 0, y:0), size: baseImage.size))
-            UIColor.black.setFill()
+            color.setFill()
             rectPath.fill()
             UIGraphicsPopContext()
         }
@@ -168,25 +173,46 @@ class AnimationClass {
         _images.append(bgImage)
     }
 
-    func blindsAnimation(baseImage: UIImage, value: Int) {
+    func blindsAnimation(baseImage: UIImage, value: Int, alpha: CGFloat) {
         type = .Blinds
-        let sliceHeight = baseImage.size.height/CGFloat(22 - value)
-        _duration = 2.0
+        //let sliceHeight = baseImage.size.height/CGFloat(22 - value)
+        _duration = 1.0
+        let slices = CGFloat(22 - value)
+        let blindHeight = baseImage.size.height/slices
 
-        if let newImage = createBlindImage(image: baseImage, offset: 0, slices: CGFloat(value)) {
+        if let newImage = createBlindImage(image: baseImage, blindHeight: blindHeight, offset: -blindHeight, slices: CGFloat(value), alpha: alpha) {
             _images += [newImage]
         }
-        if let newImage = createBlindImage(image: baseImage, offset: sliceHeight/2, slices: CGFloat(value)) {
+       if let newImage = createBlindImage(image: baseImage, blindHeight: blindHeight, offset: -3*blindHeight/4, slices: CGFloat(value), alpha: alpha) {
             _images += [newImage]
         }
-        if let newImage = createBlindImage(image: baseImage, offset: -sliceHeight/2, slices: CGFloat(value)) {
+        if let newImage = createBlindImage(image: baseImage, blindHeight: blindHeight, offset: -blindHeight/2, slices: CGFloat(value), alpha: alpha) {
             _images += [newImage]
         }
-    }
+        if let newImage = createBlindImage(image: baseImage, blindHeight: blindHeight, offset: -blindHeight/4, slices: CGFloat(value), alpha: alpha) {
+            _images += [newImage]
+        }
+        if let newImage = createBlindImage(image: baseImage, blindHeight: blindHeight, offset: 0, slices: CGFloat(value), alpha: alpha) {
+            _images += [newImage]
+        }
+        if let newImage = createBlindImage(image: baseImage, blindHeight: blindHeight, offset: blindHeight/4, slices: CGFloat(value), alpha: alpha) {
+            _images += [newImage]
+        }
+        if let newImage = createBlindImage(image: baseImage, blindHeight: blindHeight, offset: blindHeight/2, slices: CGFloat(value), alpha: alpha) {
+            _images += [newImage]
+        }
+        if let newImage = createBlindImage(image: baseImage, blindHeight: blindHeight, offset: 3*blindHeight/4, slices: CGFloat(value), alpha: alpha) {
+            _images += [newImage]
+        }
+//        if let newImage = createBlindImage(image: baseImage, blindHeight: blindHeight, offset: blindHeight, slices: CGFloat(value), alpha: alpha) {
+//            _images += [newImage]
+//        }
+   }
 
     // Create image with blinds drawn over it
-    func createBlindImage(image : UIImage, offset: CGFloat, slices : CGFloat) -> UIImage? {
-        let blindHeight = image.size.height/slices
+    func createBlindImage(image : UIImage, blindHeight: CGFloat, offset: CGFloat, slices : CGFloat, alpha: CGFloat) -> UIImage? {
+
+        let color = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: alpha)
         var grayRect = CGRect(x: 0, y: offset, width: image.size.width, height: blindHeight)
         UIGraphicsBeginImageContext(image.size)
         guard let context = UIGraphicsGetCurrentContext() else {
@@ -196,10 +222,9 @@ class AnimationClass {
 
         // Draw image with blinds on top of it every blindHeight
         image.draw(at: CGPoint(x: 0, y: 0))
-        let blindsCount = Int(slices/2)
-        for _ in 0...blindsCount {
+        while grayRect.origin.y < image.size.height {
             let rectPath = UIBezierPath(rect: grayRect)
-            UIColor.black.setFill()
+            color.setFill()
             rectPath.fill()
             grayRect.origin.y += blindHeight * 2
         }

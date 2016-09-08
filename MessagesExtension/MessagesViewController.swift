@@ -16,8 +16,12 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
     @IBOutlet var filters : UISegmentedControl!
     @IBOutlet var filterTitle : UILabel!
     @IBOutlet var filterValue : UISlider!
+    @IBOutlet var filterAlpha : UISlider!
     @IBOutlet var valueLow : UILabel!
     @IBOutlet var valueHigh : UILabel!
+    @IBOutlet var alphaLow : UILabel!
+    @IBOutlet var alphaHigh : UILabel!
+    let asphaltColor = UIColor(red: 0x34/255, green: 0x49/255, blue: 0x5E/255, alpha: 1.0)
 
     var globals = Shared.sharedInstance
     var store = StoreManager.sharedInstance
@@ -31,6 +35,9 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
         notificationCenter.addObserver(self, selector: #selector(restoreSucceeded), name: NSNotification.Name(rawValue: kInAppRestoreCompleted), object: nil)
         notificationCenter.addObserver(self, selector: #selector(restoreFailed), name: NSNotification.Name(rawValue: kInAppRestoreFailed), object: nil)
         notificationCenter.addObserver(self, selector: #selector(purchaseFailed), name: NSNotification.Name(rawValue: kInAppPurchaseFailed), object: nil)
+
+        self.view.backgroundColor = asphaltColor
+        self.previewView.backgroundColor = asphaltColor
     }
     let kInAppRestoreCompleted = "kInAppRestoreCompleted"
     let kInAppRestoreFailed = "kInAppRestoreFailed"
@@ -256,31 +263,31 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
     }
 
     @IBAction func changeFilter(segs : UISegmentedControl) {
-        var hideValues = false
-         if segs.selectedSegmentIndex == 0 {
-            hideValues = true
-        } else {
-            switch segs.selectedSegmentIndex {
-            case 1:
-                valueLow.text = "Slow"
-                valueHigh.text = "Fast"
-                filterValue.value = 4
-            case 2:
-                valueLow.text = "Small"
-                valueHigh.text = "Big"
-                filterValue.value = 8
-            default:
-                break
-            }
+
+        switch segs.selectedSegmentIndex {
+        case 1:
+            valueLow.text = "Slow"
+            valueHigh.text = "Fast"
+            filterValue.value = 4
+            filterAlpha.value = 0.8
+        case 2:
+            valueLow.text = "Small"
+            valueHigh.text = "Big"
+            filterValue.value = 8
+            filterAlpha.value = 0.8
+        default:
+            break
         }
-        filterValue.isHidden = hideValues
-        valueLow.isHidden = hideValues
-        valueHigh.isHidden = hideValues
-      self.previewView.filterImage(filterIndex: segs.selectedSegmentIndex, value: Int(filterValue.value))
+        setUIMode(previewOnly: false, completion: nil)
+        self.previewView.filterImage(filterIndex: segs.selectedSegmentIndex, value: Int(filterValue.value), alpha: calcAlpha())
    }
 
     @IBAction func changeFilterValue(slider : UISlider) {
-        self.previewView.filterImage(filterIndex: filters.selectedSegmentIndex, value: Int(filterValue.value))
+        self.previewView.filterImage(filterIndex: filters.selectedSegmentIndex, value: Int(filterValue.value), alpha: calcAlpha())
+    }
+
+    func calcAlpha() -> CGFloat {
+        return CGFloat(filterAlpha.value)
     }
 
     // MARK: Convenience Methods -------------------------------------------------------------------------------------------------
@@ -294,10 +301,13 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
             print("preview style: \(previewStyle)")
             self.filters.isHidden = previewStyle
             self.filterTitle.isHidden = previewStyle
-            let valuesHidden = (self.filters.selectedSegmentIndex == 0) ? true : previewStyle
-            self.filterValue.isHidden = valuesHidden
-            self.valueLow.isHidden = valuesHidden
-            self.valueHigh.isHidden = valuesHidden
+            let filtersHidden = (self.filters.selectedSegmentIndex == 0) ? true : previewStyle
+            self.filterValue.isHidden = filtersHidden
+            self.valueLow.isHidden = filtersHidden
+            self.valueHigh.isHidden = filtersHidden
+            self.filterAlpha.isHidden = filtersHidden
+            self.alphaLow.isHidden = filtersHidden
+            self.alphaHigh.isHidden = filtersHidden
             self.sendButton.isHidden = previewOnly
             completion?()
         }

@@ -19,7 +19,7 @@ class ImageContainer {
     }
 
     init(image: UIImage) {
-        _animation = AnimationClass(baseImage: image, filterType: .None, value: 0)
+        _animation = AnimationClass(baseImage: image, filterType: .None, value: 0, alpha: 1.0)
         _baseImage = image
     }
 
@@ -27,8 +27,8 @@ class ImageContainer {
         _animation = AnimationClass(data: data)
     }
 
-    func getImage(filter : ImageFilterType, value: Int) -> UIImage {
-        _animation = AnimationClass(baseImage: _baseImage!, filterType: filter, value: value)
+    func getImage(filter : ImageFilterType, value: Int, alpha: CGFloat) -> UIImage {
+        _animation = AnimationClass(baseImage: _baseImage!, filterType: filter, value: value, alpha: alpha)
        return _animation!.asImage()!
     }
 

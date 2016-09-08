@@ -12,7 +12,7 @@ class PreviewView : UIView {
     private var _imageContainer : ImageContainer?
     var image : UIImage {
         get {
-            return _imageContainer!.getImage(filter: .None, value: 0)
+            return _imageContainer!.getImage(filter: .None, value: 0, alpha: 1.0)
         }
     }
 
@@ -102,8 +102,8 @@ class PreviewView : UIView {
         }
     }
 
-    func filterImage(filterIndex : Int, value : Int) {
-        if let filteredImage = _imageContainer?.getImage(filter: ImageFilterType.fromInt(filterIndex: filterIndex), value: value) {
+    func filterImage(filterIndex : Int, value : Int, alpha: CGFloat) {
+        if let filteredImage = _imageContainer?.getImage(filter: ImageFilterType.fromInt(filterIndex: filterIndex), value: value, alpha: alpha) {
             self.imageView.image = filteredImage
         }
 

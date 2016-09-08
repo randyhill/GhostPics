@@ -87,12 +87,35 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Clear" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IUm-ss-Lmp">
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="42" id="PI1-iv-gID"/>
+                                    <constraint firstAttribute="height" constant="21" id="hgV-db-t1s"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                             <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Fast" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iL7-M8-Zlj">
                                 <constraints>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="42" id="0FL-e2-2ym"/>
                                     <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="21" id="Lh7-Qs-JYO"/>
                                     <constraint firstAttribute="width" constant="42" id="m67-N6-6YW"/>
                                     <constraint firstAttribute="height" constant="21" id="zMs-ao-Y2H"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.80000000000000004" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="J9z-sM-Hf7">
+                                <connections>
+                                    <action selector="changeFilterValueWithSlider:" destination="FX5-3q-7bF" eventType="valueChanged" id="GZh-ad-2oj"/>
+                                </connections>
+                            </slider>
+                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Dark" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uBj-jm-GSm">
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="21" id="1iy-Ag-Svd"/>
+                                    <constraint firstAttribute="width" constant="42" id="R0d-Nx-jBD"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <nil key="textColor"/>
@@ -105,9 +128,14 @@
                             <constraint firstItem="PEb-ta-QzN" firstAttribute="leading" secondItem="iQV-Mb-dVQ" secondAttribute="leadingMargin" id="1JF-9R-gMb"/>
                             <constraint firstItem="DGI-Ho-b00" firstAttribute="top" secondItem="SaY-cy-MIG" secondAttribute="bottom" id="2BZ-5U-5SC"/>
                             <constraint firstItem="zOK-4R-DTM" firstAttribute="trailing" secondItem="iQV-Mb-dVQ" secondAttribute="trailingMargin" id="60N-Pp-Qyt"/>
+                            <constraint firstItem="uBj-jm-GSm" firstAttribute="leading" secondItem="J9z-sM-Hf7" secondAttribute="trailing" constant="3" id="6Dt-KD-BhW"/>
                             <constraint firstItem="SaY-cy-MIG" firstAttribute="trailing" secondItem="iQV-Mb-dVQ" secondAttribute="trailingMargin" constant="16" id="DL4-My-4Ky"/>
-                            <constraint firstItem="SaY-cy-MIG" firstAttribute="top" secondItem="ouj-Cf-FIg" secondAttribute="bottom" constant="69" id="NBl-NV-Knd"/>
+                            <constraint firstItem="uBj-jm-GSm" firstAttribute="top" secondItem="iL7-M8-Zlj" secondAttribute="bottom" constant="12" id="EYy-31-1TI"/>
+                            <constraint firstItem="uBj-jm-GSm" firstAttribute="trailing" secondItem="iQV-Mb-dVQ" secondAttribute="trailingMargin" id="Egb-l0-moG"/>
+                            <constraint firstItem="J9z-sM-Hf7" firstAttribute="top" secondItem="tMa-HN-tpm" secondAttribute="bottom" constant="4" id="MfN-UZ-Vfi"/>
+                            <constraint firstItem="SaY-cy-MIG" firstAttribute="top" secondItem="ouj-Cf-FIg" secondAttribute="bottom" constant="104" id="NBl-NV-Knd"/>
                             <constraint firstItem="tMa-HN-tpm" firstAttribute="leading" secondItem="FaR-0B-E3w" secondAttribute="trailing" constant="5" id="Nx7-eh-8vz"/>
+                            <constraint firstItem="IUm-ss-Lmp" firstAttribute="top" secondItem="FaR-0B-E3w" secondAttribute="bottom" constant="12" id="PUs-mT-Hu8"/>
                             <constraint firstItem="4k8-SX-uA7" firstAttribute="leading" secondItem="iQV-Mb-dVQ" secondAttribute="leadingMargin" id="R76-bI-6h3"/>
                             <constraint firstItem="4k8-SX-uA7" firstAttribute="top" secondItem="eda-mc-3jP" secondAttribute="bottom" constant="8" id="Unv-bq-L8e"/>
                             <constraint firstItem="iL7-M8-Zlj" firstAttribute="top" secondItem="zOK-4R-DTM" secondAttribute="bottom" constant="10" id="VfK-hC-gbj"/>
@@ -117,8 +145,10 @@
                             <constraint firstItem="lFw-rh-pLy" firstAttribute="leading" secondItem="ouj-Cf-FIg" secondAttribute="trailing" constant="33" id="ah7-G8-dKq"/>
                             <constraint firstItem="lFw-rh-pLy" firstAttribute="top" secondItem="eda-mc-3jP" secondAttribute="bottom" constant="4" id="eGG-UR-GV8"/>
                             <constraint firstItem="lFw-rh-pLy" firstAttribute="trailing" secondItem="iQV-Mb-dVQ" secondAttribute="trailingMargin" id="fQm-Bu-KV4"/>
+                            <constraint firstItem="IUm-ss-Lmp" firstAttribute="leading" secondItem="iQV-Mb-dVQ" secondAttribute="leadingMargin" id="iwb-F7-h9S"/>
                             <constraint firstItem="PEb-ta-QzN" firstAttribute="top" secondItem="4k8-SX-uA7" secondAttribute="bottom" constant="12" id="jcz-7c-4QE"/>
                             <constraint firstItem="FaR-0B-E3w" firstAttribute="top" secondItem="PEb-ta-QzN" secondAttribute="bottom" constant="14" id="qRz-zh-SkH"/>
+                            <constraint firstItem="J9z-sM-Hf7" firstAttribute="leading" secondItem="IUm-ss-Lmp" secondAttribute="trailing" constant="5" id="vwU-Vw-i2U"/>
                             <constraint firstItem="ouj-Cf-FIg" firstAttribute="top" secondItem="eda-mc-3jP" secondAttribute="bottom" constant="4" id="w5y-E9-LeP"/>
                             <constraint firstItem="zOK-4R-DTM" firstAttribute="leading" secondItem="PEb-ta-QzN" secondAttribute="trailing" constant="8" id="wcn-oH-Ga6"/>
                             <constraint firstItem="FaR-0B-E3w" firstAttribute="leading" secondItem="iQV-Mb-dVQ" secondAttribute="leadingMargin" id="y6u-2O-6S3"/>
@@ -128,6 +158,9 @@
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="320" height="528"/>
                     <connections>
+                        <outlet property="alphaHigh" destination="uBj-jm-GSm" id="QWC-Qw-oaU"/>
+                        <outlet property="alphaLow" destination="IUm-ss-Lmp" id="qJU-R6-SJQ"/>
+                        <outlet property="filterAlpha" destination="J9z-sM-Hf7" id="d5m-yC-DMX"/>
                         <outlet property="filterTitle" destination="PEb-ta-QzN" id="MkJ-9w-pBV"/>
                         <outlet property="filterValue" destination="tMa-HN-tpm" id="hn0-hZ-GZA"/>
                         <outlet property="filters" destination="zOK-4R-DTM" id="X8v-G7-A7t"/>
