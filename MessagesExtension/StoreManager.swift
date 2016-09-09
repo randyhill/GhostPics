@@ -16,9 +16,9 @@ let kInAppProductKey = "IAP_ProductKey"
 let kActivationKey = "nvariance.ghostpics.activation"
 
 // Notifications
-let kInAppRestoreCompleted = "kInAppRestoreCompleted"
-let kInAppRestoreFailed = "kInAppRestoreFailed"
-let kInAppPurchaseFailed = "kInAppPurchaseFailed"
+let kInAppRestoreNotification = "kInAppRestoreNotification"
+let kInAppRestoreFailNotification = "kInAppRestoreFailNotification"
+let kInAppPurchaseFailNotification = "kInAppPurchaseFailNotification"
 
 enum PurchaseError: Int {
     case Success = 0,		// No error.
@@ -190,12 +190,12 @@ class StoreManager : NSObject, SKPaymentTransactionObserver, SKProductsRequestDe
         {
             let productID = transaction.payment.productIdentifier
             print("purchase succeeded")
-            Shared.postTransactions(name: kInAppRestoreCompleted, productKeys: [productID])
+            Shared.postTransactions(name: kInAppRestoreNotification, productKeys: [productID])
         }
         else
         {
             print("purchase failed")
-            Shared.postNotification(name: kInAppPurchaseFailed,  userInfo: userInfo , object: "Purchase failed" as AnyObject?)
+            Shared.postNotification(name: kInAppPurchaseFailNotification,  userInfo: userInfo , object: "Purchase failed" as AnyObject?)
         }
     }
 
@@ -216,7 +216,7 @@ class StoreManager : NSObject, SKPaymentTransactionObserver, SKProductsRequestDe
         
         //let userInfo = [kInAppTransactionKey : transaction, kInAppProductKey : transaction.payment.productIdentifier]
         print("restore completed")
-        Shared.postTransactions(name: kInAppRestoreCompleted, productKeys: productKeys)
+        Shared.postTransactions(name: kInAppRestoreNotification, productKeys: productKeys)
     }
 
     // called when a transaction has failed
@@ -236,7 +236,7 @@ class StoreManager : NSObject, SKPaymentTransactionObserver, SKProductsRequestDe
 
     func paymentQueue(_ queue: SKPaymentQueue, restoreCompletedTransactionsFailedWithError error: Error) {
         print("restore failed")
-        Shared.postNotification(name: kInAppRestoreFailed,  userInfo: nil, object: "Failed to restore" as AnyObject?)
+        Shared.postNotification(name: kInAppRestoreFailNotification,  userInfo: nil, object: "Failed to restore" as AnyObject?)
     }
         
     

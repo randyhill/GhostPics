@@ -3,13 +3,13 @@
     {
       "size" : "60x45",
       "idiom" : "iphone",
-      "filename" : "ghost 60by45x2.png",
+      "filename" : "GHP0001-logoIconDesign-60x45@2x-skyan.png",
       "scale" : "2x"
     },
     {
       "size" : "60x45",
       "idiom" : "iphone",
-      "filename" : "ghost 60by45x3.png",
+      "filename" : "GHP0001-logoIconDesign-60x45@3x-skyan.png",
       "scale" : "3x"
     },
     {
@@ -27,28 +27,28 @@
     {
       "size" : "27x20",
       "idiom" : "universal",
-      "filename" : "ghost 27by20x2.png",
+      "filename" : "GHP0001-logoIconDesign-27x20@2x-skyan.png",
       "scale" : "2x",
       "platform" : "ios"
     },
     {
       "size" : "27x20",
       "idiom" : "universal",
-      "filename" : "ghost 27by20x3.png",
+      "filename" : "GHP0001-logoIconDesign-27x20@3x-skyan.png",
       "scale" : "3x",
       "platform" : "ios"
     },
     {
       "size" : "32x24",
       "idiom" : "universal",
-      "filename" : "ghost 32by24x2.png",
+      "filename" : "GHP0001-logoIconDesign-32x24@2x-skyan.png",
       "scale" : "2x",
       "platform" : "ios"
     },
     {
       "size" : "32x24",
       "idiom" : "universal",
-      "filename" : "ghost 32by24x3.png",
+      "filename" : "GHP0001-logoIconDesign-32x24@3x-skyan.png",
       "scale" : "3x",
       "platform" : "ios"
     },

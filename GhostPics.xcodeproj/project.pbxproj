@@ -10,10 +10,10 @@
 		D81695EA1D7F5392001C0B5F /* AnimationFileClasses.swift in Sources */ = {isa = PBXBuildFile; fileRef = D81695E91D7F5392001C0B5F /* AnimationFileClasses.swift */; };
 		D81695EC1D7F971B001C0B5F /* Shared.swift in Sources */ = {isa = PBXBuildFile; fileRef = D81695EB1D7F971B001C0B5F /* Shared.swift */; };
 		D81695F01D7F9C21001C0B5F /* StoreManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D81695EF1D7F9C21001C0B5F /* StoreManager.swift */; };
+		D85AE0181D824879003634B3 /* GhostIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = D85AE0171D824879003634B3 /* GhostIcon.png */; };
 		D860DB3F1D7A3EFF001DEA75 /* rounded ghost.png in Resources */ = {isa = PBXBuildFile; fileRef = D860DB3B1D7A3E9A001DEA75 /* rounded ghost.png */; };
 		D860DB401D7A3F05001DEA75 /* flat ghost.jpg in Resources */ = {isa = PBXBuildFile; fileRef = D860DB3A1D7A3E9A001DEA75 /* flat ghost.jpg */; };
 		D8855BC91D79E8C5009C33B2 /* PreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8855BC81D79E8C5009C33B2 /* PreviewView.swift */; };
-		D8855BCD1D7A35ED009C33B2 /* ImageContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8855BCC1D7A35ED009C33B2 /* ImageContainer.swift */; };
 		D8B278241D78CBD100B8AC25 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D8B278231D78CBD100B8AC25 /* Assets.xcassets */; };
 		D8B2782B1D78CBD100B8AC25 /* MessagesExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = D8B2782A1D78CBD100B8AC25 /* MessagesExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		D8B278301D78CBD100B8AC25 /* Messages.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D8B2782F1D78CBD100B8AC25 /* Messages.framework */; };
@@ -52,10 +52,10 @@
 		D81695E91D7F5392001C0B5F /* AnimationFileClasses.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnimationFileClasses.swift; sourceTree = "<group>"; };
 		D81695EB1D7F971B001C0B5F /* Shared.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Shared.swift; sourceTree = "<group>"; };
 		D81695EF1D7F9C21001C0B5F /* StoreManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StoreManager.swift; sourceTree = "<group>"; };
+		D85AE0171D824879003634B3 /* GhostIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = GhostIcon.png; sourceTree = "<group>"; };
 		D860DB3A1D7A3E9A001DEA75 /* flat ghost.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = "flat ghost.jpg"; path = "Images/flat ghost.jpg"; sourceTree = SOURCE_ROOT; };
 		D860DB3B1D7A3E9A001DEA75 /* rounded ghost.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "rounded ghost.png"; path = "Images/rounded ghost.png"; sourceTree = SOURCE_ROOT; };
 		D8855BC81D79E8C5009C33B2 /* PreviewView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreviewView.swift; sourceTree = "<group>"; };
-		D8855BCC1D7A35ED009C33B2 /* ImageContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageContainer.swift; sourceTree = "<group>"; };
 		D8B278201D78CBD100B8AC25 /* GhostPics.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GhostPics.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D8B278231D78CBD100B8AC25 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D8B278251D78CBD100B8AC25 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -81,11 +81,24 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		D85A15141D8217F5006FBAC0 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				D860DB3E1D7A3EA7001DEA75 /* Resources */,
+				D8B278471D78CC4D00B8AC25 /* MainInterface.storyboard */,
+				D8B278321D78CBD100B8AC25 /* MessagesViewController.swift */,
+				D8855BC81D79E8C5009C33B2 /* PreviewView.swift */,
+				D81695E91D7F5392001C0B5F /* AnimationFileClasses.swift */,
+			);
+			name = UI;
+			sourceTree = "<group>";
+		};
 		D860DB3E1D7A3EA7001DEA75 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
 				D8B278371D78CBD100B8AC25 /* Assets.xcassets */,
 				D860DB3A1D7A3E9A001DEA75 /* flat ghost.jpg */,
+				D85AE0171D824879003634B3 /* GhostIcon.png */,
 				D8B278391D78CBD100B8AC25 /* Info.plist */,
 				D860DB3B1D7A3E9A001DEA75 /* rounded ghost.png */,
 			);
@@ -132,16 +145,11 @@
 		D8B278311D78CBD100B8AC25 /* MessagesExtension */ = {
 			isa = PBXGroup;
 			children = (
-				D81695EF1D7F9C21001C0B5F /* StoreManager.swift */,
+				D85A15141D8217F5006FBAC0 /* UI */,
 				D81695EB1D7F971B001C0B5F /* Shared.swift */,
-				D8B278471D78CC4D00B8AC25 /* MainInterface.storyboard */,
-				D8B278321D78CBD100B8AC25 /* MessagesViewController.swift */,
-				D8855BC81D79E8C5009C33B2 /* PreviewView.swift */,
-				D8855BCC1D7A35ED009C33B2 /* ImageContainer.swift */,
-				D81695E91D7F5392001C0B5F /* AnimationFileClasses.swift */,
 				D8B278431D78CC3E00B8AC25 /* ServerManager.swift */,
 				D8B278441D78CC3E00B8AC25 /* Just.swift */,
-				D860DB3E1D7A3EA7001DEA75 /* Resources */,
+				D81695EF1D7F9C21001C0B5F /* StoreManager.swift */,
 			);
 			path = MessagesExtension;
 			sourceTree = "<group>";
@@ -241,6 +249,7 @@
 				D860DB401D7A3F05001DEA75 /* flat ghost.jpg in Resources */,
 				D860DB3F1D7A3EFF001DEA75 /* rounded ghost.png in Resources */,
 				D8B278481D78CC4D00B8AC25 /* MainInterface.storyboard in Resources */,
+				D85AE0181D824879003634B3 /* GhostIcon.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -253,7 +262,6 @@
 			files = (
 				D8B278461D78CC3E00B8AC25 /* Just.swift in Sources */,
 				D8855BC91D79E8C5009C33B2 /* PreviewView.swift in Sources */,
-				D8855BCD1D7A35ED009C33B2 /* ImageContainer.swift in Sources */,
 				D81695EA1D7F5392001C0B5F /* AnimationFileClasses.swift in Sources */,
 				D8B278451D78CC3E00B8AC25 /* ServerManager.swift in Sources */,
 				D81695F01D7F9C21001C0B5F /* StoreManager.swift in Sources */,
@@ -375,6 +383,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
@@ -389,6 +398,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.nvariance.GhostPics.MessagesExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Release;

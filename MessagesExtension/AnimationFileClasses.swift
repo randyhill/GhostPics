@@ -42,15 +42,17 @@ struct AnimationHeader {
     var type : ImageFilterType = .None
     var value : Int
     var alpha : CGFloat
-    var duration : Double = 0.0
+    var duration : Double = 2.0
+    var repeatAnimation = false
     var imageSize  = 0
 
-    init(type : ImageFilterType, duration : Double, size: Int, value: Int, alpha: CGFloat) {
+    init(type : ImageFilterType, duration : Double, size: Int, value: Int, alpha: CGFloat, repeatAnimation: Bool) {
         self.type = type
         self.duration = duration
         self.imageSize = size
         self.value = value
         self.alpha = alpha
+        self.repeatAnimation = repeatAnimation
         self.checkSum = calcCheckSum()
         print("imagesize: \(self.imageSize)")
     }
@@ -67,19 +69,30 @@ struct AnimationHeader {
 // MARK: Animation Class -------------------------------------------------------------------------------------------------
 class AnimationClass {
     internal var _images = [UIImage]()
-    internal var _duration = 0.0
+    internal var _duration = 2.0
+    internal var _baseImage : UIImage?
     var type : ImageFilterType = .None
     var value = 0
     var alpha : CGFloat = 0.0
+    var repeatAnimation = false
 
-    init(baseImage: UIImage, filterType: ImageFilterType, value: Int, alpha: CGFloat) {
+    var size : CGSize {
+        get {
+            return _baseImage!.size
+        }
+    }
+
+    init(baseImage: UIImage, filterType: ImageFilterType, value: Int, alpha: CGFloat, repeatAnimation: Bool) {
         self.type = filterType
         self.value = value
         self.alpha = alpha
-        createImages(baseImage: baseImage, filterType: filterType, value: value, alpha: alpha)
+        self._baseImage = baseImage
+        self.repeatAnimation = repeatAnimation
+        createImages(baseImage: baseImage, filterType: filterType, value: value, alpha: alpha, repeatAnimation: self.repeatAnimation)
     }
 
-    func createImages(baseImage: UIImage, filterType: ImageFilterType, value: Int, alpha: CGFloat) {
+    func createImages(baseImage: UIImage, filterType: ImageFilterType, value: Int, alpha: CGFloat, repeatAnimation: Bool) {
+        self.repeatAnimation = repeatAnimation
         switch type {
         case .Blinds:
             blindsAnimation(baseImage: baseImage, value: value, alpha: alpha)
@@ -98,7 +111,7 @@ class AnimationClass {
 
     init(data : NSData) {
         // Get header
-        var header = AnimationHeader(type: .None, duration: 0.0, size: 0, value: 0, alpha: 0.0)
+        var header = AnimationHeader(type: .None, duration: 0.0, size: 0, value: 0, alpha: 0.0, repeatAnimation: false)
         let headerSize = MemoryLayout<AnimationHeader>.size
         data.getBytes(&header, length: headerSize)
 
@@ -116,7 +129,7 @@ class AnimationClass {
         _images.removeAll()
         let subData = data.subdata(with: NSMakeRange(headerSize, header.imageSize))
         if let image = UIImage(data: subData) {
-            createImages(baseImage: image, filterType: header.type, value: header.value, alpha: header.alpha)
+            createImages(baseImage: image, filterType: header.type, value: header.value, alpha: header.alpha, repeatAnimation: self.repeatAnimation)
         }
     }
 
@@ -127,9 +140,9 @@ class AnimationClass {
         return UIImage.animatedImage(with: _images, duration: _duration)
     }
 
-    func asData(baseImage : UIImage) -> NSData? {
-        if let imageData = UIImageJPEGRepresentation(baseImage, 1.0) {
-            var header = AnimationHeader(type: type, duration: _duration, size: imageData.count, value: value, alpha: alpha)
+    func asData() -> NSData? {
+        if let imageData = UIImageJPEGRepresentation(_baseImage!, 1.0) {
+            var header = AnimationHeader(type: type, duration: _duration, size: imageData.count, value: value, alpha: alpha, repeatAnimation: self.repeatAnimation)
             let headerData = encode(value: &header)
             let data = NSMutableData(data: headerData as Data)
             data.append(imageData)
@@ -154,7 +167,7 @@ class AnimationClass {
     func flashAnimation(baseImage: UIImage, value: Int, alpha: CGFloat) {
         let color = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: alpha)
         self.type = .Flash
-        _duration = 10.0/Double(value)
+        //_duration = 10.0/Double(value)
 
         // Create background
         UIGraphicsBeginImageContext(baseImage.size)
@@ -180,7 +193,7 @@ class AnimationClass {
 
     func fadeAnimation(baseImage: UIImage, value: Int, alpha: CGFloat) {
         self.type = .Fade
-        _duration = 10.0/Double(value)
+       // _duration = 10.0/Double(value)
 
         // Create array of alpha values for fade progression
         let transitions = 20
@@ -218,7 +231,7 @@ class AnimationClass {
 
     func blindsAnimation(baseImage: UIImage, value: Int, alpha: CGFloat) {
         type = .Blinds
-        _duration = 1.0
+        //_duration = 1.0
         let slices = CGFloat(22 - value)
         let blindHeight = baseImage.size.height/slices
 

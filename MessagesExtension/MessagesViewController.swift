@@ -12,6 +12,7 @@ import MobileCoreServices
 
 class MessagesViewController: MSMessagesAppViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     @IBOutlet var sendButton : UIButton!
+    @IBOutlet var getPicButton : UIButton!
     @IBOutlet var previewView : PreviewView!
     @IBOutlet var filters : UISegmentedControl!
     @IBOutlet var filterTitle : UILabel!
@@ -21,8 +22,8 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
     @IBOutlet var valueHigh : UILabel!
     @IBOutlet var alphaLow : UILabel!
     @IBOutlet var alphaHigh : UILabel!
-    let asphaltColor = UIColor.darkGray
-        //UIColor(red: 0x34/255, green: 0x49/255, blue: 0x5E/255, alpha: 1.0)
+    @IBOutlet var repeatOption : UISegmentedControl!
+    @IBOutlet var repeatTitle : UILabel!
 
     var globals = Shared.sharedInstance
     var store = StoreManager.sharedInstance
@@ -33,16 +34,14 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
         store.loadStore()
 
         let notificationCenter = NotificationCenter.default
-        notificationCenter.addObserver(self, selector: #selector(restoreSucceeded), name: NSNotification.Name(rawValue: kInAppRestoreCompleted), object: nil)
-        notificationCenter.addObserver(self, selector: #selector(restoreFailed), name: NSNotification.Name(rawValue: kInAppRestoreFailed), object: nil)
-        notificationCenter.addObserver(self, selector: #selector(purchaseFailed), name: NSNotification.Name(rawValue: kInAppPurchaseFailed), object: nil)
+        notificationCenter.addObserver(self, selector: #selector(restoreSucceeded), name: NSNotification.Name(rawValue: kInAppRestoreNotification), object: nil)
+        notificationCenter.addObserver(self, selector: #selector(restoreFailed), name: NSNotification.Name(rawValue: kInAppRestoreFailNotification), object: nil)
+        notificationCenter.addObserver(self, selector: #selector(purchaseFailed), name: NSNotification.Name(rawValue: kInAppPurchaseFailNotification), object: nil)
+        notificationCenter.addObserver(self, selector: #selector(setFilterToNone), name: NSNotification.Name(rawValue: kNoneFilterNotification), object: nil)
 
-//        self.view.backgroundColor = asphaltColor
-//        self.previewView.backgroundColor = asphaltColor
+        sendButton?.layer.cornerRadius = 8.0
+        getPicButton?.layer.cornerRadius = 8.0
     }
-    let kInAppRestoreCompleted = "kInAppRestoreCompleted"
-    let kInAppRestoreFailed = "kInAppRestoreFailed"
-    let kInAppPurchaseFailed = "kInAppPurchaseFailed"
 
     func restoreSucceeded(notification: NSNotification) {
         print("Purchase success")
@@ -88,14 +87,14 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
                         if success {
                             let path = url.absoluteString
                             ServerManager.sharedInstance.downloadFile(path: path,
-                                                                      progress: { (percent) in
-                                                                        self.previewView.setProgress(percent: percent)
-                                }, completion: { (imageDataOpt, errorText) in
-                                    if let imageData = imageDataOpt {
-                                        self.previewView.initFromData(data: imageData as NSData)
-                                    } else {
-                                        self.previewView.setText(message: errorText!)
-                                    }
+                            progress: { (percent) in
+                                self.previewView.setProgress(percent: percent)
+                            }, completion: { (imageDataOpt, errorText) in
+                                if let imageData = imageDataOpt {
+                                    self.previewView.initFromData(data: imageData as NSData)
+                                } else {
+                                    self.previewView.setText(message: errorText!)
+                                }
                             })
                         } else {
                             self.previewView.setText(message: "That picture has expired, thanks to GhostPics!\n\nUse GhostPics's expiring photos to protect your secrets!")
@@ -202,12 +201,12 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
             self.previewView.startActivityFeedback(
                 completed: {
                     let _ = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: false, block: { (timer) in
-                        DispatchQueue.main.async {
+                        //DispatchQueue.main.async {
                             ServerManager.sharedInstance.uploadFile(self.previewView.asData()!,
-                                                                    progress: { (percent) in
-                                                                        DispatchQueue.main.async {
-                                                                            self.previewView.setProgress(percent: percent)
-                                                                        }
+                                progress: { (percent) in
+                                    DispatchQueue.main.async {
+                                        self.previewView.setProgress(percent: percent)
+                                    }
                                 }, completion: { (fileName) in
                                     if let imageId = fileName {
                                         if let message = self.composeMessage(conversation, image: self.previewView.image, idString: imageId) {
@@ -225,7 +224,7 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
                                         self.previewView.setText(message: "Could not prepare image")
                                     }
                             })
-                        }
+                       // }
                     })
             })
         })
@@ -265,31 +264,44 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
 
     @IBAction func changeFilter(segs : UISegmentedControl) {
 
-        switch segs.selectedSegmentIndex {
-        case 1:
-            valueLow.text = "Slow"
-            valueHigh.text = "Fast"
-            filterValue.value = 6
-            filterAlpha.value = 0.8
-        case 2:
-            valueLow.text = "Small"
-            valueHigh.text = "Big"
-            filterValue.value = 14
-            filterAlpha.value = 0.8
-        case 3:
-            valueLow.text = "Slow"
-            valueHigh.text = "Fast"
-            filterValue.value = 6
-            filterAlpha.value = 0.8
-       default:
-            break
-        }
-        setUIMode(previewOnly: false, completion: nil)
-        self.previewView.filterImage(filterIndex: segs.selectedSegmentIndex, value: Int(filterValue.value), alpha: calcAlpha())
+        setFilterTo(filterType: ImageFilterType.fromInt(filterIndex: segs.selectedSegmentIndex))
    }
 
     @IBAction func changeFilterValue(slider : UISlider) {
-        self.previewView.filterImage(filterIndex: filters.selectedSegmentIndex, value: Int(filterValue.value), alpha: calcAlpha())
+        self.previewView.filterImage(filter: ImageFilterType.fromInt(filterIndex: filters.selectedSegmentIndex), value: Int(filterValue.value), alpha: calcAlpha(), repeatAnimation: repeatOption.selectedSegmentIndex == 1)
+    }
+
+    @IBAction func changeRepeatValue(repeatSwitch : UISwitch) {
+        self.previewView.filterImage(filter: ImageFilterType.fromInt(filterIndex: filters.selectedSegmentIndex), value: Int(filterValue.value), alpha: calcAlpha(), repeatAnimation: repeatSwitch.isOn)
+    }
+
+    func setFilterTo(filterType : ImageFilterType) {
+        switch filterType {
+        case .Flash:
+            valueLow.text = "Slow"
+            valueHigh.text = "Fast"
+            filterValue.value = 6
+            filterAlpha.value = 0.9
+        case .Blinds:
+            valueLow.text = "Small"
+            valueHigh.text = "Big"
+            filterValue.value = 14
+            filterAlpha.value = 0.9
+        case .Fade:
+            valueLow.text = "Slow"
+            valueHigh.text = "Fast"
+            filterValue.value = 6
+            filterAlpha.value = 0.9
+        default:
+            break
+        }
+        setUIMode(previewOnly: false, completion: nil)
+        self.previewView.filterImage(filter: filterType, value: Int(filterValue.value), alpha: calcAlpha(), repeatAnimation: repeatOption.selectedSegmentIndex == 1)
+    }
+
+    func setFilterToNone() {
+        filters.selectedSegmentIndex = 0
+        setFilterTo(filterType: .None)
     }
 
     func calcAlpha() -> CGFloat {
@@ -300,11 +312,10 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
 
     // Hide controls when in preivew mode, or when copact size
     private var isPreview = false
-    func setUIMode(previewOnly : Bool, completion: (@escaping ()->())?) {
+    func setUIMode(previewOnly : Bool, completion: (()->())?) {
         self.isPreview = previewOnly
         let previewStyle = (viewStyle == .compact) ? true : previewOnly
         DispatchQueue.main.async {
-            print("preview style: \(previewStyle)")
             self.filters.isHidden = previewStyle
             self.filterTitle.isHidden = previewStyle
             let filtersHidden = (self.filters.selectedSegmentIndex == 0) ? true : previewStyle
@@ -314,7 +325,11 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
             self.filterAlpha.isHidden = filtersHidden
             self.alphaLow.isHidden = filtersHidden
             self.alphaHigh.isHidden = filtersHidden
+            self.repeatTitle.isHidden = filtersHidden
+            self.repeatOption.isHidden = filtersHidden
             self.sendButton.isHidden = previewOnly
+           // print("icon: \(self.appIcon.frame), filtersHidden:\(filtersHidden)")
+           // self.view.bringSubview(toFront: self.appIcon)
             completion?()
         }
     }
