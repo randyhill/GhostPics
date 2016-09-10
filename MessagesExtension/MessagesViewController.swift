@@ -10,20 +10,53 @@ import UIKit
 import Messages
 import MobileCoreServices
 
-class MessagesViewController: MSMessagesAppViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class SettingsObject {
+    var filterType : ImageFilterType = .None
+    var duration : Double = 2.0
+    var alpha : CGFloat = 1.0
+    var doRepeat : Bool = false
+
+    func setAlpha(selectedSegment : Int) {
+        switch selectedSegment {
+        case 0:
+            alpha = 1.0
+        case 1:
+            alpha = 0.8
+        case 2:
+            alpha = 0.6
+        default:
+            alpha = 0.4
+        }
+    }
+
+    func setDuration(selectedSegment : Int) {
+        switch selectedSegment {
+        case 0:
+            duration = 1.5
+        case 1:
+            duration = 2.5
+        case 2:
+            duration = 4
+        default:
+            duration = 6
+        }
+    }
+}
+
+protocol SettingsProtocol {
+    func getSettings() -> SettingsObject
+}
+
+class MessagesViewController: MSMessagesAppViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, SettingsProtocol {
     @IBOutlet var sendButton : UIButton!
     @IBOutlet var getPicButton : UIButton!
     @IBOutlet var previewView : PreviewView!
     @IBOutlet var filters : UISegmentedControl!
     @IBOutlet var filterTitle : UILabel!
-    @IBOutlet var filterValue : UISlider!
-    @IBOutlet var filterAlpha : UISlider!
-    @IBOutlet var valueLow : UILabel!
-    @IBOutlet var valueHigh : UILabel!
-    @IBOutlet var alphaLow : UILabel!
-    @IBOutlet var alphaHigh : UILabel!
+    @IBOutlet var filterValue : UISegmentedControl!
+    @IBOutlet var alphaTitle : UILabel!
+    @IBOutlet var alphaValue : UISegmentedControl!
     @IBOutlet var repeatOption : UISegmentedControl!
-    @IBOutlet var repeatTitle : UILabel!
 
     var globals = Shared.sharedInstance
     var store = StoreManager.sharedInstance
@@ -37,10 +70,11 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
         notificationCenter.addObserver(self, selector: #selector(restoreSucceeded), name: NSNotification.Name(rawValue: kInAppRestoreNotification), object: nil)
         notificationCenter.addObserver(self, selector: #selector(restoreFailed), name: NSNotification.Name(rawValue: kInAppRestoreFailNotification), object: nil)
         notificationCenter.addObserver(self, selector: #selector(purchaseFailed), name: NSNotification.Name(rawValue: kInAppPurchaseFailNotification), object: nil)
-        notificationCenter.addObserver(self, selector: #selector(setFilterToNone), name: NSNotification.Name(rawValue: kNoneFilterNotification), object: nil)
+       // notificationCenter.addObserver(self, selector: #selector(setFilterToNone), name: NSNotification.Name(rawValue: kNoneFilterNotification), object: nil)
 
         sendButton?.layer.cornerRadius = 8.0
         getPicButton?.layer.cornerRadius = 8.0
+        previewView.delegate = self
     }
 
     func restoreSucceeded(notification: NSNotification) {
@@ -268,47 +302,50 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
    }
 
     @IBAction func changeFilterValue(slider : UISlider) {
-        self.previewView.filterImage(filter: ImageFilterType.fromInt(filterIndex: filters.selectedSegmentIndex), value: Int(filterValue.value), alpha: calcAlpha(), repeatAnimation: repeatOption.selectedSegmentIndex == 1)
+        self.previewView.filterImage(settings: getSettings())
     }
 
-    @IBAction func changeRepeatValue(repeatSwitch : UISwitch) {
-        self.previewView.filterImage(filter: ImageFilterType.fromInt(filterIndex: filters.selectedSegmentIndex), value: Int(filterValue.value), alpha: calcAlpha(), repeatAnimation: repeatSwitch.isOn)
+    @IBAction func changeRepeatValue(repeatSwitch : UISegmentedControl) {
+        self.previewView.filterImage(settings: getSettings())
+    }
+
+    @IBAction func changeOpacity(opacity : UISegmentedControl) {
+         self.previewView.filterImage(settings: getSettings())
     }
 
     func setFilterTo(filterType : ImageFilterType) {
         switch filterType {
         case .Flash:
-            valueLow.text = "Slow"
-            valueHigh.text = "Fast"
-            filterValue.value = 6
-            filterAlpha.value = 0.9
+            filterValue.selectedSegmentIndex = 2
+            alphaValue.selectedSegmentIndex = 1
         case .Blinds:
-            valueLow.text = "Small"
-            valueHigh.text = "Big"
-            filterValue.value = 14
-            filterAlpha.value = 0.9
+            filterValue.selectedSegmentIndex = 2
+            alphaValue.selectedSegmentIndex = 1
         case .Fade:
-            valueLow.text = "Slow"
-            valueHigh.text = "Fast"
-            filterValue.value = 6
-            filterAlpha.value = 0.9
+            filterValue.selectedSegmentIndex = 2
+            alphaValue.selectedSegmentIndex = 1
         default:
             break
         }
         setUIMode(previewOnly: false, completion: nil)
-        self.previewView.filterImage(filter: filterType, value: Int(filterValue.value), alpha: calcAlpha(), repeatAnimation: repeatOption.selectedSegmentIndex == 1)
-    }
-
-    func setFilterToNone() {
-        filters.selectedSegmentIndex = 0
-        setFilterTo(filterType: .None)
+        self.previewView.filterImage(settings: getSettings())
     }
 
     func calcAlpha() -> CGFloat {
-        return CGFloat(filterAlpha.value)
+        let alpha = CGFloat(alphaValue.selectedSegmentIndex + 1)/CGFloat(alphaValue.numberOfSegments)
+        return alpha
     }
 
     // MARK: Convenience Methods -------------------------------------------------------------------------------------------------
+
+    func getSettings() -> SettingsObject {
+        let settings = SettingsObject()
+        settings.filterType = ImageFilterType.fromInt(filterIndex: self.filters.selectedSegmentIndex)
+        settings.setDuration(selectedSegment: filterValue.selectedSegmentIndex)
+        settings.setAlpha(selectedSegment: alphaValue.selectedSegmentIndex)
+        settings.doRepeat = (repeatOption.selectedSegmentIndex == 1)
+        return settings
+    }
 
     // Hide controls when in preivew mode, or when copact size
     private var isPreview = false
@@ -320,16 +357,10 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
             self.filterTitle.isHidden = previewStyle
             let filtersHidden = (self.filters.selectedSegmentIndex == 0) ? true : previewStyle
             self.filterValue.isHidden = filtersHidden
-            self.valueLow.isHidden = filtersHidden
-            self.valueHigh.isHidden = filtersHidden
-            self.filterAlpha.isHidden = filtersHidden
-            self.alphaLow.isHidden = filtersHidden
-            self.alphaHigh.isHidden = filtersHidden
-            self.repeatTitle.isHidden = filtersHidden
+             self.alphaValue.isHidden = filtersHidden
+            self.alphaTitle.isHidden = filtersHidden
             self.repeatOption.isHidden = filtersHidden
             self.sendButton.isHidden = previewOnly
-           // print("icon: \(self.appIcon.frame), filtersHidden:\(filtersHidden)")
-           // self.view.bringSubview(toFront: self.appIcon)
             completion?()
         }
     }

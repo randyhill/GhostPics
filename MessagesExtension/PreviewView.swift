@@ -8,18 +8,17 @@
 
 import UIKit
 
-let kNoneFilterNotification = "kNoneFilterNotification"
+//let kNoneFilterNotification = "kNoneFilterNotification"
 
 class PreviewView : UIView {
-    private var _animation : AnimationClass?
+    private var animation : AnimationClass?
     private var _baseImage : UIImage?
-    private var _runAgain : UIButton?
+    private var runAgain : UIButton?
 
     var image : UIImage {
         get {
-            _animation = AnimationClass(baseImage: _baseImage!, filterType: .None, value: 0, alpha: 1.0, repeatAnimation: false)
-            return _animation!.asImage()!
-            //            return _animation!.getImage(filter: .None, value: 0, alpha: 1.0, repeatAnimation: false)
+            animation = AnimationClass(baseImage: _baseImage!, settings: SettingsObject())
+            return animation!.asImage()!
         }
     }
 
@@ -28,10 +27,10 @@ class PreviewView : UIView {
     var textView = UITextView()
     var activityView = UIActivityIndicatorView()
     var progressBar = UIProgressView()
+    var delegate : SettingsProtocol?
 
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-       // _image = ImageContainer(image: UIImage(named: "rounded ghost")!)
         textView.font = UIFont.boldSystemFont(ofSize: 20.0)
         textView.backgroundColor = UIColor(red: 230/255.0, green: 230/255.0, blue: 230/255.0, alpha: 1.0)
 
@@ -39,19 +38,24 @@ class PreviewView : UIView {
 //        self.layer.borderColor = UIColor.black.cgColor
 //        self.layer.borderWidth = 1.0
 
-//        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(pictureTapped))
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(pictureTapped))
+        self.addGestureRecognizer(tapGesture)
+
+        let lineView = UIView(frame: CGRect(x: 0, y: 0, width: self.frame.width, height: 2))
+        lineView.backgroundColor = UIColor.black
+        self.addSubview(lineView)
     }
 
     func initFromData(data : NSData) {
-        _animation = AnimationClass(data: data)
-        self.setImage(newImage: _animation!.asImage()!)
-        if !_animation!.repeatAnimation {
+        animation = AnimationClass(data: data)
+        self.setImage(newImage: animation!.asImage()!)
+        if !animation!.repeatAnimation {
 
         }
     }
 
     func asData() -> NSData? {
-        return _animation!.asData()
+        return animation!.asData()
     }
 
     func clearViews() {
@@ -94,7 +98,7 @@ class PreviewView : UIView {
             self._baseImage = newImage
             self.clearViews()
             self.addSubview(self.imageView)
-            self._animation = AnimationClass(baseImage: newImage, filterType: .None, value: 0, alpha: 1.0, repeatAnimation: false)
+            self.animation = AnimationClass(baseImage: newImage, settings: SettingsObject())
             self.sizeImageView()
             self.imageView.image = newImage
         }
@@ -103,7 +107,7 @@ class PreviewView : UIView {
     func sizeImageView() {
         // Start with image view frame size, and resize to be proportionate to image.
         // Pick the dimension that will fit within image view frame, and shrink to that size.
-        if let size = _animation?.size {
+        if let size = animation?.size {
             self.imageView.frame = CGRect(x: 0, y: 0, width: self.frame.width, height: self.frame.height)
             let picProportion = size.height/size.width
             let newWidth = self.frame.height / picProportion
@@ -118,23 +122,36 @@ class PreviewView : UIView {
         }
     }
 
-    func filterImage(filter : ImageFilterType, value : Int, alpha: CGFloat, repeatAnimation: Bool) {
-        _animation = AnimationClass(baseImage: _baseImage!, filterType: filter, value: value, alpha: alpha, repeatAnimation: repeatAnimation)
-        runAnimation()
+    func filterImage(settings: SettingsObject) {
+        self.runAgain?.removeFromSuperview()
+        self.runAgain = nil
+        if settings.filterType == .None {
+            self.imageView.image = self.animation?.baseImage(alpha: 1.0)
+        } else {
+            runAnimation(settings: settings)
+        }
     }
 
-    func runAnimation() {
+    func runAnimation(settings: SettingsObject) {
         DispatchQueue.main.async {
-            self._runAgain?.removeFromSuperview()
-            self._runAgain = nil
-            if let filteredImage = self._animation?.asImage() {
-                self.imageView.image = filteredImage
-                if !self._animation!.repeatAnimation && self._animation!.type != .None {
-                    // clean up image in a few seconds
-                    Timer.scheduledTimer(withTimeInterval: 2.0, repeats: false, block: { (timer) in
-                        self.imageView.image = nil
-                        self.createTapToRunButton()
-                    })
+            // Clear view before showing animation
+            self.runAgain?.removeFromSuperview()
+            self.runAgain = nil
+            self.imageView.image = nil
+            self.animation = AnimationClass(baseImage: self._baseImage!, settings: settings)
+
+            // Now show animation after a short delay to show clear view
+            Timer.scheduledTimer(withTimeInterval: 1.0, repeats: false) { (timer) in
+                if let filteredImage = self.animation?.asImage() {
+                    self.imageView.image = filteredImage
+                    if !self.animation!.repeatAnimation {
+                        // clean up image in a few seconds
+                        Timer.scheduledTimer(withTimeInterval: settings.duration, repeats: false, block: { (timer) in
+                            self.imageView.image = nil
+                            self.imageView.image = self.animation?.baseImage(alpha: 1.0)
+                            self.createTapToRunButton()
+                        })
+                    }
                 }
             }
         }
@@ -144,18 +161,21 @@ class PreviewView : UIView {
         let buttonWidth : CGFloat = 160
         let buttonHeight : CGFloat = 28
         let centerFrame = CGRect(x: (self.frame.width - buttonWidth)/2, y: (self.frame.height - buttonHeight)/2, width: buttonWidth, height: buttonHeight)
-        self._runAgain = UIButton(frame: centerFrame)
-        self._runAgain?.backgroundColor = UIColor.black
-        self._runAgain?.setTitle("Tap to run again", for: .normal)
-        self._runAgain?.setTitleColor(UIColor.white, for: .normal)
-        self._runAgain?.layer.cornerRadius = 8.0
-        self._runAgain?.addTarget(self, action: #selector(self.pictureTapped), for: .touchUpInside)
-        self.addSubview(self._runAgain!)
+        self.runAgain?.removeFromSuperview()
+        self.runAgain = nil
+        self.runAgain = UIButton(frame: centerFrame)
+        self.runAgain?.backgroundColor = UIColor.black
+        self.runAgain?.setTitle("Tap to run again", for: .normal)
+        self.runAgain?.setTitleColor(UIColor.white, for: .normal)
+        self.runAgain?.layer.cornerRadius = 8.0
+        self.runAgain?.addTarget(self, action: #selector(self.pictureTapped), for: .touchUpInside)
+        self.addSubview(self.runAgain!)
     }
 
     func pictureTapped() {
-        Timer.scheduledTimer(withTimeInterval: 1.0, repeats: false) { (timer) in
-            self.runAnimation()
+        let settings = self.delegate!.getSettings()
+        if settings.filterType != .None {
+            self.runAnimation(settings: settings)
         }
     }
 
