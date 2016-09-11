@@ -13,6 +13,7 @@
 		D85AE0181D824879003634B3 /* GhostIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = D85AE0171D824879003634B3 /* GhostIcon.png */; };
 		D860DB3F1D7A3EFF001DEA75 /* rounded ghost.png in Resources */ = {isa = PBXBuildFile; fileRef = D860DB3B1D7A3E9A001DEA75 /* rounded ghost.png */; };
 		D860DB401D7A3F05001DEA75 /* flat ghost.jpg in Resources */ = {isa = PBXBuildFile; fileRef = D860DB3A1D7A3E9A001DEA75 /* flat ghost.jpg */; };
+		D8792D6A1D847022001676A7 /* OptionsButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8792D691D847022001676A7 /* OptionsButton.swift */; };
 		D8855BC91D79E8C5009C33B2 /* PreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8855BC81D79E8C5009C33B2 /* PreviewView.swift */; };
 		D8B278241D78CBD100B8AC25 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D8B278231D78CBD100B8AC25 /* Assets.xcassets */; };
 		D8B2782B1D78CBD100B8AC25 /* MessagesExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = D8B2782A1D78CBD100B8AC25 /* MessagesExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -55,6 +56,7 @@
 		D85AE0171D824879003634B3 /* GhostIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = GhostIcon.png; sourceTree = "<group>"; };
 		D860DB3A1D7A3E9A001DEA75 /* flat ghost.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = "flat ghost.jpg"; path = "Images/flat ghost.jpg"; sourceTree = SOURCE_ROOT; };
 		D860DB3B1D7A3E9A001DEA75 /* rounded ghost.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "rounded ghost.png"; path = "Images/rounded ghost.png"; sourceTree = SOURCE_ROOT; };
+		D8792D691D847022001676A7 /* OptionsButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OptionsButton.swift; sourceTree = "<group>"; };
 		D8855BC81D79E8C5009C33B2 /* PreviewView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreviewView.swift; sourceTree = "<group>"; };
 		D8B278201D78CBD100B8AC25 /* GhostPics.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GhostPics.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D8B278231D78CBD100B8AC25 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -89,6 +91,7 @@
 				D8B278321D78CBD100B8AC25 /* MessagesViewController.swift */,
 				D8855BC81D79E8C5009C33B2 /* PreviewView.swift */,
 				D81695E91D7F5392001C0B5F /* AnimationFileClasses.swift */,
+				D8792D691D847022001676A7 /* OptionsButton.swift */,
 			);
 			name = UI;
 			sourceTree = "<group>";
@@ -266,6 +269,7 @@
 				D8B278451D78CC3E00B8AC25 /* ServerManager.swift in Sources */,
 				D81695F01D7F9C21001C0B5F /* StoreManager.swift in Sources */,
 				D81695EC1D7F971B001C0B5F /* Shared.swift in Sources */,
+				D8792D6A1D847022001676A7 /* OptionsButton.swift in Sources */,
 				D8B278331D78CBD100B8AC25 /* MessagesViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

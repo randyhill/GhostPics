@@ -40,60 +40,79 @@ struct AnimationHeader {
     var headerTag = "FILT"
     var checkSum : Double = 0.0
     var type : ImageFilterType = .None
-    var value : Int
     var alpha : CGFloat
     var duration : Double = 2.0
-    var repeatAnimation = false
+    var doRepeat = false
+    var blindsSize : CGFloat = 0.1
     var imageSize  = 0
 
-    init(type : ImageFilterType, duration : Double, size: Int, value: Int, alpha: CGFloat, repeatAnimation: Bool) {
+    init(type : ImageFilterType, duration : Double, size: Int, blindsSize: CGFloat, alpha: CGFloat, doRepeat: Bool) {
         self.type = type
         self.duration = duration
         self.imageSize = size
-        self.value = value
+        self.blindsSize = blindsSize
         self.alpha = alpha
-        self.repeatAnimation = repeatAnimation
+        self.doRepeat = doRepeat
         self.checkSum = calcCheckSum()
-        print("imagesize: \(self.imageSize)")
+    }
+
+    init(settings: SettingsObject, imageSize : Int) {
+        self.type = settings.filterType
+        self.duration = settings.duration
+        self.imageSize = imageSize
+        self.blindsSize = settings.blindsSize
+        self.alpha = settings.alpha
+        self.doRepeat = settings.doRepeat
+        self.checkSum = calcCheckSum()
     }
 
     func calcCheckSum() -> Double {
-        return Double(type.rawValue + imageSize + value) + duration + Double(alpha)
+        return Double(type.rawValue + imageSize) + duration + Double(alpha + blindsSize)
     }
 
     func printIt() {
         print("Tag: \(headerTag), checkSum: \(checkSum), type: \(type), size: \(imageSize)")
+    }
+
+    func asSettings() -> SettingsObject {
+        let settings = SettingsObject()
+        settings.filterType = type
+        settings.alpha = alpha
+        settings.duration = duration
+        settings.blindsSize = blindsSize
+        settings.duration = duration
+        settings.doRepeat = doRepeat
+        return settings
     }
 }
 
 // MARK: Animation Class -------------------------------------------------------------------------------------------------
 class AnimationClass {
     internal var _images = [UIImage]()
-    internal var _duration : Double = 2.0
     internal var _baseImage : UIImage?
-    var type : ImageFilterType = .None
-    var value = 0
-    var alpha : CGFloat = 0.0
-    var repeatAnimation = false
+    var settings = SettingsObject()
 
-    var size : CGSize {
+    var size : CGSize? {
         get {
-            return _baseImage!.size
+            return _baseImage?.size
+        }
+    }
+
+    var doRepeat : Bool {
+        get {
+            return settings.doRepeat
         }
     }
 
     init(baseImage: UIImage, settings: SettingsObject) {
-        self.type = settings.filterType
-        self._duration = settings.duration
-        self.alpha = settings.alpha
+        self.settings = settings
         self._baseImage = baseImage
-        self.repeatAnimation = settings.doRepeat
-        createImages(baseImage: baseImage, filterType: settings.filterType, value: 0, alpha: settings.alpha, repeatAnimation: self.repeatAnimation)
+        createImages(baseImage: baseImage, settings: settings)
     }
 
     init(data : NSData) {
         // Get header
-        var header = AnimationHeader(type: .None, duration: 0.0, size: 0, value: 0, alpha: 0.0, repeatAnimation: false)
+        var header = AnimationHeader(type: .None, duration: 0.0, size: 0, blindsSize: 0.1, alpha: 0.0, doRepeat: false)
         let headerSize = MemoryLayout<AnimationHeader>.size
         data.getBytes(&header, length: headerSize)
 
@@ -105,19 +124,18 @@ class AnimationClass {
             print("Failed type check")
             return
         }
-        type = header.type
-        _duration = header.duration
+        settings = header.asSettings()
 
         _images.removeAll()
         let subData = data.subdata(with: NSMakeRange(headerSize, header.imageSize))
         if let image = UIImage(data: subData) {
-            createImages(baseImage: image, filterType: header.type, value: header.value, alpha: header.alpha, repeatAnimation: self.repeatAnimation)
+            createImages(baseImage: image, settings: header.asSettings())
         }
     }
 
     func asData() -> NSData? {
         if let imageData = UIImageJPEGRepresentation(_baseImage!, 1.0) {
-            var header = AnimationHeader(type: type, duration: _duration, size: imageData.count, value: value, alpha: alpha, repeatAnimation: self.repeatAnimation)
+            var header = AnimationHeader(settings: settings, imageSize: imageData.count)
             let headerData = encode(value: &header)
             let data = NSMutableData(data: headerData as Data)
             data.append(imageData)
@@ -158,27 +176,28 @@ class AnimationClass {
         if _images.count == 0 {
             return _baseImage
         }
-        return UIImage.animatedImage(with: _images, duration: _duration)
+        return UIImage.animatedImage(with: _images, duration: settings.duration)
     }
 
-    func createImages(baseImage: UIImage, filterType: ImageFilterType, value: Int, alpha: CGFloat, repeatAnimation: Bool) {
-        switch type {
+    func createImages(baseImage: UIImage, settings: SettingsObject) {
+        self._baseImage = baseImage
+        
+        switch settings.filterType {
         case .Blinds:
-            blindsAnimation(baseImage: baseImage, value: 10, alpha: alpha)
+            blindsAnimation(baseImage: baseImage, settings: settings)
         case .Flash:
-            flashAnimation(baseImage: baseImage, value: 4, alpha: alpha)
+            flashAnimation(baseImage: baseImage,  settings: settings)
         case .Fade:
-            fadeAnimation(baseImage: baseImage, value: 4, alpha: alpha)
+            fadeAnimation(baseImage: baseImage,  settings: settings)
         default:
-            baseAnimation(baseImage: baseImage, value: value, alpha: alpha)
+            baseAnimation(baseImage: baseImage,  settings: settings)
         }
-        if type != .None, let image = clearImage(baseImage: baseImage) {
-            let duration = (Int(6 - _duration))
-            print(duration)
-            for _ in 0...duration {
-                _images.append(image)
-            }
-         }
+//        if settings.filterType != .None, let image = clearImage(baseImage: baseImage) {
+//            let duration = (Int(5 - settings.duration))
+//            for _ in 0...duration {
+//                _images.append(image)
+//            }
+//         }
     }
 
     private func clearImage(baseImage: UIImage) -> UIImage? {
@@ -199,39 +218,41 @@ class AnimationClass {
     }
 
     // MARK: Animations -------------------------------------------------------------------------------------------------
-    private func baseAnimation(baseImage: UIImage, value: Int, alpha: CGFloat) {
+    private func baseAnimation(baseImage: UIImage, settings: SettingsObject) {
         _images.append(baseImage)
     }
 
-    private func flashAnimation(baseImage: UIImage, value: Int, alpha: CGFloat) {
-        let color = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: alpha)
-
-        // Create background
-        UIGraphicsBeginImageContext(baseImage.size)
-        if let context = UIGraphicsGetCurrentContext() {
-            UIGraphicsPushContext(context)
-            baseImage.draw(at: CGPoint(x: 0, y: 0))
-            let rectPath = UIBezierPath(rect: CGRect(origin: CGPoint(x: 0, y:0), size: baseImage.size))
-            color.setFill()
-            rectPath.fill()
-            UIGraphicsPopContext()
-        }
-        guard let bgImage = UIGraphicsGetImageFromCurrentImageContext() else {
-            UIGraphicsEndImageContext()
-            return
-        }
-        UIGraphicsEndImageContext()
+    private func flashAnimation(baseImage: UIImage, settings: SettingsObject) {
+//        let color = UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: settings.alpha)
+//
+//        // Create background
+//        UIGraphicsBeginImageContext(baseImage.size)
+//        if let context = UIGraphicsGetCurrentContext() {
+//            UIGraphicsPushContext(context)
+//            baseImage.draw(at: CGPoint(x: 0, y: 0))
+//            let rectPath = UIBezierPath(rect: CGRect(origin: CGPoint(x: 0, y:0), size: baseImage.size))
+//            color.setFill()
+//            rectPath.fill()
+//            UIGraphicsPopContext()
+//        }
+//        guard let bgImage = UIGraphicsGetImageFromCurrentImageContext() else {
+//            UIGraphicsEndImageContext()
+//            return
+//        }
+//        UIGraphicsEndImageContext()
 
         // Create animation
-        _images.append(bgImage)
-        _images.append(baseImage)
-        _images.append(bgImage)
+        if let clearImage = self.clearImage(baseImage: baseImage) {
+            _images.append(baseImage)
+            _images.append(clearImage)
+            _images.append(clearImage)
+        }
     }
 
-    private func fadeAnimation(baseImage: UIImage, value: Int, alpha: CGFloat) {
+    private func fadeAnimation(baseImage: UIImage, settings: SettingsObject) {
         // Create array of alpha values for fade progression
         let transitions = 20
-        let startAlpha : CGFloat = 1.0 - alpha
+        let startAlpha : CGFloat = 1.0 - settings.alpha
         let fadeDistance = CGFloat(1.0 - startAlpha)/CGFloat(transitions)
         var fadeValues = [CGFloat]()
         var startFade = startAlpha
@@ -263,34 +284,32 @@ class AnimationClass {
         }
     }
 
-    private func blindsAnimation(baseImage: UIImage, value: Int, alpha: CGFloat) {
-        type = .Blinds
-        //_duration = 1.0
-        let slices = CGFloat(22 - value)
+    private func blindsAnimation(baseImage: UIImage, settings: SettingsObject) {
+        let slices = CGFloat(22 * settings.blindsSize)
         let blindHeight = baseImage.size.height/slices
 
-        if let newImage = createBlindImage(image: baseImage, blindHeight: blindHeight, offset: -blindHeight, slices: CGFloat(value), alpha: alpha) {
+        if let newImage = createBlindImage(image: baseImage, blindHeight: blindHeight, offset: -blindHeight, slices: slices, alpha: settings.alpha) {
             _images += [newImage]
         }
-       if let newImage = createBlindImage(image: baseImage, blindHeight: blindHeight, offset: -3*blindHeight/4, slices: CGFloat(value), alpha: alpha) {
+       if let newImage = createBlindImage(image: baseImage, blindHeight: blindHeight, offset: -3*blindHeight/4, slices: slices, alpha: settings.alpha) {
             _images += [newImage]
         }
-        if let newImage = createBlindImage(image: baseImage, blindHeight: blindHeight, offset: -blindHeight/2, slices: CGFloat(value), alpha: alpha) {
+        if let newImage = createBlindImage(image: baseImage, blindHeight: blindHeight, offset: -blindHeight/2, slices: slices, alpha: settings.alpha) {
             _images += [newImage]
         }
-        if let newImage = createBlindImage(image: baseImage, blindHeight: blindHeight, offset: -blindHeight/4, slices: CGFloat(value), alpha: alpha) {
+        if let newImage = createBlindImage(image: baseImage, blindHeight: blindHeight, offset: -blindHeight/4, slices: slices, alpha: settings.alpha) {
             _images += [newImage]
         }
-        if let newImage = createBlindImage(image: baseImage, blindHeight: blindHeight, offset: 0, slices: CGFloat(value), alpha: alpha) {
+        if let newImage = createBlindImage(image: baseImage, blindHeight: blindHeight, offset: 0, slices: slices, alpha: settings.alpha) {
             _images += [newImage]
         }
-        if let newImage = createBlindImage(image: baseImage, blindHeight: blindHeight, offset: blindHeight/4, slices: CGFloat(value), alpha: alpha) {
+        if let newImage = createBlindImage(image: baseImage, blindHeight: blindHeight, offset: blindHeight/4, slices: slices, alpha: settings.alpha) {
             _images += [newImage]
         }
-        if let newImage = createBlindImage(image: baseImage, blindHeight: blindHeight, offset: blindHeight/2, slices: CGFloat(value), alpha: alpha) {
+        if let newImage = createBlindImage(image: baseImage, blindHeight: blindHeight, offset: blindHeight/2, slices: slices, alpha: settings.alpha) {
             _images += [newImage]
         }
-        if let newImage = createBlindImage(image: baseImage, blindHeight: blindHeight, offset: 3*blindHeight/4, slices: CGFloat(value), alpha: alpha) {
+        if let newImage = createBlindImage(image: baseImage, blindHeight: blindHeight, offset: 3*blindHeight/4, slices: slices, alpha: settings.alpha) {
             _images += [newImage]
         }
    }

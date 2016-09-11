@@ -34,22 +34,21 @@ class PreviewView : UIView {
         textView.font = UIFont.boldSystemFont(ofSize: 20.0)
         textView.backgroundColor = UIColor(red: 230/255.0, green: 230/255.0, blue: 230/255.0, alpha: 1.0)
 
-        self.backgroundColor = UIColor.white
-//        self.layer.borderColor = UIColor.black.cgColor
-//        self.layer.borderWidth = 1.0
+        self.backgroundColor = Shared.backgroundColor()
+        let lineView = UIView(frame: CGRect(x: 0, y: 0, width: self.frame.width, height: 2))
+        lineView.backgroundColor = UIColor.black
+        self.addSubview(lineView)
+
 
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(pictureTapped))
         self.addGestureRecognizer(tapGesture)
 
-        let lineView = UIView(frame: CGRect(x: 0, y: 0, width: self.frame.width, height: 2))
-        lineView.backgroundColor = UIColor.black
-        self.addSubview(lineView)
     }
 
     func initFromData(data : NSData) {
         animation = AnimationClass(data: data)
         self.setImage(newImage: animation!.asImage()!)
-        if !animation!.repeatAnimation {
+        if !animation!.doRepeat {
 
         }
     }
@@ -144,7 +143,7 @@ class PreviewView : UIView {
             Timer.scheduledTimer(withTimeInterval: 1.0, repeats: false) { (timer) in
                 if let filteredImage = self.animation?.asImage() {
                     self.imageView.image = filteredImage
-                    if !self.animation!.repeatAnimation {
+                    if !self.animation!.doRepeat {
                         // clean up image in a few seconds
                         Timer.scheduledTimer(withTimeInterval: settings.duration, repeats: false, block: { (timer) in
                             self.imageView.image = nil

@@ -15,6 +15,7 @@ class SettingsObject {
     var duration : Double = 2.0
     var alpha : CGFloat = 1.0
     var doRepeat : Bool = false
+    var blindsSize : CGFloat = 0.2
 
     func setAlpha(selectedSegment : Int) {
         switch selectedSegment {
@@ -29,33 +30,51 @@ class SettingsObject {
         }
     }
 
+    func setBlindsSize(selectedSegment : Int) {
+        switch selectedSegment {
+        case 0:
+            blindsSize = 0.4
+        case 1:
+            blindsSize = 0.2
+        case 2:
+            blindsSize = 0.1
+        default:
+            blindsSize = 0.1
+        }
+    }
+
+
     func setDuration(selectedSegment : Int) {
         switch selectedSegment {
         case 0:
-            duration = 1.5
+            duration = 1.0
         case 1:
-            duration = 2.5
+            duration = 2.0
         case 2:
-            duration = 4
+            duration = 3.0
         default:
-            duration = 6
+            duration = 5.0
         }
     }
 }
 
 protocol SettingsProtocol {
     func getSettings() -> SettingsObject
+    func updateSettings()
 }
 
 class MessagesViewController: MSMessagesAppViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, SettingsProtocol {
     @IBOutlet var sendButton : UIButton!
     @IBOutlet var getPicButton : UIButton!
     @IBOutlet var previewView : PreviewView!
-    @IBOutlet var filters : UISegmentedControl!
     @IBOutlet var filterTitle : UILabel!
-    @IBOutlet var filterValue : UISegmentedControl!
-    @IBOutlet var alphaTitle : UILabel!
-    @IBOutlet var alphaValue : UISegmentedControl!
+    @IBOutlet var filters : OptionsButton!
+    @IBOutlet var speedTitle: UILabel!
+    @IBOutlet var speed : OptionsButton!
+    @IBOutlet var opacityTitle : UILabel!
+    @IBOutlet var opacity : OptionsButton!
+    @IBOutlet var blindsTitle : UILabel!
+    @IBOutlet var blinds : OptionsButton!
     @IBOutlet var repeatOption : UISegmentedControl!
 
     var globals = Shared.sharedInstance
@@ -75,6 +94,14 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
         sendButton?.layer.cornerRadius = 8.0
         getPicButton?.layer.cornerRadius = 8.0
         previewView.delegate = self
+        filters.addOptions(titles: ["None", "Flash", "Blinds", "Fade"])
+        filters.delegate = self
+        speed.addOptions(titles: ["Fastest", "Fast", "Medium", "Slow"])
+        speed.delegate = self
+        opacity.addOptions(titles: ["None", "Low", "High"])
+        opacity.delegate = self
+        blinds.addOptions(titles: ["Thin", "Medium", "Thick"])
+        blinds.delegate = self
     }
 
     func restoreSucceeded(notification: NSNotification) {
@@ -316,14 +343,14 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
     func setFilterTo(filterType : ImageFilterType) {
         switch filterType {
         case .Flash:
-            filterValue.selectedSegmentIndex = 2
-            alphaValue.selectedSegmentIndex = 1
+            speed.selectedSegmentIndex = 2
+            opacity.selectedSegmentIndex = 1
         case .Blinds:
-            filterValue.selectedSegmentIndex = 2
-            alphaValue.selectedSegmentIndex = 1
+            speed.selectedSegmentIndex = 2
+            opacity.selectedSegmentIndex = 1
         case .Fade:
-            filterValue.selectedSegmentIndex = 2
-            alphaValue.selectedSegmentIndex = 1
+            speed.selectedSegmentIndex = 2
+            opacity.selectedSegmentIndex = 1
         default:
             break
         }
@@ -331,23 +358,25 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
         self.previewView.filterImage(settings: getSettings())
     }
 
-    func calcAlpha() -> CGFloat {
-        let alpha = CGFloat(alphaValue.selectedSegmentIndex + 1)/CGFloat(alphaValue.numberOfSegments)
-        return alpha
-    }
-
     // MARK: Convenience Methods -------------------------------------------------------------------------------------------------
 
     func getSettings() -> SettingsObject {
         let settings = SettingsObject()
         settings.filterType = ImageFilterType.fromInt(filterIndex: self.filters.selectedSegmentIndex)
-        settings.setDuration(selectedSegment: filterValue.selectedSegmentIndex)
-        settings.setAlpha(selectedSegment: alphaValue.selectedSegmentIndex)
+        settings.setDuration(selectedSegment: speed.selectedSegmentIndex)
+        settings.setAlpha(selectedSegment: opacity.selectedSegmentIndex)
         settings.doRepeat = (repeatOption.selectedSegmentIndex == 1)
+        settings.setBlindsSize(selectedSegment: blinds.selectedSegmentIndex)
         return settings
     }
 
-    // Hide controls when in preivew mode, or when copact size
+    func updateSettings() {
+        self.previewView.filterImage(settings: getSettings())
+        setUIMode(previewOnly: false, completion: nil)
+    }
+
+
+    // Hide controls when in preview mode, or when copact size
     private var isPreview = false
     func setUIMode(previewOnly : Bool, completion: (()->())?) {
         self.isPreview = previewOnly
@@ -355,10 +384,16 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
         DispatchQueue.main.async {
             self.filters.isHidden = previewStyle
             self.filterTitle.isHidden = previewStyle
-            let filtersHidden = (self.filters.selectedSegmentIndex == 0) ? true : previewStyle
-            self.filterValue.isHidden = filtersHidden
-             self.alphaValue.isHidden = filtersHidden
-            self.alphaTitle.isHidden = filtersHidden
+
+            let settings = self.getSettings()
+            let filtersHidden = (settings.filterType == .None) ? true : previewStyle
+            self.speedTitle.isHidden = filtersHidden
+            self.speed.isHidden = filtersHidden
+            self.opacity.isHidden = filtersHidden
+            self.opacityTitle.isHidden = filtersHidden
+            let hideBlinds = (settings.filterType != .Blinds)
+            self.blindsTitle.isHidden = hideBlinds
+            self.blinds.isHidden = hideBlinds
             self.repeatOption.isHidden = filtersHidden
             self.sendButton.isHidden = previewOnly
             completion?()
