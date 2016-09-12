@@ -223,28 +223,12 @@ class AnimationClass {
     }
 
     private func flashAnimation(baseImage: UIImage, settings: SettingsObject) {
-//        let color = UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: settings.alpha)
-//
-//        // Create background
-//        UIGraphicsBeginImageContext(baseImage.size)
-//        if let context = UIGraphicsGetCurrentContext() {
-//            UIGraphicsPushContext(context)
-//            baseImage.draw(at: CGPoint(x: 0, y: 0))
-//            let rectPath = UIBezierPath(rect: CGRect(origin: CGPoint(x: 0, y:0), size: baseImage.size))
-//            color.setFill()
-//            rectPath.fill()
-//            UIGraphicsPopContext()
-//        }
-//        guard let bgImage = UIGraphicsGetImageFromCurrentImageContext() else {
-//            UIGraphicsEndImageContext()
-//            return
-//        }
-//        UIGraphicsEndImageContext()
-
         // Create animation
         if let clearImage = self.clearImage(baseImage: baseImage) {
-            _images.append(baseImage)
-            _images.append(clearImage)
+            // Flash is 1/10 of animation
+            for _ in 1...9 {
+                _images.append(baseImage)
+            }
             _images.append(clearImage)
         }
     }
@@ -263,7 +247,7 @@ class AnimationClass {
 
         // Create faded versions of base image
         for fadeValue in fadeValues {
-            let color = UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: fadeValue)
+            let color =  Shared.backgroundColor(alpha: fadeValue)
 
             // Create background
             UIGraphicsBeginImageContext(baseImage.size)
@@ -281,6 +265,12 @@ class AnimationClass {
             }
             UIGraphicsEndImageContext()
             _images.append(bgImage)
+        }
+        // Clear images 1/5 of fade images
+        if let clearImage = self.clearImage(baseImage: baseImage) {
+            for _ in 1...5 {
+                _images.append(clearImage)
+            }
         }
     }
 

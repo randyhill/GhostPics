@@ -90,7 +90,7 @@ class OptionsButton : UIButton {
         let xOffset = self.frame.origin.x + width < self.superview!.frame.width ? self.frame.origin.x : self.superview!.frame.width - width
         menu?.frame = CGRect(x: xOffset, y: self.frame.origin.y + self.frame.size.height, width: width, height: 28)
         menu?.tintColor = UIColor.black
-        menu?.backgroundColor = Shared.backgroundColor()//UIColor.black
+        menu?.backgroundColor = Shared.backgroundColor(alpha: 1.0)//UIColor.black
        // menu?.setTitleTextAttributes([NSForegroundColorAttributeName: UIColor.white], for: .normal)
         for option in options {
             menu?.insertSegment(withTitle: option, at: menu!.numberOfSegments, animated: false)

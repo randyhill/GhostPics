@@ -34,7 +34,7 @@ class PreviewView : UIView {
         textView.font = UIFont.boldSystemFont(ofSize: 20.0)
         textView.backgroundColor = UIColor(red: 230/255.0, green: 230/255.0, blue: 230/255.0, alpha: 1.0)
 
-        self.backgroundColor = Shared.backgroundColor()
+        self.backgroundColor = Shared.backgroundColor(alpha: 1.0)
 
 
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(pictureTapped))
@@ -165,8 +165,10 @@ class PreviewView : UIView {
                         // clean up image in a few seconds
                         Timer.scheduledTimer(withTimeInterval: settings.duration, repeats: false, block: { (timer) in
                             self.imageView.image = nil
-                            self.imageView.image = self.animation?.baseImage(alpha: 1.0)
-                            self.createTapToRunButton()
+                            Timer.scheduledTimer(withTimeInterval: 1.0, repeats: false, block: { (timer) in
+                                self.imageView.image = self.animation?.baseImage(alpha: 1.0)
+                                self.createTapToRunButton()
+                            })
                         })
                     }
                 }

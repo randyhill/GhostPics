@@ -47,13 +47,13 @@ class SettingsObject {
     func setDuration(selectedSegment : Int) {
         switch selectedSegment {
         case 0:
-            duration = 1.0
+            duration = 0.3
         case 1:
-            duration = 2.0
+            duration = 1.0
         case 2:
-            duration = 3.0
+            duration = 2.0
         default:
-            duration = 5.0
+            duration = 4.0
         }
     }
 }
@@ -71,16 +71,15 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
     @IBOutlet var filterType : OptionsButton!
     @IBOutlet var speedTitle: UILabel!
     @IBOutlet var speed : OptionsButton!
-    @IBOutlet var opacityTitle : UILabel!
-    @IBOutlet var opacity : OptionsButton!
     @IBOutlet var blindsTitle : UILabel!
     @IBOutlet var blinds : OptionsButton!
     @IBOutlet var repeatOption : UISegmentedControl!
+    var fullScreenButton = UIButton()
+    let fsButtonColor = UIColor(red: 0x29/255.0, green: 0x80/255.0, blue: 0xB9/255.0, alpha: 1.0)
 
     var globals = Shared.sharedInstance
     var store = StoreManager.sharedInstance
     var inPreviewMode = false
-   // var lineView = UIView()
 
     // MARK: View Methods -------------------------------------------------------------------------------------------------
     override func viewDidLoad() {
@@ -91,7 +90,6 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
         notificationCenter.addObserver(self, selector: #selector(restoreSucceeded), name: NSNotification.Name(rawValue: kInAppRestoreNotification), object: nil)
         notificationCenter.addObserver(self, selector: #selector(restoreFailed), name: NSNotification.Name(rawValue: kInAppRestoreFailNotification), object: nil)
         notificationCenter.addObserver(self, selector: #selector(purchaseFailed), name: NSNotification.Name(rawValue: kInAppPurchaseFailNotification), object: nil)
-       // notificationCenter.addObserver(self, selector: #selector(setFilterToNone), name: NSNotification.Name(rawValue: kNoneFilterNotification), object: nil)
 
         sendButton?.layer.cornerRadius = 8.0
         getPicButton?.layer.cornerRadius = 8.0
@@ -100,14 +98,15 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
         filterType.delegate = self
         speed.addOptions(titles: ["Fastest", "Fast", "Medium", "Slow"])
         speed.delegate = self
-        opacity.addOptions(titles: ["None", "Low", "High"])
-        opacity.delegate = self
         blinds.addOptions(titles: ["Thin", "Medium", "Thick"])
         blinds.delegate = self
 
-      //   lineView.backgroundColor = UIColor.black
-     //   self.view.addSubview(lineView)
-
+        fullScreenButton.backgroundColor = fsButtonColor
+        fullScreenButton.layer.cornerRadius = 8.0
+        fullScreenButton.setTitle("Get Started", for: .normal)
+        fullScreenButton.setTitleColor(UIColor.white, for: .normal)
+        fullScreenButton.addTarget(self, action: #selector(self.makeFullScreen), for: .touchDown)
+        self.view.addSubview(fullScreenButton)
     }
 
     override func didReceiveMemoryWarning() {
@@ -117,13 +116,19 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-       // setUIMode(previewOnly: true, completion: nil)
+        let fsWidth : CGFloat = 120.0
+        let inset : CGFloat = 4.0
+        fullScreenButton.frame = CGRect(x: self.view.frame.width - fsWidth - inset, y: inset, width: fsWidth, height: 30.0)
     }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
          updateView(to: self.presentationStyle)
    }
+
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
 
     // MARK: IAP Methods -------------------------------------------------------------------------------------------------
     func restoreSucceeded(notification: NSNotification) {
@@ -138,12 +143,12 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
         self.showAlert(title: "GhostPics Activated", message: "Your purchase was unable to be completed!")
     }
 
-
     // MARK: Conversation Methods -------------------------------------------------------------------------------------------------
+
+    // Called when the extension is about to move from the inactive to active state.
+    // This will happen when the extension is about to present UI.
+    // Use this method to configure the extension and restore previously stored state.
     override func willBecomeActive(with conversation: MSConversation) {
-        // Called when the extension is about to move from the inactive to active state.
-        // This will happen when the extension is about to present UI.
-        // Use this method to configure the extension and restore previously stored state.
 
         // We are never in preview mode unless we get an image that we didn't send
         inPreviewMode = false
@@ -176,39 +181,33 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
         }
     }
 
-    override func didResignActive(with conversation: MSConversation) {
-        // Called when the extension is about to move from the active to inactive state.
-        // This will happen when the user dissmises the extension, changes to a different
-        // conversation or quits Messages.
-
-        // Use this method to release shared resources, save user data, invalidate timers,
-        // and store enough state information to restore your extension to its current state
-        // in case it is terminated later.
+    // Called when the extension is about to move from the active to inactive state.
+    // This will happen when the user dissmises the extension, changes to a different
+    // conversation or quits Messages.
+    // Use this method to release shared resources, save user data, invalidate timers,
+    // and store enough state information to restore your extension to its current state
+    // in case it is terminated later.
+   override func didResignActive(with conversation: MSConversation) {
         globals.save()
     }
 
+    // Called when a message arrives that was generated by another instance of this
+    // extension on a remote device.
     override func didReceive(_ message: MSMessage, conversation: MSConversation) {
-        // Called when a message arrives that was generated by another instance of this
-        // extension on a remote device.
-
-
     }
 
+    // Called when the user taps the send button.
     override func didStartSending(_ message: MSMessage, conversation: MSConversation) {
-        // Called when the user taps the send button.
     }
 
+    // Called when the user deletes the message without sending it.
+    // Use this to clean up state related to the deleted message.
     override func didCancelSending(_ message: MSMessage, conversation: MSConversation) {
-        // Called when the user deletes the message without sending it.
-
-        // Use this to clean up state related to the deleted message.
     }
 
+    // Called before the extension transitions to a new presentation style.
+    // Use this method to prepare for the change in presentation style.
     override func willTransition(to presentationStyle: MSMessagesAppPresentationStyle) {
-        // Called before the extension transitions to a new presentation style.
-
-        // Use this method to prepare for the change in presentation style.
-        print("will transition: \(presentationStyle)")
     }
 
     override func didTransition(to presentationStyle: MSMessagesAppPresentationStyle) {
@@ -222,10 +221,8 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
         if presentationStyle == .compact {
             previewView.frame.origin.y = sendButton.frame.origin.y + sendButton.frame.height + 8
             previewView.frame.size.height = self.view.frame.height - previewView.frame.origin.y - 8
-          //  lineView.isHidden = true
        } else {
-            //lineView.frame = CGRect(x: 0, y: previewView.frame.origin.y - 1, width: self.view.frame.width, height: 1)
-            //lineView.isHidden = false
+            fullScreenButton.removeFromSuperview()
         }
         setUIMode(completion: nil)
 
@@ -298,15 +295,19 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
         })
     }
 
+    func makeFullScreen(button: UIButton) {
+        requestPresentationStyle(.expanded)
+        button.removeFromSuperview()
+        getPicButton.backgroundColor = fsButtonColor
+    }
+
+    // MARK: Image Pickers -------------------------------------------------------------------------------------------------
+
     @IBAction func pickPhoto(button : UIButton) {
         let picker = UIImagePickerController()
         picker.mediaTypes = [kUTTypeImage as String]//, kUTTypeMovie as String]
         picker.delegate = self
-        if button.tag == 3 {
-            if UIImagePickerController.isSourceTypeAvailable(.camera) {
-                picker.sourceType = .camera
-            }
-        }
+        button.backgroundColor = UIColor.black
         self.present(picker, animated: true, completion: {
             print("presented")
         })
@@ -335,6 +336,8 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
         self.setUIMode(completion: nil)
     }
 
+    // MARK: Filters -------------------------------------------------------------------------------------------------
+
     @IBAction func changeFilter(segs : UISegmentedControl) {
 
         setFilterTo(filterType: ImageFilterType.fromInt(filterIndex: segs.selectedSegmentIndex))
@@ -355,14 +358,11 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
     func setFilterTo(filterType : ImageFilterType) {
         switch filterType {
         case .Flash:
-            speed.selectedSegmentIndex = 2
-            opacity.selectedSegmentIndex = 1
+            speed.selectedSegmentIndex = 1
         case .Blinds:
             speed.selectedSegmentIndex = 2
-            opacity.selectedSegmentIndex = 1
         case .Fade:
             speed.selectedSegmentIndex = 2
-            opacity.selectedSegmentIndex = 1
         default:
             break
         }
@@ -370,13 +370,12 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
         self.previewView.filterImage(settings: getSettings())
     }
 
-    // MARK: Convenience Methods -------------------------------------------------------------------------------------------------
+    // MARK: Settings/UI -------------------------------------------------------------------------------------------------
 
     func getSettings() -> SettingsObject {
         let settings = SettingsObject()
         settings.filterType = ImageFilterType.fromInt(filterIndex: self.filterType.selectedSegmentIndex)
         settings.setDuration(selectedSegment: speed.selectedSegmentIndex)
-        settings.setAlpha(selectedSegment: opacity.selectedSegmentIndex)
         settings.doRepeat = (repeatOption.selectedSegmentIndex == 1)
         settings.setBlindsSize(selectedSegment: blinds.selectedSegmentIndex)
         return settings
@@ -403,8 +402,6 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
             let hideFilterSettings = inCompactStyle || (curFilterType == .None) || previewStyle
             self.speedTitle.isHidden = hideFilterSettings
             self.speed.isHidden = hideFilterSettings
-            self.opacity.isHidden = hideFilterSettings
-            self.opacityTitle.isHidden = hideFilterSettings
             self.repeatOption.isHidden = hideFilterSettings
 
             // Blinds filter settings
