@@ -60,7 +60,7 @@ class SettingsObject {
 
 protocol SettingsProtocol {
     func getSettings() -> SettingsObject
-    func updateSettings()
+    func updateSettings(button: OptionsButton)
 }
 
 class MessagesViewController: MSMessagesAppViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, SettingsProtocol {
@@ -105,8 +105,12 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
         fullScreenButton.layer.cornerRadius = 8.0
         fullScreenButton.setTitle("Get Started", for: .normal)
         fullScreenButton.setTitleColor(UIColor.white, for: .normal)
+        fullScreenButton.titleLabel?.font = UIFont.systemFont(ofSize: 15.0)
         fullScreenButton.addTarget(self, action: #selector(self.makeFullScreen), for: .touchDown)
         self.view.addSubview(fullScreenButton)
+
+        let tap = UITapGestureRecognizer(target: self, action: #selector(viewTapped))
+        self.view.addGestureRecognizer(tap)
     }
 
     override func didReceiveMemoryWarning() {
@@ -301,6 +305,10 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
         getPicButton.backgroundColor = fsButtonColor
     }
 
+    func viewTapped(tap : UITapGestureRecognizer) {
+        OptionsMenu.sharedInstance.destroyMenu()
+    }
+
     // MARK: Image Pickers -------------------------------------------------------------------------------------------------
 
     @IBAction func pickPhoto(button : UIButton) {
@@ -308,6 +316,7 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
         picker.mediaTypes = [kUTTypeImage as String]//, kUTTypeMovie as String]
         picker.delegate = self
         button.backgroundColor = UIColor.black
+        fullScreenButton.removeFromSuperview()
         self.present(picker, animated: true, completion: {
             print("presented")
         })
@@ -339,7 +348,6 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
     // MARK: Filters -------------------------------------------------------------------------------------------------
 
     @IBAction func changeFilter(segs : UISegmentedControl) {
-
         setFilterTo(filterType: ImageFilterType.fromInt(filterIndex: segs.selectedSegmentIndex))
    }
 
@@ -360,7 +368,7 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
         case .Flash:
             speed.selectedSegmentIndex = 1
         case .Blinds:
-            speed.selectedSegmentIndex = 2
+            speed.selectedSegmentIndex = 3
         case .Fade:
             speed.selectedSegmentIndex = 2
         default:
@@ -381,7 +389,13 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
         return settings
     }
 
-    func updateSettings() {
+    func updateSettings(button: OptionsButton) {
+        switch button.tag {
+        case 1:
+            setFilterTo(filterType: ImageFilterType.fromInt(filterIndex: self.filterType.selectedSegmentIndex))
+        default:
+            break
+        }
         self.previewView.filterImage(settings: getSettings())
         setUIMode(completion: nil)
     }

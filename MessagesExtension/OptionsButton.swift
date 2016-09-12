@@ -10,21 +10,20 @@ import UIKit
 
 
 class OptionsButton : UIButton {
-    var options = [String]()
-    var menu : UISegmentedControl?
-    private var selectedOption = 0
     var delegate : SettingsProtocol?
+    private var selectedOption = 0
+    var options = [String]()
 
     var selectedSegmentIndex : Int {
         get {
             return selectedOption
         }
         set(newSelection) {
-            if let segmentControl = menu {
-                selectedOption = newSelection
-                segmentControl.selectedSegmentIndex = newSelection
-                self.setTitleFromIndex()
-            }
+            selectedOption = newSelection
+            setTitleFromIndex()
+//            if let segmentControl = menu {
+//                segmentControl.selectedSegmentIndex = newSelection
+//            }
         }
     }
 
@@ -43,27 +42,6 @@ class OptionsButton : UIButton {
         self.layer.cornerRadius = 8.0
     }
 
-    // MARK: Actions  -------------------------------------------------------------------------------------------------
-    func tapButton() {
-        if menu != nil {
-            destroyMenu()
-        } else {
-            createMenu()
-        }
-    }
-
-    func menuItemSelected() {
-        selectedOption = menu!.selectedSegmentIndex
-        self.setTitleFromIndex()
-        destroyMenu()
-        delegate?.updateSettings()
-    }
-
-    // MARK: Menu -------------------------------------------------------------------------------------------------
-    func addOption(title : String) {
-        options.append(title)
-    }
-
     func addOptions(titles : [String]) {
         options = titles
     }
@@ -73,30 +51,74 @@ class OptionsButton : UIButton {
         self.setTitle(optionText, for: .normal)
     }
 
-    func width() -> CGFloat {
-        let font = UIFont.systemFont(ofSize: 16.0)
+    // MARK: Actions  -------------------------------------------------------------------------------------------------
+    func tapButton() {
+        let optionsMenu = OptionsMenu.sharedInstance
+        if optionsMenu.menu != nil {
+            OptionsMenu.sharedInstance.destroyMenu()
+           if optionsMenu.button != self {
+                 OptionsMenu.sharedInstance.createMenu(options: options, delegate: delegate, button: self, topLeft: CGPoint(x: self.frame.origin.x, y: self.frame.origin.y + self.frame.height) )
+            }
+        } else {
+            OptionsMenu.sharedInstance.createMenu(options: options, delegate: delegate, button: self, topLeft: CGPoint(x: self.frame.origin.x, y: self.frame.origin.y + self.frame.height) )
+        }
+    }
+
+ }
+
+// MARK: Menu -------------------------------------------------------------------------------------------------
+class OptionsMenu {
+    static let sharedInstance = OptionsMenu()
+
+    var menu : UISegmentedControl?
+    var options = [String]()
+    var delegate : SettingsProtocol?
+    var button : OptionsButton?
+
+    @objc func menuItemSelected() {
+        button?.selectedSegmentIndex = menu!.selectedSegmentIndex
+        destroyMenu()
+        delegate?.updateSettings(button: self.button!)
+    }
+
+    func addOptions(titles : [String]) {
+        options = titles
+    }
+
+
+    func width(font: UIFont) -> CGFloat {
         var width : CGFloat = 0
         let textAttributes = [NSFontAttributeName: font]
         for option in options {
             let cg = (option as NSString).size(attributes: textAttributes)
-            width += (cg.width + 12)
+            width += (cg.width + 28)
         }
         return width
     }
 
-    func createMenu() {
+    func createMenu(options : [String], delegate : SettingsProtocol?, button: OptionsButton, topLeft: CGPoint) {
+        self.options = options
+        self.delegate = delegate
+        self.button = button
+
         menu = UISegmentedControl()
-        let width = self.width()
-        let xOffset = self.frame.origin.x + width < self.superview!.frame.width ? self.frame.origin.x : self.superview!.frame.width - width
-        menu?.frame = CGRect(x: xOffset, y: self.frame.origin.y + self.frame.size.height, width: width, height: 28)
+        let font = UIFont.systemFont(ofSize: 18.0)
+        let width = self.width(font: font)
+
+        // Stay on screen
+        var adjustedX = topLeft.x
+        if adjustedX + width > button.superview!.frame.width {
+            adjustedX = button.superview!.frame.width - width
+        }
+        menu?.frame = CGRect(x: adjustedX, y: topLeft.y, width: width, height: 40.0)
         menu?.tintColor = UIColor.black
-        menu?.backgroundColor = Shared.backgroundColor(alpha: 1.0)//UIColor.black
-       // menu?.setTitleTextAttributes([NSForegroundColorAttributeName: UIColor.white], for: .normal)
+        menu?.backgroundColor = UIColor.white
+        menu?.setTitleTextAttributes([NSFontAttributeName: font], for: .normal)
         for option in options {
             menu?.insertSegment(withTitle: option, at: menu!.numberOfSegments, animated: false)
         }
         menu?.addTarget(self, action: #selector(menuItemSelected), for: .valueChanged)
-        self.superview!.addSubview(menu!)
+        button.superview!.addSubview(menu!)
     }
 
     func destroyMenu() {

@@ -70,7 +70,8 @@
                             </label>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="nPE-PO-X1c">
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="28" id="SqM-wp-puP"/>
+                                    <constraint firstAttribute="height" constant="28" id="W8a-SM-eFf"/>
+                                    <constraint firstAttribute="width" constant="151" id="zin-et-Be5"/>
                                 </constraints>
                                 <segments>
                                     <segment title="One Time"/>
@@ -81,7 +82,7 @@
                                     <action selector="changeRepeatValueWithRepeatSwitch:" destination="FX5-3q-7bF" eventType="valueChanged" id="zgW-Uq-0gs"/>
                                 </connections>
                             </segmentedControl>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tJY-Ch-Xan" customClass="OptionsButton" customModule="MessagesExtension" customModuleProvider="target">
+                            <button opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tJY-Ch-Xan" customClass="OptionsButton" customModule="MessagesExtension" customModuleProvider="target">
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="80" id="Md9-yF-FJw"/>
@@ -100,17 +101,17 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hsy-9M-29d" customClass="OptionsButton" customModule="MessagesExtension" customModuleProvider="target">
+                            <button opaque="NO" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hsy-9M-29d" customClass="OptionsButton" customModule="MessagesExtension" customModuleProvider="target">
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="30" id="baf-fE-HyV"/>
-                                    <constraint firstAttribute="width" constant="80" id="pUW-Tj-G3q"/>
+                                    <constraint firstAttribute="width" constant="80" id="4SZ-dj-ZXp"/>
+                                    <constraint firstAttribute="height" constant="30" id="wrc-3B-j9h"/>
                                 </constraints>
                                 <state key="normal" title="Fast">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aY6-6a-cAm" customClass="OptionsButton" customModule="MessagesExtension" customModuleProvider="target">
+                            <button opaque="NO" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aY6-6a-cAm" customClass="OptionsButton" customModule="MessagesExtension" customModuleProvider="target">
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="UYE-lv-K1H"/>
@@ -134,8 +135,8 @@
                         <constraints>
                             <constraint firstItem="aY6-6a-cAm" firstAttribute="leading" secondItem="aJH-G0-W46" secondAttribute="trailing" constant="4" id="1zb-Vx-PdY"/>
                             <constraint firstItem="DGI-Ho-b00" firstAttribute="top" secondItem="SaY-cy-MIG" secondAttribute="bottom" id="2BZ-5U-5SC"/>
+                            <constraint firstItem="aJH-G0-W46" firstAttribute="top" secondItem="nPE-PO-X1c" secondAttribute="bottom" constant="17" id="60m-3m-HQ7"/>
                             <constraint firstItem="PEb-ta-QzN" firstAttribute="leading" secondItem="iQV-Mb-dVQ" secondAttribute="leading" constant="3" id="8Kr-yi-Drg"/>
-                            <constraint firstItem="aJH-G0-W46" firstAttribute="top" secondItem="nPE-PO-X1c" secondAttribute="bottom" constant="17" id="8y4-bk-e5g"/>
                             <constraint firstItem="9CL-gk-ial" firstAttribute="top" secondItem="PEb-ta-QzN" secondAttribute="bottom" constant="20" id="Cg3-BU-ZXi"/>
                             <constraint firstItem="SaY-cy-MIG" firstAttribute="trailing" secondItem="iQV-Mb-dVQ" secondAttribute="trailingMargin" constant="16" id="DL4-My-4Ky"/>
                             <constraint firstItem="21C-f2-rY5" firstAttribute="top" secondItem="eda-mc-3jP" secondAttribute="bottom" constant="9" id="HdS-5r-xlx"/>

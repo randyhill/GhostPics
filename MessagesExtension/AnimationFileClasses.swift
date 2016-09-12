@@ -225,8 +225,8 @@ class AnimationClass {
     private func flashAnimation(baseImage: UIImage, settings: SettingsObject) {
         // Create animation
         if let clearImage = self.clearImage(baseImage: baseImage) {
-            // Flash is 1/10 of animation
-            for _ in 1...9 {
+            // Flash is 1/5 of animation
+            for _ in 1...4 {
                 _images.append(baseImage)
             }
             _images.append(clearImage)
