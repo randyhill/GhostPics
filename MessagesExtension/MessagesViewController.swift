@@ -68,7 +68,7 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
     @IBOutlet var getPicButton : UIButton!
     @IBOutlet var previewView : PreviewView!
     @IBOutlet var filterTitle : UILabel!
-    @IBOutlet var filters : OptionsButton!
+    @IBOutlet var filterType : OptionsButton!
     @IBOutlet var speedTitle: UILabel!
     @IBOutlet var speed : OptionsButton!
     @IBOutlet var opacityTitle : UILabel!
@@ -79,6 +79,8 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
 
     var globals = Shared.sharedInstance
     var store = StoreManager.sharedInstance
+    var inPreviewMode = false
+   // var lineView = UIView()
 
     // MARK: View Methods -------------------------------------------------------------------------------------------------
     override func viewDidLoad() {
@@ -94,16 +96,36 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
         sendButton?.layer.cornerRadius = 8.0
         getPicButton?.layer.cornerRadius = 8.0
         previewView.delegate = self
-        filters.addOptions(titles: ["None", "Flash", "Blinds", "Fade"])
-        filters.delegate = self
+        filterType.addOptions(titles: ["None", "Flash", "Blinds", "Fade"])
+        filterType.delegate = self
         speed.addOptions(titles: ["Fastest", "Fast", "Medium", "Slow"])
         speed.delegate = self
         opacity.addOptions(titles: ["None", "Low", "High"])
         opacity.delegate = self
         blinds.addOptions(titles: ["Thin", "Medium", "Thick"])
         blinds.delegate = self
+
+      //   lineView.backgroundColor = UIColor.black
+     //   self.view.addSubview(lineView)
+
     }
 
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+       // setUIMode(previewOnly: true, completion: nil)
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+         updateView(to: self.presentationStyle)
+   }
+
+    // MARK: IAP Methods -------------------------------------------------------------------------------------------------
     func restoreSucceeded(notification: NSNotification) {
         print("Purchase success")
         globals.activated = true
@@ -116,33 +138,20 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
         self.showAlert(title: "GhostPics Activated", message: "Your purchase was unable to be completed!")
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        //requestPresentationStyle(.expanded)
-        setUIMode(previewOnly: true, completion: nil)
-    }
-
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        updateView(to: self.presentationStyle)
-    }
 
     // MARK: Conversation Methods -------------------------------------------------------------------------------------------------
     override func willBecomeActive(with conversation: MSConversation) {
         // Called when the extension is about to move from the inactive to active state.
         // This will happen when the extension is about to present UI.
-
         // Use this method to configure the extension and restore previously stored state.
+
+        // We are never in preview mode unless we get an image that we didn't send
+        inPreviewMode = false
         if let message = conversation.selectedMessage {
             // Use this method to trigger UI updates in response to the message.
              print(message.url)
             if let url = message.url, conversation.localParticipantIdentifier != message.senderParticipantIdentifier  {
-                self.setUIMode(previewOnly: true, completion: {
+                self.setUIMode(completion: {
                     self.previewView.startActivityFeedback(completed: nil)
                     ServerManager.sharedInstance.fileExists(url: url, completion: { (success) in
                         if success {
@@ -151,6 +160,7 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
                             progress: { (percent) in
                                 self.previewView.setProgress(percent: percent)
                             }, completion: { (imageDataOpt, errorText) in
+                                self.inPreviewMode = true
                                 if let imageData = imageDataOpt {
                                     self.previewView.initFromData(data: imageData as NSData)
                                 } else {
@@ -208,15 +218,16 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
     var viewStyle = MSMessagesAppPresentationStyle.compact
     func updateView(to presentationStyle: MSMessagesAppPresentationStyle) {
         // Called after the extension transitions to a new presentation style.
-        var hideExtraControls = true
         viewStyle = presentationStyle
         if presentationStyle == .compact {
             previewView.frame.origin.y = sendButton.frame.origin.y + sendButton.frame.height + 8
             previewView.frame.size.height = self.view.frame.height - previewView.frame.origin.y - 8
-        } else {
-            hideExtraControls = isPreview
+          //  lineView.isHidden = true
+       } else {
+            //lineView.frame = CGRect(x: 0, y: previewView.frame.origin.y - 1, width: self.view.frame.width, height: 1)
+            //lineView.isHidden = false
         }
-        setUIMode(previewOnly: hideExtraControls, completion: nil)
+        setUIMode(completion: nil)
 
         // Use this method to finalize any behaviors associated with the change in presentation style.
         previewView.sizeImageView()
@@ -258,35 +269,31 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
     func sendGhost() {
         guard let conversation = activeConversation else { fatalError("Expected a conversation") }
 
-        setUIMode(previewOnly: true, completion: {
-            self.previewView.startActivityFeedback(
-                completed: {
-                    let _ = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: false, block: { (timer) in
-                        //DispatchQueue.main.async {
-                            ServerManager.sharedInstance.uploadFile(self.previewView.asData()!,
-                                progress: { (percent) in
-                                    DispatchQueue.main.async {
-                                        self.previewView.setProgress(percent: percent)
+        setUIMode(completion: {
+            self.previewView.startActivityFeedback( completed: {
+                let _ = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: false, block: { (timer) in
+                    ServerManager.sharedInstance.uploadFile(self.previewView.asData()!,
+                    progress: { (percent) in
+                          self.previewView.setProgress(percent: percent)
+                    },
+                    completion: { (fileName) in
+                        if let imageId = fileName {
+                            if let message = self.composeMessage(conversation, image: self.previewView.image, idString: imageId) {
+                                // Add the message to the conversation.
+                                conversation.insert(message) { error in
+                                    if let error = error {
+                                        print(error)
                                     }
-                                }, completion: { (fileName) in
-                                    if let imageId = fileName {
-                                        if let message = self.composeMessage(conversation, image: self.previewView.image, idString: imageId) {
-                                            // Add the message to the conversation.
-                                            conversation.insert(message) { error in
-                                                if let error = error {
-                                                    print(error)
-                                                }
-                                            }
-                                            self.dismiss()
-                                        }
-                                        self.globals.imagesSentCount += 1
-                                        self.globals.save()
-                                    } else {
-                                        self.previewView.setText(message: "Could not prepare image")
-                                    }
-                            })
-                       // }
+                                }
+                                self.dismiss()
+                            }
+                            self.globals.imagesSentCount += 1
+                            self.globals.save()
+                        } else {
+                            self.previewView.setText(message: "Could not prepare image")
+                        }
                     })
+                })
             })
         })
     }
@@ -307,20 +314,25 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
 
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
+            if presentationStyle == .compact {
+                previewView.frame.origin.y = sendButton.frame.origin.y + sendButton.frame.height + 8
+                previewView.frame.size.height = self.view.frame.height - previewView.frame.origin.y - 8
+            }
             self.previewView.setImage(newImage: image)
-            filters.selectedSegmentIndex = 0
+            filterType.selectedSegmentIndex = 0
         }
         picker.dismiss(animated: true) {
             print("dismissed")
         }
-        self.setUIMode(previewOnly: false, completion: nil)
+        self.inPreviewMode = false
+        self.setUIMode(completion: nil)
     }
 
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         picker.dismiss(animated: true) {
             print("dismissed")
         }
-        self.setUIMode(previewOnly: false, completion: nil)
+        self.setUIMode(completion: nil)
     }
 
     @IBAction func changeFilter(segs : UISegmentedControl) {
@@ -354,7 +366,7 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
         default:
             break
         }
-        setUIMode(previewOnly: false, completion: nil)
+        setUIMode(completion: nil)
         self.previewView.filterImage(settings: getSettings())
     }
 
@@ -362,7 +374,7 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
 
     func getSettings() -> SettingsObject {
         let settings = SettingsObject()
-        settings.filterType = ImageFilterType.fromInt(filterIndex: self.filters.selectedSegmentIndex)
+        settings.filterType = ImageFilterType.fromInt(filterIndex: self.filterType.selectedSegmentIndex)
         settings.setDuration(selectedSegment: speed.selectedSegmentIndex)
         settings.setAlpha(selectedSegment: opacity.selectedSegmentIndex)
         settings.doRepeat = (repeatOption.selectedSegmentIndex == 1)
@@ -372,30 +384,36 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
 
     func updateSettings() {
         self.previewView.filterImage(settings: getSettings())
-        setUIMode(previewOnly: false, completion: nil)
+        setUIMode(completion: nil)
     }
 
 
     // Hide controls when in preview mode, or when copact size
-    private var isPreview = false
-    func setUIMode(previewOnly : Bool, completion: (()->())?) {
-        self.isPreview = previewOnly
-        let previewStyle = (viewStyle == .compact) ? true : previewOnly
+    func setUIMode(completion: (()->())?) {
         DispatchQueue.main.async {
-            self.filters.isHidden = previewStyle
-            self.filterTitle.isHidden = previewStyle
+            let inCompactStyle = (self.viewStyle == .compact)
+            let previewStyle = !self.previewView.hasImage() || self.inPreviewMode
+            let curFilterType = self.getSettings().filterType
 
-            let settings = self.getSettings()
-            let filtersHidden = (settings.filterType == .None) ? true : previewStyle
-            self.speedTitle.isHidden = filtersHidden
-            self.speed.isHidden = filtersHidden
-            self.opacity.isHidden = filtersHidden
-            self.opacityTitle.isHidden = filtersHidden
-            let hideBlinds = (settings.filterType != .Blinds)
+            // Filter type
+            self.filterType.isHidden = previewStyle || inCompactStyle
+            self.filterTitle.isHidden = previewStyle || inCompactStyle
+
+            // Filter settings
+            let hideFilterSettings = inCompactStyle || (curFilterType == .None) || previewStyle
+            self.speedTitle.isHidden = hideFilterSettings
+            self.speed.isHidden = hideFilterSettings
+            self.opacity.isHidden = hideFilterSettings
+            self.opacityTitle.isHidden = hideFilterSettings
+            self.repeatOption.isHidden = hideFilterSettings
+
+            // Blinds filter settings
+            let hideBlinds = inCompactStyle || (curFilterType != .Blinds)
             self.blindsTitle.isHidden = hideBlinds
             self.blinds.isHidden = hideBlinds
-            self.repeatOption.isHidden = filtersHidden
-            self.sendButton.isHidden = previewOnly
+
+            // Send button
+            self.sendButton.isHidden = self.inPreviewMode || !self.previewView.hasImage()
             completion?()
         }
     }

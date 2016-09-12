@@ -35,9 +35,6 @@ class PreviewView : UIView {
         textView.backgroundColor = UIColor(red: 230/255.0, green: 230/255.0, blue: 230/255.0, alpha: 1.0)
 
         self.backgroundColor = Shared.backgroundColor()
-        let lineView = UIView(frame: CGRect(x: 0, y: 0, width: self.frame.width, height: 2))
-        lineView.backgroundColor = UIColor.black
-        self.addSubview(lineView)
 
 
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(pictureTapped))
@@ -47,9 +44,18 @@ class PreviewView : UIView {
 
     func initFromData(data : NSData) {
         animation = AnimationClass(data: data)
-        self.setImage(newImage: animation!.asImage()!)
-        if !animation!.doRepeat {
-
+        DispatchQueue.main.async {
+            self.clearViews()
+            self.addSubview(self.imageView)
+            self.sizeImageView()
+            self.imageView.image = self.animation?.asImage()
+            if let settings = self.animation?.settings {
+                if !settings.doRepeat && settings.filterType != .None {
+                    Timer.scheduledTimer(withTimeInterval: self.animation!.settings.duration, repeats: false, block: { (timer) in
+                        self.imageView.image = nil
+                    })
+                }
+            }
         }
     }
 
@@ -63,6 +69,13 @@ class PreviewView : UIView {
         self.stopActivityFeedback()
     }
 
+    func hasImage() -> Bool {
+        if _baseImage == nil {
+            return false
+        }
+        return true
+    }
+
     // MARK: Activity Feedback Methods -------------------------------------------------------------------------------------------------
     func startActivityFeedback(completed: (()->())?) {
         DispatchQueue.main.async {
@@ -74,6 +87,7 @@ class PreviewView : UIView {
             self.activityView.layer.zPosition = 1
 
             self.progressBar.frame = CGRect(x: 0, y: 0, width: self.frame.width, height: 10)
+            self.progressBar.setProgress(0.0, animated: false)
             self.addSubview(self.progressBar)
             completed?()
         }
@@ -83,6 +97,10 @@ class PreviewView : UIView {
         DispatchQueue.main.async {
             self.progressBar.progress = percent
         }
+    }
+
+    func setProgressSync(percent : Float) {
+        self.progressBar.setProgress(percent, animated: true)
     }
 
     func stopActivityFeedback() {

@@ -188,7 +188,7 @@
                         <outlet property="blinds" destination="aY6-6a-cAm" id="1wL-il-XCa"/>
                         <outlet property="blindsTitle" destination="aJH-G0-W46" id="MLx-EA-Xze"/>
                         <outlet property="filterTitle" destination="PEb-ta-QzN" id="MkJ-9w-pBV"/>
-                        <outlet property="filters" destination="tJY-Ch-Xan" id="Vmf-pX-V6u"/>
+                        <outlet property="filterType" destination="tJY-Ch-Xan" id="rtJ-tC-kUt"/>
                         <outlet property="getPicButton" destination="ouj-Cf-FIg" id="RCA-Ie-fQt"/>
                         <outlet property="opacity" destination="8g2-E6-7ua" id="xxo-Zm-6up"/>
                         <outlet property="opacityTitle" destination="Voa-hP-u36" id="gPb-wX-gGd"/>
