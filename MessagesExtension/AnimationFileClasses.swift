@@ -105,9 +105,11 @@ class AnimationClass {
     }
 
     init(baseImage: UIImage, settings: SettingsObject) {
+        print("create animation")
         self.settings = settings
         self._baseImage = baseImage
         createImages(baseImage: baseImage, settings: settings)
+        print("animation created")
     }
 
     init(data : NSData) {
@@ -235,7 +237,7 @@ class AnimationClass {
 
     private func fadeAnimation(baseImage: UIImage, settings: SettingsObject) {
         // Create array of alpha values for fade progression
-        let transitions = 20
+        let transitions = 12
         let startAlpha : CGFloat = 1.0 - settings.alpha
         let fadeDistance = CGFloat(1.0 - startAlpha)/CGFloat(transitions)
         var fadeValues = [CGFloat]()
@@ -266,9 +268,9 @@ class AnimationClass {
             UIGraphicsEndImageContext()
             _images.append(bgImage)
         }
-        // Clear images 1/5 of fade images
+        // Clear images 1/4 of fade images
         if let clearImage = self.clearImage(baseImage: baseImage) {
-            for _ in 1...5 {
+            for _ in 1...2 {
                 _images.append(clearImage)
             }
         }

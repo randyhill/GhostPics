@@ -163,7 +163,8 @@ class PreviewView : UIView {
                     self.imageView.image = filteredImage
                     if !self.animation!.doRepeat {
                         // clean up image in a few seconds
-                        Timer.scheduledTimer(withTimeInterval: settings.duration, repeats: false, block: { (timer) in
+                        let duration = settings.duration * 0.9
+                        Timer.scheduledTimer(withTimeInterval: duration, repeats: false, block: { (timer) in
                             self.imageView.image = nil
                             Timer.scheduledTimer(withTimeInterval: 1.0, repeats: false, block: { (timer) in
                                 self.imageView.image = self.animation?.baseImage(alpha: 1.0)

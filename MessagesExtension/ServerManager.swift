@@ -67,13 +67,13 @@ class ServerManager {
                 if let data = result?.content {
                     return completion(data, nil)
                 } else {
-                    return completion(nil, "That image appears to have expired")
+                    return completion(nil, "That image has vanished")
                 }
             } else {
                 if let error = result?.error {
                     return completion(nil, error.description)
                 } else {
-                    return completion(nil, "That image appears to have expired")
+                    return completion(nil, "That image has vanished")
                 }
             }
         }

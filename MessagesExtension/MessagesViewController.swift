@@ -64,6 +64,7 @@ protocol SettingsProtocol {
 }
 
 class MessagesViewController: MSMessagesAppViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, SettingsProtocol {
+    @IBOutlet var gpIcon : UIImageView!
     @IBOutlet var sendButton : UIButton!
     @IBOutlet var getPicButton : UIButton!
     @IBOutlet var previewView : PreviewView!
@@ -75,11 +76,11 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
     @IBOutlet var blinds : OptionsButton!
     @IBOutlet var repeatOption : UISegmentedControl!
     var fullScreenButton = UIButton()
-    let fsButtonColor = UIColor(red: 0x29/255.0, green: 0x80/255.0, blue: 0xB9/255.0, alpha: 1.0)
 
     var globals = Shared.sharedInstance
     var store = StoreManager.sharedInstance
     var inPreviewMode = false
+    var viewStyle = MSMessagesAppPresentationStyle.compact
 
     // MARK: View Methods -------------------------------------------------------------------------------------------------
     override func viewDidLoad() {
@@ -101,17 +102,26 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
         blinds.addOptions(titles: ["Thin", "Medium", "Thick"])
         blinds.delegate = self
 
-        fullScreenButton.backgroundColor = fsButtonColor
-        fullScreenButton.layer.cornerRadius = 8.0
-        fullScreenButton.setTitle("Get Started", for: .normal)
-        fullScreenButton.setTitleColor(UIColor.white, for: .normal)
-        fullScreenButton.titleLabel?.font = UIFont.systemFont(ofSize: 15.0)
-        fullScreenButton.addTarget(self, action: #selector(self.makeFullScreen), for: .touchDown)
-        self.view.addSubview(fullScreenButton)
+        // Get started button and walkthrough
+        if !Shared.sharedInstance.didWalkthrough {
+            fullScreenButton.backgroundColor = Shared.attentionColor(alpha: 1.0)
+            fullScreenButton.layer.cornerRadius = 8.0
+            fullScreenButton.setTitle("Get Started", for: .normal)
+            fullScreenButton.setTitleColor(UIColor.white, for: .normal)
+            fullScreenButton.titleLabel?.font = UIFont.systemFont(ofSize: 15.0)
+            fullScreenButton.addTarget(self, action: #selector(self.makeFullScreen), for: .touchDown)
+            self.view.addSubview(fullScreenButton)
+        }
 
         let tap = UITapGestureRecognizer(target: self, action: #selector(viewTapped))
         self.view.addGestureRecognizer(tap)
-    }
+
+        let iconTap = UITapGestureRecognizer(target: self, action: #selector(iconTapped))
+        gpIcon.addGestureRecognizer(iconTap)
+        gpIcon.layer.cornerRadius = 8.0
+        gpIcon.layer.masksToBounds = true
+        gpIcon.isUserInteractionEnabled = true
+   }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -123,7 +133,7 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
         let fsWidth : CGFloat = 120.0
         let inset : CGFloat = 4.0
         fullScreenButton.frame = CGRect(x: self.view.frame.width - fsWidth - inset, y: inset, width: fsWidth, height: 30.0)
-    }
+     }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -218,7 +228,6 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
         updateView(to: presentationStyle)
     }
 
-    var viewStyle = MSMessagesAppPresentationStyle.compact
     func updateView(to presentationStyle: MSMessagesAppPresentationStyle) {
         // Called after the extension transitions to a new presentation style.
         viewStyle = presentationStyle
@@ -227,6 +236,11 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
             previewView.frame.size.height = self.view.frame.height - previewView.frame.origin.y - 8
        } else {
             fullScreenButton.removeFromSuperview()
+            if !Shared.sharedInstance.didWalkthrough {
+                Shared.sharedInstance.didWalkthrough = true
+                Shared.sharedInstance.save()
+                showAboutView()
+            }
         }
         setUIMode(completion: nil)
 
@@ -249,7 +263,7 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
         message.shouldExpire = true
 
         let layout = MSMessageTemplateLayout()
-        layout.caption = "I sent you a Ghost Pic! Tap to see it before it expires!"
+        layout.caption = "I sent you a GhostPic! Tap to see it before it vanishes!"
         message.layout = layout
         return message
     }
@@ -302,11 +316,26 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
     func makeFullScreen(button: UIButton) {
         requestPresentationStyle(.expanded)
         button.removeFromSuperview()
-        getPicButton.backgroundColor = fsButtonColor
+        getPicButton.backgroundColor = Shared.attentionColor(alpha: 1.0)
     }
 
     func viewTapped(tap : UITapGestureRecognizer) {
         OptionsMenu.sharedInstance.destroyMenu()
+    }
+
+    func iconTapped(tap : UITapGestureRecognizer) {
+        if viewStyle == MSMessagesAppPresentationStyle.compact {
+            requestPresentationStyle(.expanded)
+        }
+        showAboutView()
+    }
+
+    func showAboutView() {
+        if let about = self.storyboard?.instantiateViewController(withIdentifier: "AboutController") {
+            self.present(about, animated: true, completion: {
+
+            })
+        }
     }
 
     // MARK: Image Pickers -------------------------------------------------------------------------------------------------
@@ -374,8 +403,6 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
         default:
             break
         }
-        setUIMode(completion: nil)
-        self.previewView.filterImage(settings: getSettings())
     }
 
     // MARK: Settings/UI -------------------------------------------------------------------------------------------------
@@ -399,7 +426,6 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
         self.previewView.filterImage(settings: getSettings())
         setUIMode(completion: nil)
     }
-
 
     // Hide controls when in preview mode, or when copact size
     func setUIMode(completion: (()->())?) {

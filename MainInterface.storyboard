@@ -59,15 +59,6 @@
                                     <action selector="sendButton:" destination="FX5-3q-7bF" eventType="touchUpInside" id="9j5-yg-Szx"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="GhostPics" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="21C-f2-rY5">
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="91" id="3MB-Tc-PbY"/>
-                                    <constraint firstAttribute="height" constant="21" id="Ume-Am-tXJ"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" weight="black" pointSize="17"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="nPE-PO-X1c">
                                 <constraints>
                                     <constraint firstAttribute="height" constant="28" id="W8a-SM-eFf"/>
@@ -130,6 +121,12 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="GHP 40.png" translatesAutoresizingMaskIntoConstraints="NO" id="Nut-Tw-emq">
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="40" id="5t7-qO-a46"/>
+                                    <constraint firstAttribute="height" constant="40" id="CIz-eu-A5h"/>
+                                </constraints>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" red="0.90196079019999997" green="0.90196079019999997" blue="0.90196079019999997" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
@@ -137,26 +134,26 @@
                             <constraint firstItem="DGI-Ho-b00" firstAttribute="top" secondItem="SaY-cy-MIG" secondAttribute="bottom" id="2BZ-5U-5SC"/>
                             <constraint firstItem="aJH-G0-W46" firstAttribute="top" secondItem="nPE-PO-X1c" secondAttribute="bottom" constant="17" id="60m-3m-HQ7"/>
                             <constraint firstItem="PEb-ta-QzN" firstAttribute="leading" secondItem="iQV-Mb-dVQ" secondAttribute="leading" constant="3" id="8Kr-yi-Drg"/>
+                            <constraint firstItem="Nut-Tw-emq" firstAttribute="top" secondItem="eda-mc-3jP" secondAttribute="bottom" constant="4" id="Anp-xy-kfY"/>
                             <constraint firstItem="9CL-gk-ial" firstAttribute="top" secondItem="PEb-ta-QzN" secondAttribute="bottom" constant="20" id="Cg3-BU-ZXi"/>
                             <constraint firstItem="SaY-cy-MIG" firstAttribute="trailing" secondItem="iQV-Mb-dVQ" secondAttribute="trailingMargin" constant="16" id="DL4-My-4Ky"/>
-                            <constraint firstItem="21C-f2-rY5" firstAttribute="top" secondItem="eda-mc-3jP" secondAttribute="bottom" constant="9" id="HdS-5r-xlx"/>
+                            <constraint firstItem="Nut-Tw-emq" firstAttribute="leading" secondItem="iQV-Mb-dVQ" secondAttribute="leading" constant="6" id="O03-Qa-yx4"/>
                             <constraint firstItem="aY6-6a-cAm" firstAttribute="top" secondItem="nPE-PO-X1c" secondAttribute="bottom" constant="10" id="OcQ-VH-Y18"/>
                             <constraint firstItem="nPE-PO-X1c" firstAttribute="trailing" secondItem="iQV-Mb-dVQ" secondAttribute="trailingMargin" id="QVy-Yo-LPO"/>
                             <constraint firstItem="hsy-9M-29d" firstAttribute="top" secondItem="tJY-Ch-Xan" secondAttribute="bottom" constant="10" id="bTh-Ez-uPv"/>
                             <constraint firstItem="lFw-rh-pLy" firstAttribute="top" secondItem="eda-mc-3jP" secondAttribute="bottom" constant="4" id="eGG-UR-GV8"/>
-                            <constraint firstItem="21C-f2-rY5" firstAttribute="leading" secondItem="iQV-Mb-dVQ" secondAttribute="leading" constant="6" id="fKg-j8-3rB"/>
                             <constraint firstItem="lFw-rh-pLy" firstAttribute="trailing" secondItem="iQV-Mb-dVQ" secondAttribute="trailingMargin" id="fQm-Bu-KV4"/>
                             <constraint firstItem="tJY-Ch-Xan" firstAttribute="leading" secondItem="PEb-ta-QzN" secondAttribute="trailing" constant="4" id="hBZ-7q-H8k"/>
                             <constraint firstItem="hsy-9M-29d" firstAttribute="leading" secondItem="9CL-gk-ial" secondAttribute="trailing" constant="4" id="iGv-eS-fk9"/>
-                            <constraint firstItem="nPE-PO-X1c" firstAttribute="top" secondItem="lFw-rh-pLy" secondAttribute="bottom" constant="11" id="kvo-09-40L"/>
+                            <constraint firstItem="nPE-PO-X1c" firstAttribute="top" secondItem="lFw-rh-pLy" secondAttribute="bottom" constant="19" id="kvo-09-40L"/>
                             <constraint firstItem="aJH-G0-W46" firstAttribute="leading" secondItem="iQV-Mb-dVQ" secondAttribute="leading" constant="153" id="mCR-2U-4HH"/>
                             <constraint firstItem="9CL-gk-ial" firstAttribute="leading" secondItem="iQV-Mb-dVQ" secondAttribute="leading" constant="10" id="oGs-eX-qLb"/>
-                            <constraint firstItem="tJY-Ch-Xan" firstAttribute="top" secondItem="ouj-Cf-FIg" secondAttribute="bottom" constant="10" id="pNJ-rm-uGD"/>
+                            <constraint firstItem="tJY-Ch-Xan" firstAttribute="top" secondItem="ouj-Cf-FIg" secondAttribute="bottom" constant="18" id="pNJ-rm-uGD"/>
                             <constraint firstItem="SaY-cy-MIG" firstAttribute="top" secondItem="hsy-9M-29d" secondAttribute="bottom" constant="8" id="u2H-lU-pNi"/>
                             <constraint firstItem="ouj-Cf-FIg" firstAttribute="centerX" secondItem="iQV-Mb-dVQ" secondAttribute="centerX" id="vd3-hR-gYu"/>
                             <constraint firstItem="ouj-Cf-FIg" firstAttribute="top" secondItem="eda-mc-3jP" secondAttribute="bottom" constant="4" id="w5y-E9-LeP"/>
                             <constraint firstItem="SaY-cy-MIG" firstAttribute="leading" secondItem="iQV-Mb-dVQ" secondAttribute="leadingMargin" constant="-16" id="yju-hW-yQ6"/>
-                            <constraint firstItem="PEb-ta-QzN" firstAttribute="top" secondItem="eda-mc-3jP" secondAttribute="bottom" constant="49" id="zpl-VF-ptC"/>
+                            <constraint firstItem="PEb-ta-QzN" firstAttribute="top" secondItem="eda-mc-3jP" secondAttribute="bottom" constant="57" id="zpl-VF-ptC"/>
                             <constraint firstItem="nPE-PO-X1c" firstAttribute="leading" secondItem="hsy-9M-29d" secondAttribute="trailing" constant="20" id="ztO-Hr-xu7"/>
                         </constraints>
                     </view>
@@ -168,6 +165,7 @@
                         <outlet property="filterTitle" destination="PEb-ta-QzN" id="MkJ-9w-pBV"/>
                         <outlet property="filterType" destination="tJY-Ch-Xan" id="rtJ-tC-kUt"/>
                         <outlet property="getPicButton" destination="ouj-Cf-FIg" id="RCA-Ie-fQt"/>
+                        <outlet property="gpIcon" destination="Nut-Tw-emq" id="tc5-42-YBf"/>
                         <outlet property="previewView" destination="SaY-cy-MIG" id="2kb-DA-s6j"/>
                         <outlet property="repeatOption" destination="nPE-PO-X1c" id="zAF-LT-A2I"/>
                         <outlet property="sendButton" destination="lFw-rh-pLy" id="bc3-RH-EVY"/>
@@ -179,5 +177,84 @@
             </objects>
             <point key="canvasLocation" x="25.600000000000001" y="35.982008995502248"/>
         </scene>
+        <!--About Controller-->
+        <scene sceneID="GJY-f0-Pox">
+            <objects>
+                <viewController storyboardIdentifier="AboutController" id="zqR-Xw-0uO" customClass="AboutController" customModule="MessagesExtension" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="TTE-I3-dAN"/>
+                        <viewControllerLayoutGuide type="bottom" id="5Fh-o1-EUe"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="qA0-LT-JNh">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="528"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Welcome to GhostPics!" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ud6-77-mqR">
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="KHM-dH-xZy">
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <string key="text">GhostPics is a secure way to send pictures to other iOS 10 users, the best part is they vanish after viewing!  The process is simple, 1</string>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5xD-AV-mb5">
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="6A4-Eg-kXA"/>
+                                    <constraint firstAttribute="width" constant="100" id="ETg-9i-ehf"/>
+                                </constraints>
+                                <state key="normal" title="Get Started">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="doneWithSender:" destination="zqR-Xw-0uO" eventType="touchUpInside" id="nfi-Ja-RUa"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RQO-cp-rIr">
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="100" id="8GS-5j-4Fn"/>
+                                    <constraint firstAttribute="height" constant="30" id="Wbd-PX-sOj"/>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="100" id="aVh-Op-T7n"/>
+                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="30" id="uUp-Lb-da9"/>
+                                </constraints>
+                                <state key="normal" title="Email Us">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" red="0.11764705882352941" green="0.69411764705882351" blue="0.8901960784313725" alpha="1" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstItem="RQO-cp-rIr" firstAttribute="leading" secondItem="qA0-LT-JNh" secondAttribute="leadingMargin" id="BMD-6O-lU2"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="5xD-AV-mb5" secondAttribute="trailing" id="PND-Be-Qba"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="KHM-dH-xZy" secondAttribute="trailing" id="SBV-pf-N2o"/>
+                            <constraint firstItem="Ud6-77-mqR" firstAttribute="leading" secondItem="qA0-LT-JNh" secondAttribute="leadingMargin" id="Xju-1c-HYA"/>
+                            <constraint firstItem="5Fh-o1-EUe" firstAttribute="top" secondItem="RQO-cp-rIr" secondAttribute="bottom" constant="49" id="ZBt-D6-nf6"/>
+                            <constraint firstItem="Ud6-77-mqR" firstAttribute="top" secondItem="TTE-I3-dAN" secondAttribute="bottom" constant="80" id="aYX-On-DAc"/>
+                            <constraint firstItem="KHM-dH-xZy" firstAttribute="top" secondItem="Ud6-77-mqR" secondAttribute="bottom" constant="10" id="dQi-6P-L8I"/>
+                            <constraint firstItem="5Fh-o1-EUe" firstAttribute="top" secondItem="KHM-dH-xZy" secondAttribute="bottom" constant="84" id="nNL-0r-sV7"/>
+                            <constraint firstItem="KHM-dH-xZy" firstAttribute="leading" secondItem="qA0-LT-JNh" secondAttribute="leadingMargin" id="nOe-Rn-4Rd"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="Ud6-77-mqR" secondAttribute="trailing" constant="96" id="x5r-ou-TPk"/>
+                            <constraint firstItem="5Fh-o1-EUe" firstAttribute="top" secondItem="5xD-AV-mb5" secondAttribute="bottom" constant="49" id="z86-da-ZeJ"/>
+                        </constraints>
+                    </view>
+                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <size key="freeformSize" width="320" height="528"/>
+                    <connections>
+                        <outlet property="bodyTextView" destination="KHM-dH-xZy" id="7WZ-Tl-bIg"/>
+                        <outlet property="doneButton" destination="5xD-AV-mb5" id="wBu-OU-Cf5"/>
+                        <outlet property="emailButton" destination="RQO-cp-rIr" id="tGD-vC-1KO"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="hV5-0r-pKE" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="604.79999999999995" y="35.982008995502248"/>
+        </scene>
     </scenes>
+    <resources>
+        <image name="GHP 40.png" width="40" height="40"/>
+    </resources>
 </document>

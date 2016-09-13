@@ -31,13 +31,18 @@ extension UIViewController {
 }
 
 class Shared {
-    let kMessageCount = "kMessageCount"
-    let kPurchaseActivated = "kActivated"
     static let sharedInstance = Shared()
 
+    // userdefult keys
+    let kMessageCount = "kMessageCount"
+    let kPurchaseActivated = "kActivated"
+    let kWalkthrough = "kWalkthrough"
+
+    // app data
     var imagesSentCount = 0
     var evaluationImageLimit = 20
     var activated = false
+    var didWalkthrough = false
 
     class func postNotification(name : String, userInfo: [String: Any]?, object: AnyObject?) {
         let notificationQ = NotificationCenter.default
@@ -55,6 +60,19 @@ class Shared {
         return UIColor(red: 230/255.0, green: 230/255.0, blue: 230/255.0, alpha: alpha)
     }
 
+    class func ghostBlue(alpha: CGFloat) -> UIColor {
+        return UIColor(red: 30/255.0, green: 177/255.0, blue: 227/255.0, alpha: alpha)
+    }
+
+    class func attentionColor(alpha: CGFloat) -> UIColor {
+        return UIColor(red: 30/255.0, green: 129/255.0, blue: 249/255.0, alpha: alpha) // messages blue
+    }
+    // return UIColor(red: 0x34/255.0, green: 0x98/255.0, blue: 0xDB/255.0, alpha: alpha) // Peter River
+    // return UIColor(red: 0x34/255.0, green: 0x49/255.0, blue: 0x5e/255.0, alpha: alpha) // wetAsphalt
+    //return UIColor(red: 0x83/255.0, green: 0x44/255.0, blue: 0xAD/255.0, alpha: alpha) //amathyst
+    //        return UIColor(red: 0x9B/255.0, green: 0x59/255.0, blue: 0xB6/255.0, alpha: alpha)// wisteria
+    // return UIColor(red: 0x29/255.0, green: 0x80/255.0, blue: 0xB9/255.0, alpha: 1.0) // belize hole
+
     init() {
         self.load()
     }
@@ -63,12 +81,14 @@ class Shared {
         let defaults = UserDefaults.standard
         defaults.set(imagesSentCount, forKey: kMessageCount)
         defaults.set(activated, forKey: kPurchaseActivated)
+        defaults.set(didWalkthrough, forKey: kWalkthrough)
     }
 
     func load() {
         let defaults = UserDefaults.standard
         imagesSentCount = defaults.integer(forKey: kMessageCount)
         activated = defaults.bool(forKey: kPurchaseActivated)
+        didWalkthrough = defaults.bool(forKey: kWalkthrough)
     }
 
 }

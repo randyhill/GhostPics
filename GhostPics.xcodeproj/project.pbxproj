@@ -9,12 +9,12 @@
 /* Begin PBXBuildFile section */
 		D81695EA1D7F5392001C0B5F /* AnimationFileClasses.swift in Sources */ = {isa = PBXBuildFile; fileRef = D81695E91D7F5392001C0B5F /* AnimationFileClasses.swift */; };
 		D81695EC1D7F971B001C0B5F /* Shared.swift in Sources */ = {isa = PBXBuildFile; fileRef = D81695EB1D7F971B001C0B5F /* Shared.swift */; };
-		D81695F01D7F9C21001C0B5F /* StoreManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D81695EF1D7F9C21001C0B5F /* StoreManager.swift */; };
-		D85AE0181D824879003634B3 /* GhostIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = D85AE0171D824879003634B3 /* GhostIcon.png */; };
-		D860DB3F1D7A3EFF001DEA75 /* rounded ghost.png in Resources */ = {isa = PBXBuildFile; fileRef = D860DB3B1D7A3E9A001DEA75 /* rounded ghost.png */; };
-		D860DB401D7A3F05001DEA75 /* flat ghost.jpg in Resources */ = {isa = PBXBuildFile; fileRef = D860DB3A1D7A3E9A001DEA75 /* flat ghost.jpg */; };
+		D874535C1D8858690010A80E /* StoreManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D874535B1D8858690010A80E /* StoreManager.swift */; };
 		D8792D6A1D847022001676A7 /* OptionsButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8792D691D847022001676A7 /* OptionsButton.swift */; };
 		D8855BC91D79E8C5009C33B2 /* PreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8855BC81D79E8C5009C33B2 /* PreviewView.swift */; };
+		D88867E61D889AEC00401B4C /* GHP 40@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = D88867E31D889AEC00401B4C /* GHP 40@3x.png */; };
+		D88867E71D889AEC00401B4C /* GHP 40@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D88867E41D889AEC00401B4C /* GHP 40@2x.png */; };
+		D88867E81D889AEC00401B4C /* GHP 40.png in Resources */ = {isa = PBXBuildFile; fileRef = D88867E51D889AEC00401B4C /* GHP 40.png */; };
 		D8B278241D78CBD100B8AC25 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D8B278231D78CBD100B8AC25 /* Assets.xcassets */; };
 		D8B2782B1D78CBD100B8AC25 /* MessagesExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = D8B2782A1D78CBD100B8AC25 /* MessagesExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		D8B278301D78CBD100B8AC25 /* Messages.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D8B2782F1D78CBD100B8AC25 /* Messages.framework */; };
@@ -23,6 +23,7 @@
 		D8B278451D78CC3E00B8AC25 /* ServerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8B278431D78CC3E00B8AC25 /* ServerManager.swift */; };
 		D8B278461D78CC3E00B8AC25 /* Just.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8B278441D78CC3E00B8AC25 /* Just.swift */; };
 		D8B278481D78CC4D00B8AC25 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D8B278471D78CC4D00B8AC25 /* MainInterface.storyboard */; };
+		D8C8626F1D88671100DCDD2B /* AboutController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C8626E1D88671100DCDD2B /* AboutController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -52,12 +53,12 @@
 /* Begin PBXFileReference section */
 		D81695E91D7F5392001C0B5F /* AnimationFileClasses.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnimationFileClasses.swift; sourceTree = "<group>"; };
 		D81695EB1D7F971B001C0B5F /* Shared.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Shared.swift; sourceTree = "<group>"; };
-		D81695EF1D7F9C21001C0B5F /* StoreManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StoreManager.swift; sourceTree = "<group>"; };
-		D85AE0171D824879003634B3 /* GhostIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = GhostIcon.png; sourceTree = "<group>"; };
-		D860DB3A1D7A3E9A001DEA75 /* flat ghost.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = "flat ghost.jpg"; path = "Images/flat ghost.jpg"; sourceTree = SOURCE_ROOT; };
-		D860DB3B1D7A3E9A001DEA75 /* rounded ghost.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "rounded ghost.png"; path = "Images/rounded ghost.png"; sourceTree = SOURCE_ROOT; };
+		D874535B1D8858690010A80E /* StoreManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StoreManager.swift; sourceTree = "<group>"; };
 		D8792D691D847022001676A7 /* OptionsButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OptionsButton.swift; sourceTree = "<group>"; };
 		D8855BC81D79E8C5009C33B2 /* PreviewView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreviewView.swift; sourceTree = "<group>"; };
+		D88867E31D889AEC00401B4C /* GHP 40@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "GHP 40@3x.png"; path = "Resources/blue/GHP 40@3x.png"; sourceTree = "<group>"; };
+		D88867E41D889AEC00401B4C /* GHP 40@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "GHP 40@2x.png"; path = "Resources/blue/GHP 40@2x.png"; sourceTree = "<group>"; };
+		D88867E51D889AEC00401B4C /* GHP 40.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "GHP 40.png"; path = "Resources/blue/GHP 40.png"; sourceTree = "<group>"; };
 		D8B278201D78CBD100B8AC25 /* GhostPics.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GhostPics.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D8B278231D78CBD100B8AC25 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D8B278251D78CBD100B8AC25 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -69,6 +70,7 @@
 		D8B278431D78CC3E00B8AC25 /* ServerManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerManager.swift; sourceTree = "<group>"; };
 		D8B278441D78CC3E00B8AC25 /* Just.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Just.swift; sourceTree = "<group>"; };
 		D8B278471D78CC4D00B8AC25 /* MainInterface.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = MainInterface.storyboard; sourceTree = SOURCE_ROOT; };
+		D8C8626E1D88671100DCDD2B /* AboutController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AboutController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -92,6 +94,7 @@
 				D8855BC81D79E8C5009C33B2 /* PreviewView.swift */,
 				D81695E91D7F5392001C0B5F /* AnimationFileClasses.swift */,
 				D8792D691D847022001676A7 /* OptionsButton.swift */,
+				D8C8626E1D88671100DCDD2B /* AboutController.swift */,
 			);
 			name = UI;
 			sourceTree = "<group>";
@@ -99,11 +102,11 @@
 		D860DB3E1D7A3EA7001DEA75 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				D88867E31D889AEC00401B4C /* GHP 40@3x.png */,
+				D88867E41D889AEC00401B4C /* GHP 40@2x.png */,
+				D88867E51D889AEC00401B4C /* GHP 40.png */,
 				D8B278371D78CBD100B8AC25 /* Assets.xcassets */,
-				D860DB3A1D7A3E9A001DEA75 /* flat ghost.jpg */,
-				D85AE0171D824879003634B3 /* GhostIcon.png */,
 				D8B278391D78CBD100B8AC25 /* Info.plist */,
-				D860DB3B1D7A3E9A001DEA75 /* rounded ghost.png */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -151,8 +154,8 @@
 				D85A15141D8217F5006FBAC0 /* UI */,
 				D81695EB1D7F971B001C0B5F /* Shared.swift */,
 				D8B278431D78CC3E00B8AC25 /* ServerManager.swift */,
+				D874535B1D8858690010A80E /* StoreManager.swift */,
 				D8B278441D78CC3E00B8AC25 /* Just.swift */,
-				D81695EF1D7F9C21001C0B5F /* StoreManager.swift */,
 			);
 			path = MessagesExtension;
 			sourceTree = "<group>";
@@ -207,6 +210,7 @@
 					D8B2781F1D78CBD100B8AC25 = {
 						CreatedOnToolsVersion = 8.0;
 						DevelopmentTeam = 4UNCRH2N42;
+						LastSwiftMigration = 0800;
 						ProvisioningStyle = Automatic;
 					};
 					D8B278291D78CBD100B8AC25 = {
@@ -249,10 +253,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				D8B278381D78CBD100B8AC25 /* Assets.xcassets in Resources */,
-				D860DB401D7A3F05001DEA75 /* flat ghost.jpg in Resources */,
-				D860DB3F1D7A3EFF001DEA75 /* rounded ghost.png in Resources */,
+				D88867E71D889AEC00401B4C /* GHP 40@2x.png in Resources */,
+				D88867E81D889AEC00401B4C /* GHP 40.png in Resources */,
 				D8B278481D78CC4D00B8AC25 /* MainInterface.storyboard in Resources */,
-				D85AE0181D824879003634B3 /* GhostIcon.png in Resources */,
+				D88867E61D889AEC00401B4C /* GHP 40@3x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -267,9 +271,10 @@
 				D8855BC91D79E8C5009C33B2 /* PreviewView.swift in Sources */,
 				D81695EA1D7F5392001C0B5F /* AnimationFileClasses.swift in Sources */,
 				D8B278451D78CC3E00B8AC25 /* ServerManager.swift in Sources */,
-				D81695F01D7F9C21001C0B5F /* StoreManager.swift in Sources */,
 				D81695EC1D7F971B001C0B5F /* Shared.swift in Sources */,
+				D874535C1D8858690010A80E /* StoreManager.swift in Sources */,
 				D8792D6A1D847022001676A7 /* OptionsButton.swift in Sources */,
+				D8C8626F1D88671100DCDD2B /* AboutController.swift in Sources */,
 				D8B278331D78CBD100B8AC25 /* MessagesViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -412,10 +417,13 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				DEVELOPMENT_TEAM = 4UNCRH2N42;
 				INFOPLIST_FILE = GhostPics/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.nvariance.GhostPics;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -426,8 +434,10 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				DEVELOPMENT_TEAM = 4UNCRH2N42;
 				INFOPLIST_FILE = GhostPics/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.nvariance.GhostPics;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
