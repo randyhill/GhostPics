@@ -17,6 +17,7 @@
 		D88867E81D889AEC00401B4C /* GHP 40.png in Resources */ = {isa = PBXBuildFile; fileRef = D88867E51D889AEC00401B4C /* GHP 40.png */; };
 		D8AAD11B1D88E183004A2094 /* GHP-60x45@2x-skyan.png in Resources */ = {isa = PBXBuildFile; fileRef = D8AAD11A1D88E183004A2094 /* GHP-60x45@2x-skyan.png */; };
 		D8AAD11D1D88E1BF004A2094 /* GHP-60x45@3x-skyan.png in Resources */ = {isa = PBXBuildFile; fileRef = D8AAD11C1D88E1BF004A2094 /* GHP-60x45@3x-skyan.png */; };
+		D8AAD11F1D89B4E5004A2094 /* KeyChainAccess.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8AAD11E1D89B4E5004A2094 /* KeyChainAccess.swift */; };
 		D8B278241D78CBD100B8AC25 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D8B278231D78CBD100B8AC25 /* Assets.xcassets */; };
 		D8B2782B1D78CBD100B8AC25 /* MessagesExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = D8B2782A1D78CBD100B8AC25 /* MessagesExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		D8B278301D78CBD100B8AC25 /* Messages.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D8B2782F1D78CBD100B8AC25 /* Messages.framework */; };
@@ -63,6 +64,8 @@
 		D88867E51D889AEC00401B4C /* GHP 40.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "GHP 40.png"; path = "Resources/blue/GHP 40.png"; sourceTree = "<group>"; };
 		D8AAD11A1D88E183004A2094 /* GHP-60x45@2x-skyan.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "GHP-60x45@2x-skyan.png"; path = "Resources/blue/GHP-60x45@2x-skyan.png"; sourceTree = "<group>"; };
 		D8AAD11C1D88E1BF004A2094 /* GHP-60x45@3x-skyan.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "GHP-60x45@3x-skyan.png"; path = "Resources/blue/GHP-60x45@3x-skyan.png"; sourceTree = "<group>"; };
+		D8AAD11E1D89B4E5004A2094 /* KeyChainAccess.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyChainAccess.swift; sourceTree = "<group>"; };
+		D8AAD1201D89BB03004A2094 /* MessagesExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MessagesExtension.entitlements; sourceTree = "<group>"; };
 		D8B278201D78CBD100B8AC25 /* GhostPics.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GhostPics.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D8B278231D78CBD100B8AC25 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D8B278251D78CBD100B8AC25 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -157,11 +160,13 @@
 		D8B278311D78CBD100B8AC25 /* MessagesExtension */ = {
 			isa = PBXGroup;
 			children = (
+				D8AAD1201D89BB03004A2094 /* MessagesExtension.entitlements */,
 				D85A15141D8217F5006FBAC0 /* UI */,
 				D81695EB1D7F971B001C0B5F /* Shared.swift */,
 				D8B278431D78CC3E00B8AC25 /* ServerManager.swift */,
 				D874535B1D8858690010A80E /* StoreManager.swift */,
 				D8B278441D78CC3E00B8AC25 /* Just.swift */,
+				D8AAD11E1D89B4E5004A2094 /* KeyChainAccess.swift */,
 			);
 			path = MessagesExtension;
 			sourceTree = "<group>";
@@ -223,6 +228,11 @@
 						CreatedOnToolsVersion = 8.0;
 						DevelopmentTeam = 4UNCRH2N42;
 						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.Keychain = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
@@ -276,6 +286,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D8B278461D78CC3E00B8AC25 /* Just.swift in Sources */,
+				D8AAD11F1D89B4E5004A2094 /* KeyChainAccess.swift in Sources */,
 				D8855BC91D79E8C5009C33B2 /* PreviewView.swift in Sources */,
 				D81695EA1D7F5392001C0B5F /* AnimationFileClasses.swift in Sources */,
 				D8B278451D78CC3E00B8AC25 /* ServerManager.swift in Sources */,
@@ -393,6 +404,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "iMessage App Icon";
+				CODE_SIGN_ENTITLEMENTS = MessagesExtension/MessagesExtension.entitlements;
 				DEVELOPMENT_TEAM = 4UNCRH2N42;
 				INFOPLIST_FILE = MessagesExtension/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
@@ -409,6 +421,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "iMessage App Icon";
+				CODE_SIGN_ENTITLEMENTS = MessagesExtension/MessagesExtension.entitlements;
 				DEVELOPMENT_TEAM = 4UNCRH2N42;
 				INFOPLIST_FILE = MessagesExtension/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";

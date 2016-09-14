@@ -31,19 +31,7 @@ extension UIViewController {
 }
 
 class Shared {
-    static let sharedInstance = Shared()
-
-    // userdefult keys
-    let kMessageCount = "kMessageCount"
-    let kPurchaseActivated = "kActivated"
-    let kWalkthrough = "kWalkthrough"
-
-    // app data
-    var imagesSentCount = 0
-    var evaluationImageLimit = 20
-    var activated = false
-    var didWalkthrough = false
-
+    // MARK: Class Methods -------------------------------------------------------------------------------------------------
     class func postNotification(name : String, userInfo: [String: Any]?, object: AnyObject?) {
         let notificationQ = NotificationCenter.default
         let theNotification = NSNotification(name: NSNotification.Name(rawValue: name), object: object, userInfo: userInfo)
@@ -73,22 +61,52 @@ class Shared {
     //        return UIColor(red: 0x9B/255.0, green: 0x59/255.0, blue: 0xB6/255.0, alpha: alpha)// wisteria
     // return UIColor(red: 0x29/255.0, green: 0x80/255.0, blue: 0xB9/255.0, alpha: 1.0) // belize hole
 
+    // MARK: Vars -------------------------------------------------------------------------------------------------
+    static let sharedInstance = Shared()
+
+    // userdefult keys
+    //let kMessageCountKey = "kMessageCountKey"
+    let kPurchaseActivatedKey = "kActivated"
+    let kWalkthroughKey = "kWalkthroughKey"
+    let kKeyChainServiceKey = "com.nvariance.GhostPics.MessagesExtension"
+    let kKeyChainTokenKey = "token"
+
+
+    // app data
+    var imagesSentCount = 0
+    var evaluationImageLimit = 20
+    var activated = false
+    var didWalkthrough = false
+
+    // MARK: Instance Methods -------------------------------------------------------------------------------------------------
     init() {
         self.load()
+
+        // Use keychain so user can't delete and re-install to reset their usage count
+        let keychain = Keychain(service: kKeyChainServiceKey)
+        if let token = keychain[kKeyChainTokenKey] {
+            if let useCount = Int(token) {
+                imagesSentCount = useCount
+            }
+        }
     }
 
     func save() {
         let defaults = UserDefaults.standard
-        defaults.set(imagesSentCount, forKey: kMessageCount)
-        defaults.set(activated, forKey: kPurchaseActivated)
-        defaults.set(didWalkthrough, forKey: kWalkthrough)
+        //defaults.set(imagesSentCount, forKey: kMessageCountKey)
+        defaults.set(activated, forKey: kPurchaseActivatedKey)
+        defaults.set(didWalkthrough, forKey: kWalkthroughKey)
+
+        // Use keychain so user can't delete and re-install to reset their usage count
+        let keychain = Keychain(service: kKeyChainServiceKey)
+        keychain[kKeyChainTokenKey] = String(imagesSentCount)
     }
 
     func load() {
         let defaults = UserDefaults.standard
-        imagesSentCount = defaults.integer(forKey: kMessageCount)
-        activated = defaults.bool(forKey: kPurchaseActivated)
-       // didWalkthrough = defaults.bool(forKey: kWalkthrough)
+      //  imagesSentCount = defaults.integer(forKey: kMessageCountKey)
+        activated = defaults.bool(forKey: kPurchaseActivatedKey)
+       // didWalkthrough = defaults.bool(forKey: kWalkthroughKey)
     }
 
 }
