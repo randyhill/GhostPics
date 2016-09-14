@@ -15,6 +15,8 @@
 		D88867E61D889AEC00401B4C /* GHP 40@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = D88867E31D889AEC00401B4C /* GHP 40@3x.png */; };
 		D88867E71D889AEC00401B4C /* GHP 40@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D88867E41D889AEC00401B4C /* GHP 40@2x.png */; };
 		D88867E81D889AEC00401B4C /* GHP 40.png in Resources */ = {isa = PBXBuildFile; fileRef = D88867E51D889AEC00401B4C /* GHP 40.png */; };
+		D8AAD11B1D88E183004A2094 /* GHP-60x45@2x-skyan.png in Resources */ = {isa = PBXBuildFile; fileRef = D8AAD11A1D88E183004A2094 /* GHP-60x45@2x-skyan.png */; };
+		D8AAD11D1D88E1BF004A2094 /* GHP-60x45@3x-skyan.png in Resources */ = {isa = PBXBuildFile; fileRef = D8AAD11C1D88E1BF004A2094 /* GHP-60x45@3x-skyan.png */; };
 		D8B278241D78CBD100B8AC25 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D8B278231D78CBD100B8AC25 /* Assets.xcassets */; };
 		D8B2782B1D78CBD100B8AC25 /* MessagesExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = D8B2782A1D78CBD100B8AC25 /* MessagesExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		D8B278301D78CBD100B8AC25 /* Messages.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D8B2782F1D78CBD100B8AC25 /* Messages.framework */; };
@@ -59,6 +61,8 @@
 		D88867E31D889AEC00401B4C /* GHP 40@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "GHP 40@3x.png"; path = "Resources/blue/GHP 40@3x.png"; sourceTree = "<group>"; };
 		D88867E41D889AEC00401B4C /* GHP 40@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "GHP 40@2x.png"; path = "Resources/blue/GHP 40@2x.png"; sourceTree = "<group>"; };
 		D88867E51D889AEC00401B4C /* GHP 40.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "GHP 40.png"; path = "Resources/blue/GHP 40.png"; sourceTree = "<group>"; };
+		D8AAD11A1D88E183004A2094 /* GHP-60x45@2x-skyan.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "GHP-60x45@2x-skyan.png"; path = "Resources/blue/GHP-60x45@2x-skyan.png"; sourceTree = "<group>"; };
+		D8AAD11C1D88E1BF004A2094 /* GHP-60x45@3x-skyan.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "GHP-60x45@3x-skyan.png"; path = "Resources/blue/GHP-60x45@3x-skyan.png"; sourceTree = "<group>"; };
 		D8B278201D78CBD100B8AC25 /* GhostPics.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GhostPics.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D8B278231D78CBD100B8AC25 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D8B278251D78CBD100B8AC25 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -102,6 +106,8 @@
 		D860DB3E1D7A3EA7001DEA75 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				D8AAD11C1D88E1BF004A2094 /* GHP-60x45@3x-skyan.png */,
+				D8AAD11A1D88E183004A2094 /* GHP-60x45@2x-skyan.png */,
 				D88867E31D889AEC00401B4C /* GHP 40@3x.png */,
 				D88867E41D889AEC00401B4C /* GHP 40@2x.png */,
 				D88867E51D889AEC00401B4C /* GHP 40.png */,
@@ -254,8 +260,10 @@
 			files = (
 				D8B278381D78CBD100B8AC25 /* Assets.xcassets in Resources */,
 				D88867E71D889AEC00401B4C /* GHP 40@2x.png in Resources */,
+				D8AAD11D1D88E1BF004A2094 /* GHP-60x45@3x-skyan.png in Resources */,
 				D88867E81D889AEC00401B4C /* GHP 40.png in Resources */,
 				D8B278481D78CC4D00B8AC25 /* MainInterface.storyboard in Resources */,
+				D8AAD11B1D88E183004A2094 /* GHP-60x45@2x-skyan.png in Resources */,
 				D88867E61D889AEC00401B4C /* GHP 40@3x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

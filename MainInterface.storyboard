@@ -190,6 +190,10 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Welcome to GhostPics!" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ud6-77-mqR">
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="21" id="0w5-1v-6FU"/>
+                                    <constraint firstAttribute="width" constant="189" id="AKw-JV-DYF"/>
+                                </constraints>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -204,9 +208,10 @@
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="6A4-Eg-kXA"/>
-                                    <constraint firstAttribute="width" constant="100" id="ETg-9i-ehf"/>
+                                    <constraint firstAttribute="width" constant="75" id="ETg-9i-ehf"/>
                                 </constraints>
-                                <state key="normal" title="Get Started">
+                                <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                <state key="normal" title="Start">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
@@ -216,28 +221,55 @@
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RQO-cp-rIr">
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="100" id="8GS-5j-4Fn"/>
+                                    <constraint firstAttribute="width" constant="75" id="8GS-5j-4Fn"/>
                                     <constraint firstAttribute="height" constant="30" id="Wbd-PX-sOj"/>
-                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="100" id="aVh-Op-T7n"/>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="75" id="aVh-Op-T7n"/>
                                     <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="30" id="uUp-Lb-da9"/>
                                 </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                 <state key="normal" title="Email Us">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <connections>
+                                    <action selector="sendEmailWithSender:" destination="zqR-Xw-0uO" eventType="touchUpInside" id="Ys5-aD-1Ri"/>
+                                </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="215-Eh-mfa">
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="134" id="Kmf-Zz-xfF"/>
+                                    <constraint firstAttribute="height" constant="30" id="qSg-WM-Di9"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                <state key="normal" title="Restore Purchases">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="restorePurchasesWithSender:" destination="zqR-Xw-0uO" eventType="touchUpInside" id="vgD-C0-s1J"/>
+                                </connections>
+                            </button>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="GHP-60x45-skyan.png" translatesAutoresizingMaskIntoConstraints="NO" id="s6x-D1-o1k">
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="60" id="CUt-GU-tUL"/>
+                                    <constraint firstAttribute="height" constant="45" id="hRh-GQ-c7h"/>
+                                </constraints>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" red="0.11764705882352941" green="0.69411764705882351" blue="0.8901960784313725" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
+                            <constraint firstItem="5Fh-o1-EUe" firstAttribute="top" secondItem="215-Eh-mfa" secondAttribute="bottom" constant="49" id="4by-f7-LaM"/>
+                            <constraint firstItem="215-Eh-mfa" firstAttribute="centerX" secondItem="qA0-LT-JNh" secondAttribute="centerX" id="57O-wE-MbS"/>
                             <constraint firstItem="RQO-cp-rIr" firstAttribute="leading" secondItem="qA0-LT-JNh" secondAttribute="leadingMargin" id="BMD-6O-lU2"/>
                             <constraint firstAttribute="trailingMargin" secondItem="5xD-AV-mb5" secondAttribute="trailing" id="PND-Be-Qba"/>
                             <constraint firstAttribute="trailingMargin" secondItem="KHM-dH-xZy" secondAttribute="trailing" id="SBV-pf-N2o"/>
                             <constraint firstItem="Ud6-77-mqR" firstAttribute="leading" secondItem="qA0-LT-JNh" secondAttribute="leadingMargin" id="Xju-1c-HYA"/>
                             <constraint firstItem="5Fh-o1-EUe" firstAttribute="top" secondItem="RQO-cp-rIr" secondAttribute="bottom" constant="49" id="ZBt-D6-nf6"/>
                             <constraint firstItem="Ud6-77-mqR" firstAttribute="top" secondItem="TTE-I3-dAN" secondAttribute="bottom" constant="80" id="aYX-On-DAc"/>
-                            <constraint firstItem="KHM-dH-xZy" firstAttribute="top" secondItem="Ud6-77-mqR" secondAttribute="bottom" constant="10" id="dQi-6P-L8I"/>
                             <constraint firstItem="5Fh-o1-EUe" firstAttribute="top" secondItem="KHM-dH-xZy" secondAttribute="bottom" constant="84" id="nNL-0r-sV7"/>
                             <constraint firstItem="KHM-dH-xZy" firstAttribute="leading" secondItem="qA0-LT-JNh" secondAttribute="leadingMargin" id="nOe-Rn-4Rd"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="Ud6-77-mqR" secondAttribute="trailing" constant="96" id="x5r-ou-TPk"/>
+                            <constraint firstItem="s6x-D1-o1k" firstAttribute="top" secondItem="TTE-I3-dAN" secondAttribute="bottom" constant="68" id="wMz-ff-W7i"/>
+                            <constraint firstItem="KHM-dH-xZy" firstAttribute="top" secondItem="Ud6-77-mqR" secondAttribute="bottom" constant="10" id="xa7-kc-Nun"/>
+                            <constraint firstItem="s6x-D1-o1k" firstAttribute="trailing" secondItem="qA0-LT-JNh" secondAttribute="trailingMargin" id="yd6-JF-hVD"/>
                             <constraint firstItem="5Fh-o1-EUe" firstAttribute="top" secondItem="5xD-AV-mb5" secondAttribute="bottom" constant="49" id="z86-da-ZeJ"/>
                         </constraints>
                     </view>
@@ -247,6 +279,7 @@
                         <outlet property="bodyTextView" destination="KHM-dH-xZy" id="7WZ-Tl-bIg"/>
                         <outlet property="doneButton" destination="5xD-AV-mb5" id="wBu-OU-Cf5"/>
                         <outlet property="emailButton" destination="RQO-cp-rIr" id="tGD-vC-1KO"/>
+                        <outlet property="restoreButton" destination="215-Eh-mfa" id="PNR-to-kNw"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hV5-0r-pKE" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -256,5 +289,6 @@
     </scenes>
     <resources>
         <image name="GHP 40.png" width="40" height="40"/>
+        <image name="GHP-60x45-skyan.png" width="60" height="45"/>
     </resources>
 </document>

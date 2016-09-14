@@ -130,7 +130,7 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        let fsWidth : CGFloat = 120.0
+        let fsWidth : CGFloat = 90.0
         let inset : CGFloat = 4.0
         fullScreenButton.frame = CGRect(x: self.view.frame.width - fsWidth - inset, y: inset, width: fsWidth, height: 30.0)
      }

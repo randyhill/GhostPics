@@ -88,7 +88,7 @@ class Shared {
         let defaults = UserDefaults.standard
         imagesSentCount = defaults.integer(forKey: kMessageCount)
         activated = defaults.bool(forKey: kPurchaseActivated)
-        didWalkthrough = defaults.bool(forKey: kWalkthrough)
+       // didWalkthrough = defaults.bool(forKey: kWalkthrough)
     }
 
 }

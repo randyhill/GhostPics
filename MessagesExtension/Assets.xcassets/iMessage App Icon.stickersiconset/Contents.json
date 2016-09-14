@@ -15,13 +15,13 @@
     {
       "size" : "67x50",
       "idiom" : "ipad",
-      "filename" : "ghost 67by50x2.png",
+      "filename" : "GHP-67x50@2x.png",
       "scale" : "2x"
     },
     {
       "size" : "74x55",
       "idiom" : "ipad",
-      "filename" : "ghost 74by55x2.png",
+      "filename" : "GHP 74x55@2x.png",
       "scale" : "2x"
     },
     {
@@ -55,7 +55,7 @@
     {
       "size" : "1024x768",
       "idiom" : "ios-marketing",
-      "filename" : "ghost store.png",
+      "filename" : "GHP-1024x768.png",
       "scale" : "1x",
       "platform" : "ios"
     }
