@@ -301,11 +301,13 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
                                     }
                                 }
                                 self.dismiss()
+                                self.globals.imagesSentCount += 1
+                                self.globals.save()
+                            } else {
+                                self.previewView.setText(message: "Could not send image, try again")
                             }
-                            self.globals.imagesSentCount += 1
-                            self.globals.save()
                         } else {
-                            self.previewView.setText(message: "Could not prepare image")
+                            self.previewView.setText(message: "Could not prepare image, try again")
                         }
                     })
                 })

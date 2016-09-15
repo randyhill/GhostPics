@@ -14,9 +14,9 @@ let cUploadURL = "http://localhost:8080/upload"
 let cDownloadURL = "http://localhost:8080/download/"
 let cFileExistsURL = "http://localhost:8080/exists/"
 #else
-let cUploadURL = "https://protected-ridge-16932.herokuapp.com/upload"
-let cDownloadURL = "https://protected-ridge-16932.herokuapp.com/download/"
-let cFileExistsURL = "https://protected-ridge-16932.herokuapp.com/exists/"
+let cUploadURL = "https://ghostpics.herokuapp.com/upload"
+let cDownloadURL = "https://ghostpics.herokuapp.com/download/"
+let cFileExistsURL = "https://ghostpics.herokuapp.com/exists/"
 #endif
 
 class ServerManager {
