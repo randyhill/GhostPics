@@ -22,6 +22,7 @@ class AboutController : UIViewController, MFMailComposeViewControllerDelegate {
     let faqTitle = "Questions:\n"
     let faqText =  "Do recipients need iOS 10 to view my picture?\nYes, GhostPics is iOS 10 only for the moment, and this ensures that the security of your photos is maintained.\n"
 
+    var delegate : MessagesViewController?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -56,7 +57,7 @@ class AboutController : UIViewController, MFMailComposeViewControllerDelegate {
 
     @IBAction func done(sender: UIButton) {
         self.dismiss(animated: true) {
-
+            self.delegate?.aboutScreen = nil
         }
     }
 

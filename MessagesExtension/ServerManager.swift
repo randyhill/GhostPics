@@ -28,9 +28,10 @@ class ServerManager {
     }
 
     func uploadFile(_ imageData: NSData, progress : @escaping (Float)->(), completion : @escaping (_ fileName: String?)->()) {
+        let startTime = Date()
         if var fileId = Just.post(cUploadURL, files: ["image" : .data("image.jpg", imageData as Data, nil)], asyncProgressHandler: {(p) in
-            print("Bytes: \(p.bytesProcessed) Expected: \(p.bytesExpectedToProcess) Percent: \(p.percent)")
-            progress(p.percent)
+            print("Bytes: \(p.bytesProcessed) Expected: \(p.bytesExpectedToProcess) Percent: \(p.percent) Seconds: \(Date().timeIntervalSince(startTime))")
+           // progress(p.percent)
         }).text {
             // fileId string should be 12 characters, plus quotes
             if fileId.characters.count > 12 {
@@ -58,8 +59,9 @@ class ServerManager {
     }
 
     func downloadFile(path : String, progress : @escaping (Float)->(), completion : @escaping (_ data : Data?, _ error: String?)->()) {
-        _ = Just.get(path, params: [:], asyncProgressHandler: {(p) in
-            print("Bytes: \(p.bytesProcessed) Expected: \(p.bytesExpectedToProcess) Percent: \(p.percent)")
+        let startTime = Date()
+       _ = Just.get(path, params: [:], asyncProgressHandler: {(p) in
+            print("Bytes: \(p.bytesProcessed) Expected: \(p.bytesExpectedToProcess) Percent: \(p.percent) Seconds: \(Date().timeIntervalSince(startTime))")
             progress(p.percent)
         }) { (result) in
             print("dowwnload file returned")

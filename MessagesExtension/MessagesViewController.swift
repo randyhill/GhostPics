@@ -67,6 +67,7 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
     @IBOutlet var gpIcon : UIImageView!
     @IBOutlet var sendButton : UIButton!
     @IBOutlet var getPicButton : UIButton!
+    @IBOutlet var cameraButton : UIButton!
     @IBOutlet var previewView : PreviewView!
     @IBOutlet var filterTitle : UILabel!
     @IBOutlet var filterType : OptionsButton!
@@ -93,6 +94,12 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
         notificationCenter.addObserver(self, selector: #selector(purchaseFailed), name: NSNotification.Name(rawValue: kInAppPurchaseFailNotification), object: nil)
 
         sendButton?.layer.cornerRadius = 8.0
+        if UIImagePickerController.isSourceTypeAvailable(.camera) {
+            cameraButton?.layer.cornerRadius = 8.0
+        } else {
+            cameraButton?.isHidden = true
+        }
+
         getPicButton?.layer.cornerRadius = 8.0
         previewView.delegate = self
         filterType.addOptions(titles: ["None", "Flash", "Blinds", "Fade"])
@@ -234,6 +241,13 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
         if presentationStyle == .compact {
             previewView.frame.origin.y = sendButton.frame.origin.y + sendButton.frame.height + 8
             previewView.frame.size.height = self.view.frame.height - previewView.frame.origin.y - 8
+
+            // Hide aboutscreen if it was open
+            if let about = aboutScreen {
+                about.dismiss(animated: true, completion: { 
+                    
+                })
+            }
        } else {
             fullScreenButton.removeFromSuperview()
             if !Shared.sharedInstance.didWalkthrough {
@@ -270,7 +284,7 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
 
     // MARK: Actions -------------------------------------------------------------------------------------------------
     @IBAction func sendButton(_ sender : UIButton) {
-        if globals.activated || globals.imagesSentCount < globals.evaluationImageLimit {
+        if globals.activated || !globals.isExpired() {
             sendGhost()
         } else {
             self.showQuestionAlert(title: "Evaluation Complete", question: "Evaluation is limited to sending \(globals.evaluationImageLimit) GhostPics. Do you want to remove this limit ?", okTitle: "Yes", cancelTitle: "No", completion: { (accepted) in
@@ -332,12 +346,15 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
         showAboutView()
     }
 
+    var aboutScreen : AboutController?
     func showAboutView() {
-        if let about = self.storyboard?.instantiateViewController(withIdentifier: "AboutController") {
-            self.present(about, animated: true, completion: {
-
-            })
+        guard let about = self.storyboard?.instantiateViewController(withIdentifier: "AboutController") as? AboutController else {
+            return
         }
+        aboutScreen = about
+        self.aboutScreen?.delegate = self
+        self.present(about, animated: true, completion: {
+        })
     }
 
     // MARK: Image Pickers -------------------------------------------------------------------------------------------------
@@ -346,11 +363,49 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
         let picker = UIImagePickerController()
         picker.mediaTypes = [kUTTypeImage as String]//, kUTTypeMovie as String]
         picker.delegate = self
-        button.backgroundColor = UIColor.black
+        //button.backgroundColor = UIColor.black
         fullScreenButton.removeFromSuperview()
-        self.present(picker, animated: true, completion: {
-            print("presented")
-        })
+        if let parentController = self.parent {
+            parentController.addChildViewController(picker)
+            parentController.view.addSubview(picker.view)
+            picker.view.translatesAutoresizingMaskIntoConstraints = false
+            picker.view.leftAnchor.constraint(equalTo: self.view.leftAnchor).isActive = true
+            picker.view.rightAnchor.constraint(equalTo: self.view.rightAnchor).isActive = true
+            picker.view.topAnchor.constraint(equalTo: self.topLayoutGuide.bottomAnchor, constant: 80).isActive = true
+            picker.view.bottomAnchor.constraint(equalTo: self.bottomLayoutGuide.topAnchor, constant: -40).isActive = true
+            picker.didMove(toParentViewController: parentController)
+
+            parentController.present(picker, animated: false, completion: {
+                print("completed")
+            })
+        }
+       // self.present(picker, animated: true, completion: {
+        //})
+    }
+
+    @IBAction func pickFromCamera(button : UIButton) {
+        let picker = UIImagePickerController()
+        picker.mediaTypes = [kUTTypeImage as String]//, kUTTypeMovie as String]
+        picker.sourceType = .camera
+        picker.delegate = self
+        //button.backgroundColor = UIColor.black
+        fullScreenButton.removeFromSuperview()
+
+        if let parentController = self.parent {
+            parentController.addChildViewController(picker)
+            parentController.view.addSubview(picker.view)
+            picker.view.translatesAutoresizingMaskIntoConstraints = false
+            picker.view.leftAnchor.constraint(equalTo: self.view.leftAnchor).isActive = true
+            picker.view.rightAnchor.constraint(equalTo: self.view.rightAnchor).isActive = true
+            picker.view.topAnchor.constraint(equalTo: self.topLayoutGuide.bottomAnchor, constant: 80).isActive = true
+            picker.view.bottomAnchor.constraint(equalTo: self.bottomLayoutGuide.topAnchor, constant: -40).isActive = true
+            picker.didMove(toParentViewController: parentController)
+
+            parentController.present(picker, animated: false, completion: {
+                print("completed")
+            })
+        }
+
     }
 
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
@@ -363,7 +418,6 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
             filterType.selectedSegmentIndex = 0
         }
         picker.dismiss(animated: true) {
-            print("dismissed")
         }
         self.inPreviewMode = false
         self.setUIMode(completion: nil)
@@ -371,7 +425,6 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
 
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         picker.dismiss(animated: true) {
-            print("dismissed")
         }
         self.setUIMode(completion: nil)
     }

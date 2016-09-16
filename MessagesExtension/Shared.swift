@@ -74,7 +74,7 @@ class Shared {
 
     // app data
     var imagesSentCount = 0
-    var evaluationImageLimit = 20
+    let evaluationImageLimit = 40
     var activated = false
     var didWalkthrough = false
 
@@ -91,9 +91,12 @@ class Shared {
         }
     }
 
+    func isExpired() -> Bool {
+        return imagesSentCount > evaluationImageLimit
+    }
+
     func save() {
         let defaults = UserDefaults.standard
-        //defaults.set(imagesSentCount, forKey: kMessageCountKey)
         defaults.set(activated, forKey: kPurchaseActivatedKey)
         defaults.set(didWalkthrough, forKey: kWalkthroughKey)
 
@@ -104,9 +107,8 @@ class Shared {
 
     func load() {
         let defaults = UserDefaults.standard
-      //  imagesSentCount = defaults.integer(forKey: kMessageCountKey)
         activated = defaults.bool(forKey: kPurchaseActivatedKey)
-       // didWalkthrough = defaults.bool(forKey: kWalkthroughKey)
+        didWalkthrough = defaults.bool(forKey: kWalkthroughKey)
     }
 
 }

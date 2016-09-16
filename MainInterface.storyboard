@@ -19,19 +19,19 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="528"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" reversesTitleShadowWhenHighlighted="YES" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ouj-Cf-FIg">
+                            <button opaque="NO" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" reversesTitleShadowWhenHighlighted="YES" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Bao-ds-otS">
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="30" id="VDu-6f-1eF"/>
-                                    <constraint firstAttribute="width" constant="88" id="pZv-3W-NlF"/>
+                                    <constraint firstAttribute="width" constant="80" id="WOs-cL-rME"/>
+                                    <constraint firstAttribute="height" constant="30" id="fmf-dB-0gl"/>
                                 </constraints>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <state key="normal" title="Pick Photo">
+                                <state key="normal" title="Camera">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <color key="titleShadowColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <action selector="pickPhotoWithButton:" destination="FX5-3q-7bF" eventType="touchUpInside" id="sBo-Hy-zYU"/>
+                                    <action selector="pickFromCameraWithButton:" destination="FX5-3q-7bF" eventType="touchUpInside" id="n89-j7-fyz"/>
                                 </connections>
                             </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SaY-cy-MIG" customClass="PreviewView" customModule="MessagesExtension" customModuleProvider="target">
@@ -49,7 +49,7 @@
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="77Z-R9-hu8"/>
-                                    <constraint firstAttribute="width" constant="61" id="RNN-t1-X13"/>
+                                    <constraint firstAttribute="width" constant="70" id="RNN-t1-X13"/>
                                 </constraints>
                                 <state key="normal" title="Send">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -127,6 +127,21 @@
                                     <constraint firstAttribute="height" constant="40" id="CIz-eu-A5h"/>
                                 </constraints>
                             </imageView>
+                            <button opaque="NO" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" reversesTitleShadowWhenHighlighted="YES" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ouj-Cf-FIg">
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="VDu-6f-1eF"/>
+                                    <constraint firstAttribute="width" constant="80" id="pZv-3W-NlF"/>
+                                </constraints>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <state key="normal" title="Photos">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    <color key="titleShadowColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="pickPhotoWithButton:" destination="FX5-3q-7bF" eventType="touchUpInside" id="sBo-Hy-zYU"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="0.90196079019999997" green="0.90196079019999997" blue="0.90196079019999997" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
@@ -140,17 +155,19 @@
                             <constraint firstItem="Nut-Tw-emq" firstAttribute="leading" secondItem="iQV-Mb-dVQ" secondAttribute="leading" constant="6" id="O03-Qa-yx4"/>
                             <constraint firstItem="aY6-6a-cAm" firstAttribute="top" secondItem="nPE-PO-X1c" secondAttribute="bottom" constant="10" id="OcQ-VH-Y18"/>
                             <constraint firstItem="nPE-PO-X1c" firstAttribute="trailing" secondItem="iQV-Mb-dVQ" secondAttribute="trailingMargin" id="QVy-Yo-LPO"/>
+                            <constraint firstItem="Bao-ds-otS" firstAttribute="leading" secondItem="Nut-Tw-emq" secondAttribute="trailing" constant="7" id="Whm-Fg-1CS"/>
                             <constraint firstItem="hsy-9M-29d" firstAttribute="top" secondItem="tJY-Ch-Xan" secondAttribute="bottom" constant="10" id="bTh-Ez-uPv"/>
                             <constraint firstItem="lFw-rh-pLy" firstAttribute="top" secondItem="eda-mc-3jP" secondAttribute="bottom" constant="4" id="eGG-UR-GV8"/>
                             <constraint firstItem="lFw-rh-pLy" firstAttribute="trailing" secondItem="iQV-Mb-dVQ" secondAttribute="trailingMargin" id="fQm-Bu-KV4"/>
                             <constraint firstItem="tJY-Ch-Xan" firstAttribute="leading" secondItem="PEb-ta-QzN" secondAttribute="trailing" constant="4" id="hBZ-7q-H8k"/>
                             <constraint firstItem="hsy-9M-29d" firstAttribute="leading" secondItem="9CL-gk-ial" secondAttribute="trailing" constant="4" id="iGv-eS-fk9"/>
+                            <constraint firstItem="lFw-rh-pLy" firstAttribute="leading" secondItem="ouj-Cf-FIg" secondAttribute="trailing" constant="13" id="jGp-eF-11i"/>
                             <constraint firstItem="nPE-PO-X1c" firstAttribute="top" secondItem="lFw-rh-pLy" secondAttribute="bottom" constant="19" id="kvo-09-40L"/>
                             <constraint firstItem="aJH-G0-W46" firstAttribute="leading" secondItem="iQV-Mb-dVQ" secondAttribute="leading" constant="153" id="mCR-2U-4HH"/>
                             <constraint firstItem="9CL-gk-ial" firstAttribute="leading" secondItem="iQV-Mb-dVQ" secondAttribute="leading" constant="10" id="oGs-eX-qLb"/>
                             <constraint firstItem="tJY-Ch-Xan" firstAttribute="top" secondItem="ouj-Cf-FIg" secondAttribute="bottom" constant="18" id="pNJ-rm-uGD"/>
                             <constraint firstItem="SaY-cy-MIG" firstAttribute="top" secondItem="hsy-9M-29d" secondAttribute="bottom" constant="8" id="u2H-lU-pNi"/>
-                            <constraint firstItem="ouj-Cf-FIg" firstAttribute="centerX" secondItem="iQV-Mb-dVQ" secondAttribute="centerX" id="vd3-hR-gYu"/>
+                            <constraint firstItem="Bao-ds-otS" firstAttribute="top" secondItem="eda-mc-3jP" secondAttribute="bottom" constant="4" id="vrD-XC-E0d"/>
                             <constraint firstItem="ouj-Cf-FIg" firstAttribute="top" secondItem="eda-mc-3jP" secondAttribute="bottom" constant="4" id="w5y-E9-LeP"/>
                             <constraint firstItem="SaY-cy-MIG" firstAttribute="leading" secondItem="iQV-Mb-dVQ" secondAttribute="leadingMargin" constant="-16" id="yju-hW-yQ6"/>
                             <constraint firstItem="PEb-ta-QzN" firstAttribute="top" secondItem="eda-mc-3jP" secondAttribute="bottom" constant="57" id="zpl-VF-ptC"/>
@@ -162,6 +179,7 @@
                     <connections>
                         <outlet property="blinds" destination="aY6-6a-cAm" id="1wL-il-XCa"/>
                         <outlet property="blindsTitle" destination="aJH-G0-W46" id="MLx-EA-Xze"/>
+                        <outlet property="cameraButton" destination="Bao-ds-otS" id="X97-hT-HgK"/>
                         <outlet property="filterTitle" destination="PEb-ta-QzN" id="MkJ-9w-pBV"/>
                         <outlet property="filterType" destination="tJY-Ch-Xan" id="rtJ-tC-kUt"/>
                         <outlet property="getPicButton" destination="ouj-Cf-FIg" id="RCA-Ie-fQt"/>
@@ -207,7 +225,7 @@
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5xD-AV-mb5">
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="30" id="6A4-Eg-kXA"/>
+                                    <constraint firstAttribute="height" constant="36" id="6A4-Eg-kXA"/>
                                     <constraint firstAttribute="width" constant="75" id="ETg-9i-ehf"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="13"/>
@@ -222,7 +240,7 @@
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="75" id="8GS-5j-4Fn"/>
-                                    <constraint firstAttribute="height" constant="30" id="Wbd-PX-sOj"/>
+                                    <constraint firstAttribute="height" constant="36" id="Wbd-PX-sOj"/>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="75" id="aVh-Op-T7n"/>
                                     <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="30" id="uUp-Lb-da9"/>
                                 </constraints>
@@ -238,7 +256,7 @@
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="134" id="Kmf-Zz-xfF"/>
-                                    <constraint firstAttribute="height" constant="30" id="qSg-WM-Di9"/>
+                                    <constraint firstAttribute="height" constant="36" id="qSg-WM-Di9"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                 <state key="normal" title="Restore Purchases">
@@ -265,7 +283,7 @@
                             <constraint firstItem="Ud6-77-mqR" firstAttribute="leading" secondItem="qA0-LT-JNh" secondAttribute="leadingMargin" id="Xju-1c-HYA"/>
                             <constraint firstItem="5Fh-o1-EUe" firstAttribute="top" secondItem="RQO-cp-rIr" secondAttribute="bottom" constant="49" id="ZBt-D6-nf6"/>
                             <constraint firstItem="Ud6-77-mqR" firstAttribute="top" secondItem="TTE-I3-dAN" secondAttribute="bottom" constant="80" id="aYX-On-DAc"/>
-                            <constraint firstItem="5Fh-o1-EUe" firstAttribute="top" secondItem="KHM-dH-xZy" secondAttribute="bottom" constant="84" id="nNL-0r-sV7"/>
+                            <constraint firstItem="5Fh-o1-EUe" firstAttribute="top" secondItem="KHM-dH-xZy" secondAttribute="bottom" constant="93" id="nNL-0r-sV7"/>
                             <constraint firstItem="KHM-dH-xZy" firstAttribute="leading" secondItem="qA0-LT-JNh" secondAttribute="leadingMargin" id="nOe-Rn-4Rd"/>
                             <constraint firstItem="s6x-D1-o1k" firstAttribute="top" secondItem="TTE-I3-dAN" secondAttribute="bottom" constant="68" id="wMz-ff-W7i"/>
                             <constraint firstItem="KHM-dH-xZy" firstAttribute="top" secondItem="Ud6-77-mqR" secondAttribute="bottom" constant="10" id="xa7-kc-Nun"/>
