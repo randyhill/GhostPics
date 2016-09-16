@@ -275,9 +275,9 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
         }
         message.url = url
         message.shouldExpire = true
-
         let layout = MSMessageTemplateLayout()
         layout.caption = "I sent you a GhostPic! Tap to see it before it vanishes!"
+        layout.image = image
         message.layout = layout
         return message
     }
@@ -285,7 +285,7 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
     // MARK: Actions -------------------------------------------------------------------------------------------------
     @IBAction func sendButton(_ sender : UIButton) {
         if globals.activated || !globals.isExpired() {
-            sendGhost()
+            sendDirectGhost()
         } else {
             self.showQuestionAlert(title: "Evaluation Complete", question: "Evaluation is limited to sending \(globals.evaluationImageLimit) GhostPics. Do you want to remove this limit ?", okTitle: "Yes", cancelTitle: "No", completion: { (accepted) in
                 if accepted {
@@ -329,6 +329,24 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
         })
     }
 
+    func sendDirectGhost() {
+        guard let conversation = activeConversation else { fatalError("Expected a conversation") }
+        if let message = self.composeMessage(conversation, image: self.previewView.encodedImage()!, idString: "ImageID") {
+            // Add the message to the conversation.
+            conversation.insert(message) { error in
+                if let error = error {
+                    print(error)
+                }
+            }
+            self.dismiss()
+            self.globals.imagesSentCount += 1
+            self.globals.save()
+        } else {
+            self.previewView.setText(message: "Could not send image, try again")
+        }
+
+   }
+
     func makeFullScreen(button: UIButton) {
         requestPresentationStyle(.expanded)
         button.removeFromSuperview()
@@ -365,22 +383,8 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
         picker.delegate = self
         //button.backgroundColor = UIColor.black
         fullScreenButton.removeFromSuperview()
-        if let parentController = self.parent {
-            parentController.addChildViewController(picker)
-            parentController.view.addSubview(picker.view)
-            picker.view.translatesAutoresizingMaskIntoConstraints = false
-            picker.view.leftAnchor.constraint(equalTo: self.view.leftAnchor).isActive = true
-            picker.view.rightAnchor.constraint(equalTo: self.view.rightAnchor).isActive = true
-            picker.view.topAnchor.constraint(equalTo: self.topLayoutGuide.bottomAnchor, constant: 80).isActive = true
-            picker.view.bottomAnchor.constraint(equalTo: self.bottomLayoutGuide.topAnchor, constant: -40).isActive = true
-            picker.didMove(toParentViewController: parentController)
-
-            parentController.present(picker, animated: false, completion: {
-                print("completed")
-            })
-        }
-       // self.present(picker, animated: true, completion: {
-        //})
+        self.present(picker, animated: true, completion: {
+        })
     }
 
     @IBAction func pickFromCamera(button : UIButton) {

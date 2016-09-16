@@ -146,6 +146,11 @@ class AnimationClass {
         return nil
     }
 
+    func asJPEGData() -> Data? {
+        return UIImageJPEGRepresentation(_baseImage!, 1.0)
+    }
+
+
     func encode<T>( value: inout T) -> NSData {
         let sizeOfValue = MemoryLayout<T>.size
         return withUnsafePointer(to: &value) { p in
@@ -181,6 +186,7 @@ class AnimationClass {
         return UIImage.animatedImage(with: _images, duration: settings.duration)
     }
 
+
     func createImages(baseImage: UIImage, settings: SettingsObject) {
         self._baseImage = baseImage
         
@@ -194,12 +200,6 @@ class AnimationClass {
         default:
             baseAnimation(baseImage: baseImage,  settings: settings)
         }
-//        if settings.filterType != .None, let image = clearImage(baseImage: baseImage) {
-//            let duration = (Int(5 - settings.duration))
-//            for _ in 0...duration {
-//                _images.append(image)
-//            }
-//         }
     }
 
     private func clearImage(baseImage: UIImage) -> UIImage? {
