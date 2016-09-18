@@ -14,8 +14,6 @@ class SettingsObject {
     var filterType : ImageFilterType = .None
     var duration : Double = 2.0
     var alpha : CGFloat = 1.0
-    var doRepeat : Bool = false
-    var blindsSize : CGFloat = 0.2
 
     func setAlpha(selectedSegment : Int) {
         switch selectedSegment {
@@ -29,20 +27,6 @@ class SettingsObject {
             alpha = 0.4
         }
     }
-
-    func setBlindsSize(selectedSegment : Int) {
-        switch selectedSegment {
-        case 0:
-            blindsSize = 0.4
-        case 1:
-            blindsSize = 0.2
-        case 2:
-            blindsSize = 0.1
-        default:
-            blindsSize = 0.1
-        }
-    }
-
 
     func setDuration(selectedSegment : Int) {
         switch selectedSegment {
@@ -73,14 +57,12 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
     @IBOutlet var filterType : OptionsButton!
     @IBOutlet var speedTitle: UILabel!
     @IBOutlet var speed : OptionsButton!
-    @IBOutlet var blindsTitle : UILabel!
-    @IBOutlet var blinds : OptionsButton!
-    @IBOutlet var repeatOption : UISegmentedControl!
     var fullScreenButton = UIButton()
 
     var globals = Shared.sharedInstance
     var store = StoreManager.sharedInstance
-    var inPreviewMode = false
+    var inPreviewMode = false   // We are showing a sent image
+    var inFileDownload = false
     var viewStyle = MSMessagesAppPresentationStyle.compact
 
     // MARK: View Methods -------------------------------------------------------------------------------------------------
@@ -106,8 +88,6 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
         filterType.delegate = self
         speed.addOptions(titles: ["Fastest", "Fast", "Medium", "Slow"])
         speed.delegate = self
-        blinds.addOptions(titles: ["Thin", "Medium", "Thick"])
-        blinds.delegate = self
 
         // Get started button and walkthrough
         if !Shared.sharedInstance.didWalkthrough {
@@ -137,9 +117,8 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        let fsWidth : CGFloat = 90.0
-        let inset : CGFloat = 4.0
-        fullScreenButton.frame = CGRect(x: self.view.frame.width - fsWidth - inset, y: inset, width: fsWidth, height: 30.0)
+        let fsWidth : CGFloat = 120.0
+        fullScreenButton.frame = CGRect(x: (self.view.frame.width - fsWidth)/2, y: (self.view.frame.height - 40.0)/2, width: fsWidth, height: 40.0)
      }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -154,13 +133,20 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
     // MARK: IAP Methods -------------------------------------------------------------------------------------------------
     func restoreSucceeded(notification: NSNotification) {
         globals.activated = true
-        self.showAlert(title: "GhostPics Activated", message: "Your purchase was successful!")
+        globals.save()
+        DispatchQueue.main.async {
+            self.showAlert(title: "GhostPics Activated", message: "Your purchase was successful!")
+       }
     }
     func restoreFailed(notification: NSNotification) {
-        self.showAlert(title: "Purchase Error", message: "Your purchase was unable to be completed")
+        DispatchQueue.main.async {
+            self.showAlert(title: "Purchase Error", message: "Your purchase was unable to be completed")
+        }
     }
     func purchaseFailed(notification: NSNotification) {
-        self.showAlert(title: "GhostPics Activated", message: "Your purchase was unable to be completed!")
+        DispatchQueue.main.async {
+            self.showAlert(title: "GhostPics Activated", message: "Your purchase was unable to be completed!")
+        }
     }
 
     // MARK: Conversation Methods -------------------------------------------------------------------------------------------------
@@ -177,20 +163,21 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
     func openReceivedImage(message : MSMessage, conversation: MSConversation) {
         // We are never in preview mode unless we get an image that we didn't send
         inPreviewMode = false
-        print("opening image")
+        inFileDownload = true
 
         // Use this method to trigger UI updates in response to the message.
         if let url = message.url, conversation.localParticipantIdentifier != message.senderParticipantIdentifier  {
             self.setUIMode(completion: {
                 self.previewView.startActivityFeedback(completed: nil)
                 ServerManager.sharedInstance.fileExists(url: url, completion: { (success) in
+                    self.inPreviewMode = true
                     if success {
                         let path = url.absoluteString
                         ServerManager.sharedInstance.downloadFile(path: path,
                             progress: { (percent) in
                                 self.previewView.setProgress(percent: percent)
                             }, completion: { (imageDataOpt, errorText) in
-                                self.inPreviewMode = true
+                                self.inFileDownload = false
                                 if let imageData = imageDataOpt {
                                     self.previewView.initFromData(data: imageData as NSData)
                                 } else {
@@ -198,25 +185,13 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
                                 }
                         })
                     } else {
+                        self.inFileDownload = false
                         self.previewView.setText(message: "That picture has expired, thanks to GhostPics!\n\nUse GhostPics's expiring photos to protect your secrets!")
                     }
                 })
             })
         }
     }
-
-//    func openImage(message: MSMessage) {
-//        if let layout = message.layout {
-//            if let template = layout as? MSMessageTemplateLayout {
-//                if let image = template.image {
-//                    self.previewView.decodeImage(image: image)
-//                }
-//            }
-//        } else {
-//            let session = MSSession(message.session)
-//
-//        }
-//    }
 
     // Called when the extension is about to move from the active to inactive state.
     // This will happen when the user dissmises the extension, changes to a different
@@ -267,7 +242,7 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
                 }
             } else {
                 // Let's open the image if it was sent to us while we were already open.
-                if let conversation = self.activeConversation, let message = conversation.selectedMessage, !self.inPreviewMode {
+                if let conversation = self.activeConversation, let message = conversation.selectedMessage, !self.inFileDownload {
                     self.openReceivedImage(message: message, conversation: conversation)
                 }
 
@@ -308,15 +283,7 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
 
     // MARK: Actions -------------------------------------------------------------------------------------------------
     @IBAction func sendButton(_ sender : UIButton) {
-        if globals.activated || !globals.isExpired() {
-            sendGhost()
-        } else {
-            self.showQuestionAlert(title: "Evaluation Complete", question: "Evaluation is limited to sending \(globals.evaluationImageLimit) GhostPics. Do you want to remove this limit ?", okTitle: "Yes", cancelTitle: "No", completion: { (accepted) in
-                if accepted {
-                    _ = self.store.startPurchase(productIDs: [kActivationKey])
-                }
-            })
-        }
+             sendGhost()
      }
 
     func sendGhost() {
@@ -353,10 +320,10 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
         })
     }
 
-    func makeFullScreen(button: UIButton) {
+    @IBAction func makeFullScreen(button: UIButton) {
         requestPresentationStyle(.expanded)
-        button.removeFromSuperview()
-        getPicButton.backgroundColor = Shared.attentionColor(alpha: 1.0)
+        fullScreenButton.removeFromSuperview()
+//        getPicButton.backgroundColor = Shared.attentionColor(alpha: 1.0)
     }
 
     func viewTapped(tap : UITapGestureRecognizer) {
@@ -366,6 +333,13 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
     func iconTapped(tap : UITapGestureRecognizer) {
         if viewStyle == MSMessagesAppPresentationStyle.compact {
             requestPresentationStyle(.expanded)
+        }
+        showAboutView()
+    }
+
+    @IBAction func openAboutView() {
+        if viewStyle == MSMessagesAppPresentationStyle.compact {
+        requestPresentationStyle(.expanded)
         }
         showAboutView()
     }
@@ -395,8 +369,7 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
 
     var cameraOverlay : CameraOverlay?
     @IBAction func pickFromCamera(button : UIButton) {
-       // let picker = UIImagePickerController()
-        picker.mediaTypes = [kUTTypeImage as String]//, kUTTypeMovie as String]
+         picker.mediaTypes = [kUTTypeImage as String]//, kUTTypeMovie as String]
         picker.sourceType = .camera
         picker.delegate = self
         picker.showsCameraControls = false
@@ -480,24 +453,6 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
         self.setUIMode(completion: nil)
     }
 
-    // MARK: Filters -------------------------------------------------------------------------------------------------
-
-    @IBAction func changeFilter(segs : UISegmentedControl) {
-        setFilterTo(filterType: ImageFilterType.fromInt(filterIndex: segs.selectedSegmentIndex))
-   }
-
-    @IBAction func changeFilterValue(slider : UISlider) {
-        self.previewView.filterImage(settings: getSettings())
-    }
-
-    @IBAction func changeRepeatValue(repeatSwitch : UISegmentedControl) {
-        self.previewView.filterImage(settings: getSettings())
-    }
-
-    @IBAction func changeOpacity(opacity : UISegmentedControl) {
-         self.previewView.filterImage(settings: getSettings())
-    }
-
     func setFilterTo(filterType : ImageFilterType) {
         switch filterType {
         case .Flash:
@@ -517,20 +472,33 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
         let settings = SettingsObject()
         settings.filterType = ImageFilterType.fromInt(filterIndex: self.filterType.selectedSegmentIndex)
         settings.setDuration(selectedSegment: speed.selectedSegmentIndex)
-        settings.doRepeat = (repeatOption.selectedSegmentIndex == 1)
-        settings.setBlindsSize(selectedSegment: blinds.selectedSegmentIndex)
         return settings
     }
 
     func updateSettings(button: OptionsButton) {
-        switch button.tag {
-        case 1:
-            setFilterTo(filterType: ImageFilterType.fromInt(filterIndex: self.filterType.selectedSegmentIndex))
-        default:
-            break
+        DispatchQueue.main.async {
+           switch button.tag {
+            case 1:
+                let shared = Shared.sharedInstance
+                if shared.isExpired() && self.filterType.selectedSegmentIndex > 0 {
+                    self.showQuestionAlert(title: "Evaluation Limit", question: "We hope you've enjoyed using the effects. Their evaluation use limit has been reached. Do you want to continue using effects on your GhostPics (and support our development)?", okTitle: "Yes", cancelTitle: "No", completion: { (accepted) in
+                        if accepted {
+                            _ = self.store.startPurchase(productIDs: [kActivationKey])
+                        }
+                    })
+                    self.filterType.selectedSegmentIndex = 0
+                } else {
+                    if self.filterType.selectedSegmentIndex > 0 {
+                        shared.effectsUsedCount += 1
+                    }
+                    self.setFilterTo(filterType: ImageFilterType.fromInt(filterIndex: self.filterType.selectedSegmentIndex))
+                }
+            default:
+                break
+            }
+            self.previewView.filterImage(settings: self.getSettings())
+            self.setUIMode(completion: nil)
         }
-        self.previewView.filterImage(settings: getSettings())
-        setUIMode(completion: nil)
     }
 
     // Hide controls when in preview mode, or when copact size
@@ -548,12 +516,6 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
             let hideFilterSettings = inCompactStyle || (curFilterType == .None) || previewStyle
             self.speedTitle.isHidden = hideFilterSettings
             self.speed.isHidden = hideFilterSettings
-            self.repeatOption.isHidden = hideFilterSettings
-
-            // Blinds filter settings
-            let hideBlinds = inCompactStyle || (curFilterType != .Blinds)
-            self.blindsTitle.isHidden = hideBlinds
-            self.blinds.isHidden = hideBlinds
 
             // Send button
             self.sendButton.isHidden = self.inPreviewMode || !self.previewView.hasImage()

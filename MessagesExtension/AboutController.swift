@@ -15,12 +15,13 @@ class AboutController : UIViewController, MFMailComposeViewControllerDelegate {
     @IBOutlet var emailButton : UIButton!
     @IBOutlet var restoreButton : UIButton!
 
-    let aboutHeader = "GhostPics is a secure way to send pictures to other iOS 10 users, the best part is they vanish after viewing! Using GhostPics is simple\n\n" +
-        "1) Select a picture with the Pick Photo button\n" +
-        "2) Choose any effect you want to display it with.\n" +
-        "3) Send! It's that simple. Your recipient will only be able to open and view the image in GhostPics, and only once. It vanishes immediately after viewing.\n\n"
-    let faqTitle = "Questions:\n"
-    let faqText =  "Do recipients need iOS 10 to view my picture?\nYes, GhostPics is iOS 10 only for the moment, and this ensures that the security of your photos is maintained.\n"
+    let aboutHeader = "Use GhostPics to securely send private pictures to other iOS 10 users, and they vanish after viewing!\n\n" +
+        "Simply\n\n" +
+        "1) Select a picture with the Pick Photo button or take a new one with Camera button\n\n" +
+        "2) Choose any effect you want recipient to see it with.\n\n" +
+        "3) Send!\n\nIt's that simple. Your recipient will only be able to open and view the picture only once. It vanishes immediately after viewing!\n\n"
+//    let faqTitle = "Questions:\n"
+//    let faqText =  "Do recipients need iOS 10 to view my picture?\nYes, GhostPics is iOS 10 only for the moment, and this ensures the security of your photos are maintained.\n"
 
     var delegate : MessagesViewController?
 
@@ -35,18 +36,28 @@ class AboutController : UIViewController, MFMailComposeViewControllerDelegate {
         // Prepare text for scroll view
         let bodyText = NSMutableAttributedString()
         let bodyFont = UIFont.systemFont(ofSize: 14)
-        let titleFont = UIFont.boldSystemFont(ofSize: 16)
         bodyText.append(textWithFontAttribute(text: aboutHeader, font: bodyFont))
-        bodyText.append(textWithFontAttribute(text: faqTitle, font: titleFont))
-        bodyText.append(textWithFontAttribute(text: faqText, font: bodyFont))
         bodyTextView.attributedText = bodyText
-        bodyTextView.setContentOffset(CGPoint(x: 0, y: 0), animated: false)
 
         // Round corners
         bodyTextView.layer.cornerRadius = 8.0
         doneButton.layer.cornerRadius = 8.0
         emailButton.layer.cornerRadius = 8.0
         restoreButton.layer.cornerRadius = 8.0
+
+    }
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+
+        // Fit to content
+        let fixedWidth = bodyTextView.frame.size.width
+        bodyTextView.sizeThatFits(CGSize(width: fixedWidth, height: CGFloat.greatestFiniteMagnitude))
+        let newSize = bodyTextView.sizeThatFits(CGSize(width: fixedWidth, height: CGFloat.greatestFiniteMagnitude))
+        var newFrame = bodyTextView.frame
+        newFrame.size = CGSize(width: max(newSize.width, fixedWidth), height: newSize.height)
+        bodyTextView.frame = newFrame;
+        bodyTextView.setContentOffset(CGPoint(x: 0, y: 0), animated: false)
     }
 
     func textWithFontAttribute(text : String, font : UIFont) -> NSAttributedString {
@@ -72,7 +83,21 @@ class AboutController : UIViewController, MFMailComposeViewControllerDelegate {
     @IBAction func sendEmail(sender: UIButton) {
         let mailComposeViewController = configuredMailComposeViewController()
         if MFMailComposeViewController.canSendMail() {
-            self.present(mailComposeViewController, animated: true, completion: nil)
+            //self.addChildViewController(mailComposeViewController)
+            //self.view.addSubview(mailComposeViewController.view)
+
+//            mailComposeViewController.view.translatesAutoresizingMaskIntoConstraints = false
+//
+//            mailComposeViewController.view.leftAnchor.constraint(equalTo: self.view.leftAnchor).isActive = true
+//            mailComposeViewController.view.rightAnchor.constraint(equalTo: self.view.rightAnchor).isActive = true
+//            mailComposeViewController.view.topAnchor.constraint(equalTo: self.topLayoutGuide.bottomAnchor, constant: 80).isActive = true
+//            mailComposeViewController.view.bottomAnchor.constraint(equalTo: self.bottomLayoutGuide.topAnchor, constant: -40).isActive = true
+
+            //mailComposeViewController.didMove(toParentViewController: self)
+            self.present(mailComposeViewController, animated: true, completion: {
+                mailComposeViewController.view.frame.size.height -= 100
+                mailComposeViewController.view.frame.origin.y += 100
+            })
         } else {
             self.showSendMailErrorAlert()
         }

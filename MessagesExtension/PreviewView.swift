@@ -14,6 +14,7 @@ class PreviewView : UIView {
     private var animation : AnimationClass?
     private var _baseImage : UIImage?
     private var runAgain : UIButton?
+    private var inActivityFeedback = false
 
     var image : UIImage {
         get {
@@ -50,7 +51,7 @@ class PreviewView : UIView {
             self.sizeImageView()
             self.imageView.image = self.animation?.asImage()
             if let settings = self.animation?.settings {
-                if !settings.doRepeat && settings.filterType != .None {
+                if settings.filterType != .Blinds && settings.filterType != .None {
                     Timer.scheduledTimer(withTimeInterval: self.animation!.settings.duration, repeats: false, block: { (timer) in
                         self.imageView.image = nil
                     })
@@ -72,6 +73,7 @@ class PreviewView : UIView {
     func clearViews() {
         self.imageView.removeFromSuperview()
         self.textView.removeFromSuperview()
+        self.runAgain?.removeFromSuperview()
         self.stopActivityFeedback()
     }
 
@@ -84,6 +86,7 @@ class PreviewView : UIView {
 
     // MARK: Activity Feedback Methods -------------------------------------------------------------------------------------------------
     func startActivityFeedback(completed: (()->())?) {
+        self.inActivityFeedback = true
         DispatchQueue.main.async {
             self.clearViews()
             self.activityView.frame = CGRect(x: 0, y: 0, width: self.frame.width, height: self.frame.height)
@@ -93,7 +96,7 @@ class PreviewView : UIView {
             self.activityView.layer.zPosition = 1
 
             self.progressBar.frame = CGRect(x: 0, y: 10, width: self.frame.width, height: 10)
-            self.progressBar.setProgress(0.0, animated: false)
+            self.progressBar.setProgress(0.05, animated: false)
             self.addSubview(self.progressBar)
             completed?()
         }
@@ -114,6 +117,7 @@ class PreviewView : UIView {
         self.activityView.stopAnimating()
         self.activityView.removeFromSuperview()
         self.progressBar.removeFromSuperview()
+        inActivityFeedback = false
     }
 
     // MARK: Image Methods -------------------------------------------------------------------------------------------------
@@ -182,35 +186,33 @@ class PreviewView : UIView {
            Timer.scheduledTimer(withTimeInterval: startDelay, repeats: false) { (timer) in
                 if let filteredImage = self.animation?.asImage() {
                     self.imageView.image = filteredImage
-                    if !self.animation!.doRepeat {
-                        // clean up image in a few seconds
-                        let duration = settings.duration * 0.85
-                        Timer.scheduledTimer(withTimeInterval: duration, repeats: false, block: { (timer) in
-                            self.imageView.image = nil
-                            self.createTapToRunButton()
-//                            Timer.scheduledTimer(withTimeInterval: 1.0, repeats: false, block: { (timer) in
-//                                self.imageView.image = self.animation?.baseImage(alpha: 1.0)
-//                            })
-                        })
-                    }
+                    // clean up image in a few seconds. Sometimes the image finishes early and restarts
+                    // so we'll start cleanup early to eliinate a flash from that happening
+                    let duration = settings.duration * 0.8
+                    Timer.scheduledTimer(withTimeInterval: duration, repeats: false, block: { (timer) in
+                        self.imageView.image = nil
+                        self.createTapToRunButton()
+                    })
                 }
             }
         }
     }
 
     func createTapToRunButton() {
-        let buttonWidth : CGFloat = 160
-        let buttonHeight : CGFloat = 36
-        let centerFrame = CGRect(x: (self.frame.width - buttonWidth)/2, y: (self.frame.height - buttonHeight)/2, width: buttonWidth, height: buttonHeight)
-        self.runAgain?.removeFromSuperview()
-        self.runAgain = nil
-        self.runAgain = UIButton(frame: centerFrame)
-        self.runAgain?.backgroundColor = UIColor.black
-        self.runAgain?.setTitle("Tap to run again", for: .normal)
-        self.runAgain?.setTitleColor(UIColor.white, for: .normal)
-        self.runAgain?.layer.cornerRadius = 8.0
-        self.runAgain?.addTarget(self, action: #selector(self.pictureTapped), for: .touchUpInside)
-        self.addSubview(self.runAgain!)
+        if !inActivityFeedback {
+            let buttonWidth : CGFloat = 160
+            let buttonHeight : CGFloat = 36
+            let centerFrame = CGRect(x: (self.frame.width - buttonWidth)/2, y: (self.frame.height - buttonHeight)/2, width: buttonWidth, height: buttonHeight)
+            self.runAgain?.removeFromSuperview()
+            self.runAgain = nil
+            self.runAgain = UIButton(frame: centerFrame)
+            self.runAgain?.backgroundColor = UIColor.black
+            self.runAgain?.setTitle("Tap to run again", for: .normal)
+            self.runAgain?.setTitleColor(UIColor.white, for: .normal)
+            self.runAgain?.layer.cornerRadius = 8.0
+            self.runAgain?.addTarget(self, action: #selector(self.pictureTapped), for: .touchUpInside)
+            self.addSubview(self.runAgain!)
+        }
     }
 
     func pictureTapped() {

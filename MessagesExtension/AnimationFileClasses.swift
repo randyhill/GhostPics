@@ -35,6 +35,32 @@ enum ImageFilterType : Int {
     }
 }
 
+// MARK: Extensions -------------------------------------------------------------------------------------------------
+extension UIImage {
+    func resizeWith(percentage: CGFloat) -> UIImage? {
+        let imageView = UIImageView(frame: CGRect(origin: .zero, size: CGSize(width: size.width * percentage, height: size.height * percentage)))
+        imageView.contentMode = .scaleAspectFit
+        imageView.image = self
+        UIGraphicsBeginImageContextWithOptions(imageView.bounds.size, false, scale)
+        guard let context = UIGraphicsGetCurrentContext() else { return nil }
+        imageView.layer.render(in: context)
+        guard let result = UIGraphicsGetImageFromCurrentImageContext() else { return nil }
+        UIGraphicsEndImageContext()
+        return result
+    }
+//    func resizeWith(width: CGFloat) -> UIImage? {
+//        let imageView = UIImageView(frame: CGRect(origin: .zero, size: CGSize(width: width, height: CGFloat(ceil(width/size.width * size.height)))))
+//        imageView.contentMode = .scaleAspectFit
+//        imageView.image = self
+//        UIGraphicsBeginImageContextWithOptions(imageView.bounds.size, false, scale)
+//        guard let context = UIGraphicsGetCurrentContext() else { return nil }
+//        imageView.layer.render(in: context)
+//        guard let result = UIGraphicsGetImageFromCurrentImageContext() else { return nil }
+//        UIGraphicsEndImageContext()
+//        return result
+//    }
+}
+
 // MARK: AnimationHeader -------------------------------------------------------------------------------------------------
 struct AnimationHeader {
     var headerTag = "FILT"
@@ -60,9 +86,9 @@ struct AnimationHeader {
         self.type = settings.filterType
         self.duration = settings.duration
         self.imageSize = imageSize
-        self.blindsSize = settings.blindsSize
+        //self.blindsSize = settings.blindsSize
         self.alpha = settings.alpha
-        self.doRepeat = settings.doRepeat
+        //self.doRepeat = settings.doRepeat
         self.checkSum = calcCheckSum()
     }
 
@@ -75,9 +101,9 @@ struct AnimationHeader {
         settings.filterType = type
         settings.alpha = alpha
         settings.duration = duration
-        settings.blindsSize = blindsSize
+        //settings.blindsSize = blindsSize
         settings.duration = duration
-        settings.doRepeat = doRepeat
+        //settings.doRepeat = doRepeat
         return settings
     }
 }
@@ -94,11 +120,11 @@ class AnimationClass {
         }
     }
 
-    var doRepeat : Bool {
-        get {
-            return settings.doRepeat
-        }
-    }
+//    var doRepeat : Bool {
+//        get {
+//            return settings.doRepeat
+//        }
+//    }
 
     init(baseImage: UIImage, settings: SettingsObject) {
         self.settings = settings
@@ -183,17 +209,19 @@ class AnimationClass {
 
     func createImages(baseImage: UIImage, settings: SettingsObject) {
         self._baseImage = baseImage
-        
-        switch settings.filterType {
-        case .Blinds:
-            blindsAnimation(baseImage: baseImage, settings: settings)
-        case .Flash:
-            flashAnimation(baseImage: baseImage,  settings: settings)
-        case .Fade:
-            fadeAnimation(baseImage: baseImage,  settings: settings)
-        default:
-            baseAnimation(baseImage: baseImage,  settings: settings)
+        if let previewImage = baseImage.resizeWith(percentage: 0.5) {
+            switch settings.filterType {
+            case .Blinds:
+                blindsAnimation(baseImage: previewImage, settings: settings)
+            case .Flash:
+                flashAnimation(baseImage: previewImage,  settings: settings)
+            case .Fade:
+                fadeAnimation(baseImage: previewImage,  settings: settings)
+            default:
+                baseAnimation(baseImage: previewImage,  settings: settings)
+            }
         }
+
     }
 
     private func clearImage(baseImage: UIImage) -> UIImage? {
@@ -269,7 +297,7 @@ class AnimationClass {
     }
 
     private func blindsAnimation(baseImage: UIImage, settings: SettingsObject) {
-        let slices = CGFloat(22 * settings.blindsSize)
+        let slices = CGFloat(22 * 0.8) //settings.blindsSize)
         let blindHeight = baseImage.size.height/slices
 
         if let newImage = createBlindImage(image: baseImage, blindHeight: blindHeight, offset: -blindHeight, slices: slices, alpha: settings.alpha) {
@@ -301,7 +329,7 @@ class AnimationClass {
     // Create image with blinds drawn over it
     private func createBlindImage(image : UIImage, blindHeight: CGFloat, offset: CGFloat, slices : CGFloat, alpha: CGFloat) -> UIImage? {
 
-        let color = UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: alpha)
+        let color = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.85)
         var grayRect = CGRect(x: 0, y: offset, width: image.size.width, height: blindHeight)
         UIGraphicsBeginImageContext(image.size)
         guard let context = UIGraphicsGetCurrentContext() else {

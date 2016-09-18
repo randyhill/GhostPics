@@ -57,7 +57,7 @@ class OptionsButton : UIButton {
                  OptionsMenu.sharedInstance.createMenu(options: options, delegate: delegate, button: self, topLeft: CGPoint(x: self.frame.origin.x, y: self.frame.origin.y + self.frame.height) )
             }
         } else {
-            OptionsMenu.sharedInstance.createMenu(options: options, delegate: delegate, button: self, topLeft: CGPoint(x: self.frame.origin.x, y: self.frame.origin.y + self.frame.height) )
+            OptionsMenu.sharedInstance.createMenu(options: options, delegate: delegate, button: self, topLeft: CGPoint(x: self.frame.origin.x, y: self.frame.origin.y + self.frame.height + 4.0) )
         }
     }
 

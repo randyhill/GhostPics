@@ -65,7 +65,7 @@ class Shared {
     static let sharedInstance = Shared()
 
     // userdefult keys
-    //let kMessageCountKey = "kMessageCountKey"
+    let kMessageCountKey = "kMessageCountKey"
     let kPurchaseActivatedKey = "kActivated"
     let kWalkthroughKey = "kWalkthroughKey"
     let kKeyChainServiceKey = "com.nvariance.GhostPics.MessagesExtension"
@@ -74,7 +74,8 @@ class Shared {
 
     // app data
     var imagesSentCount = 0
-    let evaluationImageLimit = 40
+    var effectsUsedCount = 0
+    let evaluationEffectsLimit = 10
     var activated = false
     var didWalkthrough = false
 
@@ -86,29 +87,34 @@ class Shared {
         let keychain = Keychain(service: kKeyChainServiceKey)
         if let token = keychain[kKeyChainTokenKey] {
             if let useCount = Int(token) {
-                imagesSentCount = useCount
+                effectsUsedCount = useCount
             }
         }
     }
 
     func isExpired() -> Bool {
-        return imagesSentCount > evaluationImageLimit
+        if activated {
+            return false
+        }
+        return effectsUsedCount > evaluationEffectsLimit
     }
 
     func save() {
         let defaults = UserDefaults.standard
         defaults.set(activated, forKey: kPurchaseActivatedKey)
         defaults.set(didWalkthrough, forKey: kWalkthroughKey)
+        defaults.set(imagesSentCount, forKey: kMessageCountKey)
 
         // Use keychain so user can't delete and re-install to reset their usage count
         let keychain = Keychain(service: kKeyChainServiceKey)
-        keychain[kKeyChainTokenKey] = String(imagesSentCount)
+        keychain[kKeyChainTokenKey] = String(effectsUsedCount)
     }
 
     func load() {
         let defaults = UserDefaults.standard
         activated = defaults.bool(forKey: kPurchaseActivatedKey)
         didWalkthrough = defaults.bool(forKey: kWalkthroughKey)
+        imagesSentCount = defaults.integer(forKey: kMessageCountKey)
     }
 
 }
