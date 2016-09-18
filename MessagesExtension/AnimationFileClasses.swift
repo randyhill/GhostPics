@@ -70,10 +70,6 @@ struct AnimationHeader {
         return Double(type.rawValue + imageSize) + duration + Double(alpha + blindsSize)
     }
 
-    func printIt() {
-        print("Tag: \(headerTag), checkSum: \(checkSum), type: \(type), size: \(imageSize)")
-    }
-
     func asSettings() -> SettingsObject {
         let settings = SettingsObject()
         settings.filterType = type
@@ -105,11 +101,9 @@ class AnimationClass {
     }
 
     init(baseImage: UIImage, settings: SettingsObject) {
-        print("create animation")
         self.settings = settings
         self._baseImage = baseImage
         createImages(baseImage: baseImage, settings: settings)
-        print("animation created")
     }
 
     init(data : NSData) {
@@ -134,9 +128,9 @@ class AnimationClass {
             createImages(baseImage: image, settings: header.asSettings())
         }
     }
-
+    let jpegQuality : CGFloat = 0.7
     func asData() -> NSData? {
-        if let imageData = UIImageJPEGRepresentation(_baseImage!, 1.0) {
+        if let imageData = UIImageJPEGRepresentation(_baseImage!, jpegQuality) {
             var header = AnimationHeader(settings: settings, imageSize: imageData.count)
             let headerData = encode(value: &header)
             let data = NSMutableData(data: headerData as Data)
@@ -146,9 +140,9 @@ class AnimationClass {
         return nil
     }
 
-    func asJPEGData() -> Data? {
-        return UIImageJPEGRepresentation(_baseImage!, 1.0)
-    }
+//    func asJPEGData() -> Data? {
+//        return UIImageJPEGRepresentation(_baseImage!, jpegQuality)
+//    }
 
 
     func encode<T>( value: inout T) -> NSData {
@@ -237,7 +231,7 @@ class AnimationClass {
 
     private func fadeAnimation(baseImage: UIImage, settings: SettingsObject) {
         // Create array of alpha values for fade progression
-        let transitions = 12
+        let transitions = 8
         let startAlpha : CGFloat = 1.0 - settings.alpha
         let fadeDistance = CGFloat(1.0 - startAlpha)/CGFloat(transitions)
         var fadeValues = [CGFloat]()
@@ -270,9 +264,7 @@ class AnimationClass {
         }
         // Clear images 1/4 of fade images
         if let clearImage = self.clearImage(baseImage: baseImage) {
-            for _ in 1...2 {
-                _images.append(clearImage)
-            }
+            _images.append(clearImage)
         }
     }
 

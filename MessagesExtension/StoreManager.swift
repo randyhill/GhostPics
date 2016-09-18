@@ -189,12 +189,10 @@ class StoreManager : NSObject, SKPaymentTransactionObserver, SKProductsRequestDe
         if (wasSuccessful)
         {
             let productID = transaction.payment.productIdentifier
-            print("purchase succeeded")
             Shared.postTransactions(name: kInAppRestoreNotification, productKeys: [productID])
         }
         else
         {
-            print("purchase failed")
             Shared.postNotification(name: kInAppPurchaseFailNotification,  userInfo: userInfo , object: "Purchase failed" as AnyObject?)
         }
     }
@@ -215,7 +213,6 @@ class StoreManager : NSObject, SKPaymentTransactionObserver, SKProductsRequestDe
         }
         
         //let userInfo = [kInAppTransactionKey : transaction, kInAppProductKey : transaction.payment.productIdentifier]
-        print("restore completed")
         Shared.postTransactions(name: kInAppRestoreNotification, productKeys: productKeys)
     }
 
@@ -235,7 +232,6 @@ class StoreManager : NSObject, SKPaymentTransactionObserver, SKProductsRequestDe
     }
 
     func paymentQueue(_ queue: SKPaymentQueue, restoreCompletedTransactionsFailedWithError error: Error) {
-        print("restore failed")
         Shared.postNotification(name: kInAppRestoreFailNotification,  userInfo: nil, object: "Failed to restore" as AnyObject?)
     }
         

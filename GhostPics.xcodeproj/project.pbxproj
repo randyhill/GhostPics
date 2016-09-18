@@ -9,6 +9,13 @@
 /* Begin PBXBuildFile section */
 		D81695EA1D7F5392001C0B5F /* AnimationFileClasses.swift in Sources */ = {isa = PBXBuildFile; fileRef = D81695E91D7F5392001C0B5F /* AnimationFileClasses.swift */; };
 		D81695EC1D7F971B001C0B5F /* Shared.swift in Sources */ = {isa = PBXBuildFile; fileRef = D81695EB1D7F971B001C0B5F /* Shared.swift */; };
+		D86702721D8CBE7400EA0C68 /* CameraOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = D86702711D8CBE7400EA0C68 /* CameraOverlay.swift */; };
+		D86702741D8CC83A00EA0C68 /* camera.png in Resources */ = {isa = PBXBuildFile; fileRef = D86702731D8CC83A00EA0C68 /* camera.png */; };
+		D86702781D8DC72700EA0C68 /* landscape-picture.png in Resources */ = {isa = PBXBuildFile; fileRef = D86702771D8DC72700EA0C68 /* landscape-picture.png */; };
+		D867027A1D8DD0D800EA0C68 /* rotate.png in Resources */ = {isa = PBXBuildFile; fileRef = D86702791D8DD0D800EA0C68 /* rotate.png */; };
+		D8688B4B1D8DEEB000E67596 /* snap32.png in Resources */ = {isa = PBXBuildFile; fileRef = D8688B491D8DEEB000E67596 /* snap32.png */; };
+		D8688B4C1D8DEEB000E67596 /* snap48.png in Resources */ = {isa = PBXBuildFile; fileRef = D8688B4A1D8DEEB000E67596 /* snap48.png */; };
+		D8688B4E1D8E224C00E67596 /* ImageEffects.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8688B4D1D8E224C00E67596 /* ImageEffects.swift */; };
 		D874535C1D8858690010A80E /* StoreManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D874535B1D8858690010A80E /* StoreManager.swift */; };
 		D8792D6A1D847022001676A7 /* OptionsButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8792D691D847022001676A7 /* OptionsButton.swift */; };
 		D8855BC91D79E8C5009C33B2 /* PreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8855BC81D79E8C5009C33B2 /* PreviewView.swift */; };
@@ -56,6 +63,13 @@
 /* Begin PBXFileReference section */
 		D81695E91D7F5392001C0B5F /* AnimationFileClasses.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnimationFileClasses.swift; sourceTree = "<group>"; };
 		D81695EB1D7F971B001C0B5F /* Shared.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Shared.swift; sourceTree = "<group>"; };
+		D86702711D8CBE7400EA0C68 /* CameraOverlay.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraOverlay.swift; sourceTree = "<group>"; };
+		D86702731D8CC83A00EA0C68 /* camera.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = camera.png; path = Resources/camera.png; sourceTree = "<group>"; };
+		D86702771D8DC72700EA0C68 /* landscape-picture.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "landscape-picture.png"; path = "Resources/landscape-picture.png"; sourceTree = "<group>"; };
+		D86702791D8DD0D800EA0C68 /* rotate.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = rotate.png; path = Resources/rotate.png; sourceTree = "<group>"; };
+		D8688B491D8DEEB000E67596 /* snap32.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = snap32.png; path = Resources/snap32.png; sourceTree = "<group>"; };
+		D8688B4A1D8DEEB000E67596 /* snap48.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = snap48.png; path = Resources/snap48.png; sourceTree = "<group>"; };
+		D8688B4D1D8E224C00E67596 /* ImageEffects.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageEffects.swift; sourceTree = "<group>"; };
 		D874535B1D8858690010A80E /* StoreManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StoreManager.swift; sourceTree = "<group>"; };
 		D8792D691D847022001676A7 /* OptionsButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OptionsButton.swift; sourceTree = "<group>"; };
 		D8855BC81D79E8C5009C33B2 /* PreviewView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreviewView.swift; sourceTree = "<group>"; };
@@ -98,10 +112,12 @@
 				D860DB3E1D7A3EA7001DEA75 /* Resources */,
 				D8B278471D78CC4D00B8AC25 /* MainInterface.storyboard */,
 				D8B278321D78CBD100B8AC25 /* MessagesViewController.swift */,
+				D86702711D8CBE7400EA0C68 /* CameraOverlay.swift */,
 				D8855BC81D79E8C5009C33B2 /* PreviewView.swift */,
 				D81695E91D7F5392001C0B5F /* AnimationFileClasses.swift */,
 				D8792D691D847022001676A7 /* OptionsButton.swift */,
 				D8C8626E1D88671100DCDD2B /* AboutController.swift */,
+				D8688B4D1D8E224C00E67596 /* ImageEffects.swift */,
 			);
 			name = UI;
 			sourceTree = "<group>";
@@ -109,6 +125,11 @@
 		D860DB3E1D7A3EA7001DEA75 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				D8688B491D8DEEB000E67596 /* snap32.png */,
+				D8688B4A1D8DEEB000E67596 /* snap48.png */,
+				D86702791D8DD0D800EA0C68 /* rotate.png */,
+				D86702771D8DC72700EA0C68 /* landscape-picture.png */,
+				D86702731D8CC83A00EA0C68 /* camera.png */,
 				D8AAD11C1D88E1BF004A2094 /* GHP-60x45@3x-skyan.png */,
 				D8AAD11A1D88E183004A2094 /* GHP-60x45@2x-skyan.png */,
 				D88867E31D889AEC00401B4C /* GHP 40@3x.png */,
@@ -268,12 +289,17 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D867027A1D8DD0D800EA0C68 /* rotate.png in Resources */,
+				D86702781D8DC72700EA0C68 /* landscape-picture.png in Resources */,
 				D8B278381D78CBD100B8AC25 /* Assets.xcassets in Resources */,
+				D8688B4B1D8DEEB000E67596 /* snap32.png in Resources */,
 				D88867E71D889AEC00401B4C /* GHP 40@2x.png in Resources */,
 				D8AAD11D1D88E1BF004A2094 /* GHP-60x45@3x-skyan.png in Resources */,
 				D88867E81D889AEC00401B4C /* GHP 40.png in Resources */,
 				D8B278481D78CC4D00B8AC25 /* MainInterface.storyboard in Resources */,
 				D8AAD11B1D88E183004A2094 /* GHP-60x45@2x-skyan.png in Resources */,
+				D86702741D8CC83A00EA0C68 /* camera.png in Resources */,
+				D8688B4C1D8DEEB000E67596 /* snap48.png in Resources */,
 				D88867E61D889AEC00401B4C /* GHP 40@3x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -285,6 +311,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D8688B4E1D8E224C00E67596 /* ImageEffects.swift in Sources */,
 				D8B278461D78CC3E00B8AC25 /* Just.swift in Sources */,
 				D8AAD11F1D89B4E5004A2094 /* KeyChainAccess.swift in Sources */,
 				D8855BC91D79E8C5009C33B2 /* PreviewView.swift in Sources */,
@@ -295,6 +322,7 @@
 				D8792D6A1D847022001676A7 /* OptionsButton.swift in Sources */,
 				D8C8626F1D88671100DCDD2B /* AboutController.swift in Sources */,
 				D8B278331D78CBD100B8AC25 /* MessagesViewController.swift in Sources */,
+				D86702721D8CBE7400EA0C68 /* CameraOverlay.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -28,17 +28,15 @@ class ServerManager {
     }
 
     func uploadFile(_ imageData: NSData, progress : @escaping (Float)->(), completion : @escaping (_ fileName: String?)->()) {
-        let startTime = Date()
         if var fileId = Just.post(cUploadURL, files: ["image" : .data("image.jpg", imageData as Data, nil)], asyncProgressHandler: {(p) in
-            print("Bytes: \(p.bytesProcessed) Expected: \(p.bytesExpectedToProcess) Percent: \(p.percent) Seconds: \(Date().timeIntervalSince(startTime))")
-           // progress(p.percent)
+            print("percent: \(p.percent) total: \(p.bytesExpectedToProcess)")
+            progress(p.percent)
         }).text {
             // fileId string should be 12 characters, plus quotes
             if fileId.characters.count > 12 {
                 // Remove quotes
                 fileId.remove(at: fileId.index(before: fileId.endIndex))
                 fileId.remove(at: fileId.startIndex)
-                print(fileId)
                 completion(fileId)
             } else {
                 completion(nil)
@@ -49,8 +47,8 @@ class ServerManager {
     func fileExists(url : URL, completion : @escaping (_ success : Bool)->()) {
         let path = cFileExistsURL + url.lastPathComponent
         _ = Just.get(path, params: [:]) { (result) in
-            print("file exists returned: \(result!.statusCode)")
-            if let code = result?.statusCode, code == 200   {
+            print("status code: \(result?.statusCode)")
+             if let code = result?.statusCode, code == 200   {
                 return completion(true)
             } else {
                 return completion(false)
@@ -59,12 +57,10 @@ class ServerManager {
     }
 
     func downloadFile(path : String, progress : @escaping (Float)->(), completion : @escaping (_ data : Data?, _ error: String?)->()) {
-        let startTime = Date()
        _ = Just.get(path, params: [:], asyncProgressHandler: {(p) in
-            print("Bytes: \(p.bytesProcessed) Expected: \(p.bytesExpectedToProcess) Percent: \(p.percent) Seconds: \(Date().timeIntervalSince(startTime))")
+            print("percent: \(p.percent) total: \(p.bytesExpectedToProcess)")
             progress(p.percent)
         }) { (result) in
-            print("dowwnload file returned")
             if let code = result?.statusCode, code == 200   {
                 if let data = result?.content {
                     return completion(data, nil)

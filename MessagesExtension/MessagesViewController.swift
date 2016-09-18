@@ -153,7 +153,6 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
 
     // MARK: IAP Methods -------------------------------------------------------------------------------------------------
     func restoreSucceeded(notification: NSNotification) {
-        print("Purchase success")
         globals.activated = true
         self.showAlert(title: "GhostPics Activated", message: "Your purchase was successful!")
     }
@@ -170,19 +169,24 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
     // This will happen when the extension is about to present UI.
     // Use this method to configure the extension and restore previously stored state.
     override func willBecomeActive(with conversation: MSConversation) {
+        if let message = conversation.selectedMessage {
+            self.openReceivedImage(message: message, conversation: conversation)
+        }
+    }
 
+    func openReceivedImage(message : MSMessage, conversation: MSConversation) {
         // We are never in preview mode unless we get an image that we didn't send
         inPreviewMode = false
-        if let message = conversation.selectedMessage {
-            // Use this method to trigger UI updates in response to the message.
-             print(message.url)
-            if let url = message.url, conversation.localParticipantIdentifier != message.senderParticipantIdentifier  {
-                self.setUIMode(completion: {
-                    self.previewView.startActivityFeedback(completed: nil)
-                    ServerManager.sharedInstance.fileExists(url: url, completion: { (success) in
-                        if success {
-                            let path = url.absoluteString
-                            ServerManager.sharedInstance.downloadFile(path: path,
+        print("opening image")
+
+        // Use this method to trigger UI updates in response to the message.
+        if let url = message.url, conversation.localParticipantIdentifier != message.senderParticipantIdentifier  {
+            self.setUIMode(completion: {
+                self.previewView.startActivityFeedback(completed: nil)
+                ServerManager.sharedInstance.fileExists(url: url, completion: { (success) in
+                    if success {
+                        let path = url.absoluteString
+                        ServerManager.sharedInstance.downloadFile(path: path,
                             progress: { (percent) in
                                 self.previewView.setProgress(percent: percent)
                             }, completion: { (imageDataOpt, errorText) in
@@ -192,15 +196,27 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
                                 } else {
                                     self.previewView.setText(message: errorText!)
                                 }
-                            })
-                        } else {
-                            self.previewView.setText(message: "That picture has expired, thanks to GhostPics!\n\nUse GhostPics's expiring photos to protect your secrets!")
-                        }
-                    })
+                        })
+                    } else {
+                        self.previewView.setText(message: "That picture has expired, thanks to GhostPics!\n\nUse GhostPics's expiring photos to protect your secrets!")
+                    }
                 })
-            }
+            })
         }
     }
+
+//    func openImage(message: MSMessage) {
+//        if let layout = message.layout {
+//            if let template = layout as? MSMessageTemplateLayout {
+//                if let image = template.image {
+//                    self.previewView.decodeImage(image: image)
+//                }
+//            }
+//        } else {
+//            let session = MSSession(message.session)
+//
+//        }
+//    }
 
     // Called when the extension is about to move from the active to inactive state.
     // This will happen when the user dissmises the extension, changes to a different
@@ -237,29 +253,37 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
 
     func updateView(to presentationStyle: MSMessagesAppPresentationStyle) {
         // Called after the extension transitions to a new presentation style.
-        viewStyle = presentationStyle
-        if presentationStyle == .compact {
-            previewView.frame.origin.y = sendButton.frame.origin.y + sendButton.frame.height + 8
-            previewView.frame.size.height = self.view.frame.height - previewView.frame.origin.y - 8
+        DispatchQueue.main.async {
+            self.viewStyle = presentationStyle
+            if presentationStyle == .compact {
+                self.previewView.frame.origin.y = self.sendButton.frame.origin.y + self.sendButton.frame.height + 8
+                self.previewView.frame.size.height = self.view.frame.height - self.previewView.frame.origin.y - 8
 
-            // Hide aboutscreen if it was open
-            if let about = aboutScreen {
-                about.dismiss(animated: true, completion: { 
-                    
-                })
+                // Hide aboutscreen if it was open
+                if let about = self.aboutScreen {
+                    about.dismiss(animated: true, completion: {
+
+                    })
+                }
+            } else {
+                // Let's open the image if it was sent to us while we were already open.
+                if let conversation = self.activeConversation, let message = conversation.selectedMessage, !self.inPreviewMode {
+                    self.openReceivedImage(message: message, conversation: conversation)
+                }
+
+                self.fullScreenButton.removeFromSuperview()
+                if !Shared.sharedInstance.didWalkthrough {
+                    Shared.sharedInstance.didWalkthrough = true
+                    Shared.sharedInstance.save()
+                    self.showAboutView()
+                }
             }
-       } else {
-            fullScreenButton.removeFromSuperview()
-            if !Shared.sharedInstance.didWalkthrough {
-                Shared.sharedInstance.didWalkthrough = true
-                Shared.sharedInstance.save()
-                showAboutView()
-            }
+            self.sizeCameraControls()
+            self.setUIMode(completion: nil)
+
+            // Use this method to finalize any behaviors associated with the change in presentation style.
+            self.previewView.sizeImageView()
         }
-        setUIMode(completion: nil)
-
-        // Use this method to finalize any behaviors associated with the change in presentation style.
-        previewView.sizeImageView()
     }
 
     internal func composeMessage(_ conversation : MSConversation, image : UIImage, idString: String) -> MSMessage? {
@@ -277,7 +301,7 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
         message.shouldExpire = true
         let layout = MSMessageTemplateLayout()
         layout.caption = "I sent you a GhostPic! Tap to see it before it vanishes!"
-        layout.image = image
+        //layout.image = image
         message.layout = layout
         return message
     }
@@ -285,7 +309,7 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
     // MARK: Actions -------------------------------------------------------------------------------------------------
     @IBAction func sendButton(_ sender : UIButton) {
         if globals.activated || !globals.isExpired() {
-            sendDirectGhost()
+            sendGhost()
         } else {
             self.showQuestionAlert(title: "Evaluation Complete", question: "Evaluation is limited to sending \(globals.evaluationImageLimit) GhostPics. Do you want to remove this limit ?", okTitle: "Yes", cancelTitle: "No", completion: { (accepted) in
                 if accepted {
@@ -329,24 +353,6 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
         })
     }
 
-    func sendDirectGhost() {
-        guard let conversation = activeConversation else { fatalError("Expected a conversation") }
-        if let message = self.composeMessage(conversation, image: self.previewView.encodedImage()!, idString: "ImageID") {
-            // Add the message to the conversation.
-            conversation.insert(message) { error in
-                if let error = error {
-                    print(error)
-                }
-            }
-            self.dismiss()
-            self.globals.imagesSentCount += 1
-            self.globals.save()
-        } else {
-            self.previewView.setText(message: "Could not send image, try again")
-        }
-
-   }
-
     func makeFullScreen(button: UIButton) {
         requestPresentationStyle(.expanded)
         button.removeFromSuperview()
@@ -377,39 +383,78 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
 
     // MARK: Image Pickers -------------------------------------------------------------------------------------------------
 
+    var picker = UIImagePickerController()
+
     @IBAction func pickPhoto(button : UIButton) {
-        let picker = UIImagePickerController()
         picker.mediaTypes = [kUTTypeImage as String]//, kUTTypeMovie as String]
         picker.delegate = self
-        //button.backgroundColor = UIColor.black
         fullScreenButton.removeFromSuperview()
         self.present(picker, animated: true, completion: {
         })
     }
 
+    var cameraOverlay : CameraOverlay?
     @IBAction func pickFromCamera(button : UIButton) {
-        let picker = UIImagePickerController()
+       // let picker = UIImagePickerController()
         picker.mediaTypes = [kUTTypeImage as String]//, kUTTypeMovie as String]
         picker.sourceType = .camera
         picker.delegate = self
-        //button.backgroundColor = UIColor.black
+        picker.showsCameraControls = false
+        picker.cameraOverlayView = createCameraControls()
         fullScreenButton.removeFromSuperview()
 
-        if let parentController = self.parent {
-            parentController.addChildViewController(picker)
-            parentController.view.addSubview(picker.view)
-            picker.view.translatesAutoresizingMaskIntoConstraints = false
-            picker.view.leftAnchor.constraint(equalTo: self.view.leftAnchor).isActive = true
-            picker.view.rightAnchor.constraint(equalTo: self.view.rightAnchor).isActive = true
-            picker.view.topAnchor.constraint(equalTo: self.topLayoutGuide.bottomAnchor, constant: 80).isActive = true
-            picker.view.bottomAnchor.constraint(equalTo: self.bottomLayoutGuide.topAnchor, constant: -40).isActive = true
-            picker.didMove(toParentViewController: parentController)
+        self.present(picker, animated: false, completion: {
+        })
+    }
 
-            parentController.present(picker, animated: false, completion: {
-                print("completed")
-            })
+    func createCameraControls() -> CameraOverlay {
+        let isCompact = self.viewStyle == MSMessagesAppPresentationStyle.compact
+        cameraOverlay = CameraOverlay(frame: cameraControlsRect(isCompact: isCompact), isCompact: isCompact)
+        cameraOverlay?.cameraControls.addTarget(self, action: #selector(cameraControlTapped), for: .valueChanged)
+        return cameraOverlay!
+    }
+
+    func sizeCameraControls() {
+        if cameraOverlay != nil {
+            let isCompact = self.viewStyle == MSMessagesAppPresentationStyle.compact
+            let overlayFrame = cameraControlsRect(isCompact: isCompact)
+            self.cameraOverlay?.sizeControls(frame: overlayFrame, isCompact: isCompact)
+       }
+    }
+
+    func cameraControlsRect(isCompact: Bool) -> CGRect {
+        var cameraFrame = self.view.frame
+        if  isCompact {
+            cameraFrame.size.width /= 2
+            cameraFrame.origin.x = cameraFrame.size.width
+        } else {
+            cameraFrame.origin.y += 120
+            cameraFrame.size.height -= 120
         }
+        return cameraFrame
+    }
 
+    func cameraControlTapped(cameraControls : UISegmentedControl) {
+        switch cameraControls.selectedSegmentIndex {
+        case 0:
+            if picker.cameraDevice == .rear {
+                picker.cameraDevice = .front
+            } else {
+                picker.cameraDevice = .rear
+            }
+        case 1:
+            picker.takePicture()
+        case 2:
+            if picker.sourceType == .camera {
+                picker.sourceType = .savedPhotosAlbum
+            } else if picker.sourceType == .photoLibrary {
+                picker.sourceType = .savedPhotosAlbum
+            } else {
+                picker.sourceType = .camera
+            }
+        default:
+            break;
+        }
     }
 
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
@@ -422,6 +467,7 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
             filterType.selectedSegmentIndex = 0
         }
         picker.dismiss(animated: true) {
+            self.cameraOverlay = nil
         }
         self.inPreviewMode = false
         self.setUIMode(completion: nil)
@@ -429,6 +475,7 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
 
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         picker.dismiss(animated: true) {
+            self.cameraOverlay = nil
         }
         self.setUIMode(completion: nil)
     }

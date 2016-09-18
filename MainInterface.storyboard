@@ -19,21 +19,47 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="528"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" reversesTitleShadowWhenHighlighted="YES" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Bao-ds-otS">
-                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="AEb-o0-xVd">
+                                <subviews>
+                                    <button opaque="NO" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" reversesTitleShadowWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Bao-ds-otS">
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="60" id="WOs-cL-rME"/>
+                                            <constraint firstAttribute="height" constant="30" id="fmf-dB-0gl"/>
+                                        </constraints>
+                                        <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <state key="normal" image="camera.png">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            <color key="titleShadowColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="pickFromCameraWithButton:" destination="FX5-3q-7bF" eventType="touchUpInside" id="n89-j7-fyz"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" reversesTitleShadowWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ouj-Cf-FIg">
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="30" id="VDu-6f-1eF"/>
+                                            <constraint firstAttribute="width" constant="60" id="pZv-3W-NlF"/>
+                                        </constraints>
+                                        <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <state key="normal" image="landscape-picture.png">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            <color key="titleShadowColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="pickPhotoWithButton:" destination="FX5-3q-7bF" eventType="touchUpInside" id="sBo-Hy-zYU"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="80" id="WOs-cL-rME"/>
-                                    <constraint firstAttribute="height" constant="30" id="fmf-dB-0gl"/>
+                                    <constraint firstAttribute="width" constant="140" id="1Q1-3C-pmA"/>
+                                    <constraint firstItem="Bao-ds-otS" firstAttribute="top" secondItem="AEb-o0-xVd" secondAttribute="top" id="HoF-t5-XX0"/>
+                                    <constraint firstAttribute="height" constant="30" id="MUr-WB-Ruq"/>
+                                    <constraint firstAttribute="trailing" secondItem="ouj-Cf-FIg" secondAttribute="trailing" id="kvi-qE-Gig"/>
+                                    <constraint firstItem="ouj-Cf-FIg" firstAttribute="top" secondItem="AEb-o0-xVd" secondAttribute="top" constant="1" id="lKp-Xi-wqY"/>
+                                    <constraint firstItem="Bao-ds-otS" firstAttribute="leading" secondItem="AEb-o0-xVd" secondAttribute="leading" id="upT-Kj-9mM"/>
                                 </constraints>
-                                <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <state key="normal" title="Camera">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                    <color key="titleShadowColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="pickFromCameraWithButton:" destination="FX5-3q-7bF" eventType="touchUpInside" id="n89-j7-fyz"/>
-                                </connections>
-                            </button>
+                            </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SaY-cy-MIG" customClass="PreviewView" customModule="MessagesExtension" customModuleProvider="target">
                                 <color key="backgroundColor" red="0.90196079019999997" green="0.90196079019999997" blue="0.90196079019999997" alpha="1" colorSpace="calibratedRGB"/>
                             </view>
@@ -127,21 +153,6 @@
                                     <constraint firstAttribute="height" constant="40" id="CIz-eu-A5h"/>
                                 </constraints>
                             </imageView>
-                            <button opaque="NO" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" reversesTitleShadowWhenHighlighted="YES" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ouj-Cf-FIg">
-                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="30" id="VDu-6f-1eF"/>
-                                    <constraint firstAttribute="width" constant="80" id="pZv-3W-NlF"/>
-                                </constraints>
-                                <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <state key="normal" title="Photos">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                    <color key="titleShadowColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="pickPhotoWithButton:" destination="FX5-3q-7bF" eventType="touchUpInside" id="sBo-Hy-zYU"/>
-                                </connections>
-                            </button>
                         </subviews>
                         <color key="backgroundColor" red="0.90196079019999997" green="0.90196079019999997" blue="0.90196079019999997" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
@@ -152,23 +163,21 @@
                             <constraint firstItem="Nut-Tw-emq" firstAttribute="top" secondItem="eda-mc-3jP" secondAttribute="bottom" constant="4" id="Anp-xy-kfY"/>
                             <constraint firstItem="9CL-gk-ial" firstAttribute="top" secondItem="PEb-ta-QzN" secondAttribute="bottom" constant="20" id="Cg3-BU-ZXi"/>
                             <constraint firstItem="SaY-cy-MIG" firstAttribute="trailing" secondItem="iQV-Mb-dVQ" secondAttribute="trailingMargin" constant="16" id="DL4-My-4Ky"/>
+                            <constraint firstItem="AEb-o0-xVd" firstAttribute="top" secondItem="eda-mc-3jP" secondAttribute="bottom" constant="4" id="Fg3-rV-pbQ"/>
                             <constraint firstItem="Nut-Tw-emq" firstAttribute="leading" secondItem="iQV-Mb-dVQ" secondAttribute="leading" constant="6" id="O03-Qa-yx4"/>
                             <constraint firstItem="aY6-6a-cAm" firstAttribute="top" secondItem="nPE-PO-X1c" secondAttribute="bottom" constant="10" id="OcQ-VH-Y18"/>
                             <constraint firstItem="nPE-PO-X1c" firstAttribute="trailing" secondItem="iQV-Mb-dVQ" secondAttribute="trailingMargin" id="QVy-Yo-LPO"/>
-                            <constraint firstItem="Bao-ds-otS" firstAttribute="leading" secondItem="Nut-Tw-emq" secondAttribute="trailing" constant="7" id="Whm-Fg-1CS"/>
+                            <constraint firstItem="tJY-Ch-Xan" firstAttribute="top" secondItem="AEb-o0-xVd" secondAttribute="bottom" constant="18" id="Zda-yF-c2t"/>
                             <constraint firstItem="hsy-9M-29d" firstAttribute="top" secondItem="tJY-Ch-Xan" secondAttribute="bottom" constant="10" id="bTh-Ez-uPv"/>
                             <constraint firstItem="lFw-rh-pLy" firstAttribute="top" secondItem="eda-mc-3jP" secondAttribute="bottom" constant="4" id="eGG-UR-GV8"/>
                             <constraint firstItem="lFw-rh-pLy" firstAttribute="trailing" secondItem="iQV-Mb-dVQ" secondAttribute="trailingMargin" id="fQm-Bu-KV4"/>
                             <constraint firstItem="tJY-Ch-Xan" firstAttribute="leading" secondItem="PEb-ta-QzN" secondAttribute="trailing" constant="4" id="hBZ-7q-H8k"/>
                             <constraint firstItem="hsy-9M-29d" firstAttribute="leading" secondItem="9CL-gk-ial" secondAttribute="trailing" constant="4" id="iGv-eS-fk9"/>
-                            <constraint firstItem="lFw-rh-pLy" firstAttribute="leading" secondItem="ouj-Cf-FIg" secondAttribute="trailing" constant="13" id="jGp-eF-11i"/>
                             <constraint firstItem="nPE-PO-X1c" firstAttribute="top" secondItem="lFw-rh-pLy" secondAttribute="bottom" constant="19" id="kvo-09-40L"/>
                             <constraint firstItem="aJH-G0-W46" firstAttribute="leading" secondItem="iQV-Mb-dVQ" secondAttribute="leading" constant="153" id="mCR-2U-4HH"/>
                             <constraint firstItem="9CL-gk-ial" firstAttribute="leading" secondItem="iQV-Mb-dVQ" secondAttribute="leading" constant="10" id="oGs-eX-qLb"/>
-                            <constraint firstItem="tJY-Ch-Xan" firstAttribute="top" secondItem="ouj-Cf-FIg" secondAttribute="bottom" constant="18" id="pNJ-rm-uGD"/>
+                            <constraint firstItem="AEb-o0-xVd" firstAttribute="centerX" secondItem="iQV-Mb-dVQ" secondAttribute="centerX" id="svi-uA-wO8"/>
                             <constraint firstItem="SaY-cy-MIG" firstAttribute="top" secondItem="hsy-9M-29d" secondAttribute="bottom" constant="8" id="u2H-lU-pNi"/>
-                            <constraint firstItem="Bao-ds-otS" firstAttribute="top" secondItem="eda-mc-3jP" secondAttribute="bottom" constant="4" id="vrD-XC-E0d"/>
-                            <constraint firstItem="ouj-Cf-FIg" firstAttribute="top" secondItem="eda-mc-3jP" secondAttribute="bottom" constant="4" id="w5y-E9-LeP"/>
                             <constraint firstItem="SaY-cy-MIG" firstAttribute="leading" secondItem="iQV-Mb-dVQ" secondAttribute="leadingMargin" constant="-16" id="yju-hW-yQ6"/>
                             <constraint firstItem="PEb-ta-QzN" firstAttribute="top" secondItem="eda-mc-3jP" secondAttribute="bottom" constant="57" id="zpl-VF-ptC"/>
                             <constraint firstItem="nPE-PO-X1c" firstAttribute="leading" secondItem="hsy-9M-29d" secondAttribute="trailing" constant="20" id="ztO-Hr-xu7"/>
@@ -308,5 +317,7 @@
     <resources>
         <image name="GHP 40.png" width="40" height="40"/>
         <image name="GHP-60x45-skyan.png" width="60" height="45"/>
+        <image name="camera.png" width="32" height="32"/>
+        <image name="landscape-picture.png" width="32" height="32"/>
     </resources>
 </document>

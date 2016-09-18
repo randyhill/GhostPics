@@ -21,9 +21,6 @@ class OptionsButton : UIButton {
         set(newSelection) {
             selectedOption = newSelection
             setTitleFromIndex()
-//            if let segmentControl = menu {
-//                segmentControl.selectedSegmentIndex = newSelection
-//            }
         }
     }
 
@@ -85,7 +82,6 @@ class OptionsMenu {
         options = titles
     }
 
-
     func width(font: UIFont) -> CGFloat {
         var width : CGFloat = 0
         let textAttributes = [NSFontAttributeName: font]
@@ -110,7 +106,7 @@ class OptionsMenu {
         if adjustedX + width > button.superview!.frame.width {
             adjustedX = button.superview!.frame.width - width
         }
-        menu?.frame = CGRect(x: adjustedX, y: topLeft.y, width: width, height: 40.0)
+        menu?.frame = CGRect(x: adjustedX, y: topLeft.y, width: width, height: 48.0)
         menu?.tintColor = UIColor.black
         menu?.backgroundColor = UIColor.white
         menu?.setTitleTextAttributes([NSFontAttributeName: font], for: .normal)
