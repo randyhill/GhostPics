@@ -16,6 +16,12 @@
 		D8688B4B1D8DEEB000E67596 /* snap32.png in Resources */ = {isa = PBXBuildFile; fileRef = D8688B491D8DEEB000E67596 /* snap32.png */; };
 		D8688B4C1D8DEEB000E67596 /* snap48.png in Resources */ = {isa = PBXBuildFile; fileRef = D8688B4A1D8DEEB000E67596 /* snap48.png */; };
 		D8688B4E1D8E224C00E67596 /* ImageEffects.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8688B4D1D8E224C00E67596 /* ImageEffects.swift */; };
+		D86F89C01D91F6E700653AE6 /* dog.png in Resources */ = {isa = PBXBuildFile; fileRef = D86F89BF1D91F6E700653AE6 /* dog.png */; };
+		D86F89C21D91F84A00653AE6 /* cat-2.png in Resources */ = {isa = PBXBuildFile; fileRef = D86F89C11D91F84A00653AE6 /* cat-2.png */; };
+		D86F89C71D91F87B00653AE6 /* black-cat.png in Resources */ = {isa = PBXBuildFile; fileRef = D86F89C31D91F87B00653AE6 /* black-cat.png */; };
+		D86F89C81D91F87B00653AE6 /* cat.png in Resources */ = {isa = PBXBuildFile; fileRef = D86F89C41D91F87B00653AE6 /* cat.png */; };
+		D86F89C91D91F87B00653AE6 /* siberian-husky.png in Resources */ = {isa = PBXBuildFile; fileRef = D86F89C51D91F87B00653AE6 /* siberian-husky.png */; };
+		D86F89CA1D91F87B00653AE6 /* happydog.png in Resources */ = {isa = PBXBuildFile; fileRef = D86F89C61D91F87B00653AE6 /* happydog.png */; };
 		D874535C1D8858690010A80E /* StoreManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D874535B1D8858690010A80E /* StoreManager.swift */; };
 		D8792D6A1D847022001676A7 /* OptionsButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8792D691D847022001676A7 /* OptionsButton.swift */; };
 		D8855BC91D79E8C5009C33B2 /* PreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8855BC81D79E8C5009C33B2 /* PreviewView.swift */; };
@@ -70,6 +76,12 @@
 		D8688B491D8DEEB000E67596 /* snap32.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = snap32.png; path = Resources/snap32.png; sourceTree = "<group>"; };
 		D8688B4A1D8DEEB000E67596 /* snap48.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = snap48.png; path = Resources/snap48.png; sourceTree = "<group>"; };
 		D8688B4D1D8E224C00E67596 /* ImageEffects.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageEffects.swift; sourceTree = "<group>"; };
+		D86F89BF1D91F6E700653AE6 /* dog.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = dog.png; sourceTree = "<group>"; };
+		D86F89C11D91F84A00653AE6 /* cat-2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cat-2.png"; sourceTree = "<group>"; };
+		D86F89C31D91F87B00653AE6 /* black-cat.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "black-cat.png"; sourceTree = "<group>"; };
+		D86F89C41D91F87B00653AE6 /* cat.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cat.png; sourceTree = "<group>"; };
+		D86F89C51D91F87B00653AE6 /* siberian-husky.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "siberian-husky.png"; sourceTree = "<group>"; };
+		D86F89C61D91F87B00653AE6 /* happydog.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = happydog.png; sourceTree = "<group>"; };
 		D874535B1D8858690010A80E /* StoreManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StoreManager.swift; sourceTree = "<group>"; };
 		D8792D691D847022001676A7 /* OptionsButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OptionsButton.swift; sourceTree = "<group>"; };
 		D8855BC81D79E8C5009C33B2 /* PreviewView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreviewView.swift; sourceTree = "<group>"; };
@@ -125,6 +137,12 @@
 		D860DB3E1D7A3EA7001DEA75 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				D86F89C31D91F87B00653AE6 /* black-cat.png */,
+				D86F89C41D91F87B00653AE6 /* cat.png */,
+				D86F89C51D91F87B00653AE6 /* siberian-husky.png */,
+				D86F89C61D91F87B00653AE6 /* happydog.png */,
+				D86F89C11D91F84A00653AE6 /* cat-2.png */,
+				D86F89BF1D91F6E700653AE6 /* dog.png */,
 				D8688B491D8DEEB000E67596 /* snap32.png */,
 				D8688B4A1D8DEEB000E67596 /* snap48.png */,
 				D86702791D8DD0D800EA0C68 /* rotate.png */,
@@ -291,16 +309,22 @@
 			files = (
 				D867027A1D8DD0D800EA0C68 /* rotate.png in Resources */,
 				D86702781D8DC72700EA0C68 /* landscape-picture.png in Resources */,
+				D86F89C81D91F87B00653AE6 /* cat.png in Resources */,
 				D8B278381D78CBD100B8AC25 /* Assets.xcassets in Resources */,
 				D8688B4B1D8DEEB000E67596 /* snap32.png in Resources */,
 				D88867E71D889AEC00401B4C /* GHP 40@2x.png in Resources */,
 				D8AAD11D1D88E1BF004A2094 /* GHP-60x45@3x-skyan.png in Resources */,
 				D88867E81D889AEC00401B4C /* GHP 40.png in Resources */,
+				D86F89C21D91F84A00653AE6 /* cat-2.png in Resources */,
 				D8B278481D78CC4D00B8AC25 /* MainInterface.storyboard in Resources */,
+				D86F89C91D91F87B00653AE6 /* siberian-husky.png in Resources */,
+				D86F89C71D91F87B00653AE6 /* black-cat.png in Resources */,
+				D86F89C01D91F6E700653AE6 /* dog.png in Resources */,
 				D8AAD11B1D88E183004A2094 /* GHP-60x45@2x-skyan.png in Resources */,
 				D86702741D8CC83A00EA0C68 /* camera.png in Resources */,
 				D8688B4C1D8DEEB000E67596 /* snap48.png in Resources */,
 				D88867E61D889AEC00401B4C /* GHP 40@3x.png in Resources */,
+				D86F89CA1D91F87B00653AE6 /* happydog.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

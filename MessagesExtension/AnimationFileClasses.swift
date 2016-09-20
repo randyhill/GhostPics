@@ -10,7 +10,7 @@ import UIKit
 
 // MARK: Enums -------------------------------------------------------------------------------------------------
 enum ImageFilterType : Int {
-    case None = 0, Flash, Blinds, Fade
+    case None = 0, Flash, Blinds, Fade, Faces
 
     static func fromInt(filterIndex : Int) -> ImageFilterType {
         switch filterIndex {
@@ -22,6 +22,8 @@ enum ImageFilterType : Int {
             return .Blinds
         case 3:
             return .Fade
+        case 4:
+            return .Faces
         default :
             return .None
         }
@@ -206,7 +208,6 @@ class AnimationClass {
         return UIImage.animatedImage(with: _images, duration: settings.duration)
     }
 
-
     func createImages(baseImage: UIImage, settings: SettingsObject) {
         self._baseImage = baseImage
         if let previewImage = baseImage.resizeWith(percentage: 0.5) {
@@ -297,7 +298,7 @@ class AnimationClass {
     }
 
     private func blindsAnimation(baseImage: UIImage, settings: SettingsObject) {
-        let slices = CGFloat(22 * 0.8) //settings.blindsSize)
+        let slices = CGFloat(22 * (1.1 - settings.blindSize))
         let blindHeight = baseImage.size.height/slices
 
         if let newImage = createBlindImage(image: baseImage, blindHeight: blindHeight, offset: -blindHeight, slices: slices, alpha: settings.alpha) {

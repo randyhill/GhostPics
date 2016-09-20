@@ -14,6 +14,7 @@ class SettingsObject {
     var filterType : ImageFilterType = .None
     var duration : Double = 2.0
     var alpha : CGFloat = 1.0
+    var blindSize : CGFloat = 0.6
 
     func setAlpha(selectedSegment : Int) {
         switch selectedSegment {
@@ -57,7 +58,11 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
     @IBOutlet var filterType : OptionsButton!
     @IBOutlet var speedTitle: UILabel!
     @IBOutlet var speed : OptionsButton!
+    @IBOutlet var smallTitle : UILabel!
+    @IBOutlet var bigTitle : UILabel!
+    @IBOutlet var width : UISlider!
     var fullScreenButton = UIButton()
+    let facesControl = UISegmentedControl()
 
     var globals = Shared.sharedInstance
     var store = StoreManager.sharedInstance
@@ -84,7 +89,7 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
 
         getPicButton?.layer.cornerRadius = 8.0
         previewView.delegate = self
-        filterType.addOptions(titles: ["None", "Flash", "Blinds", "Fade"])
+        filterType.addOptions(titles: ["None", "Flash", "Blinds", "Fade", "Dog"])
         filterType.delegate = self
         speed.addOptions(titles: ["Fastest", "Fast", "Medium", "Slow"])
         speed.delegate = self
@@ -99,6 +104,13 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
             fullScreenButton.addTarget(self, action: #selector(self.makeFullScreen), for: .touchDown)
             self.view.addSubview(fullScreenButton)
         }
+
+        facesControl.layer.cornerRadius = 8.0
+        let ff = filterType.frame
+        facesControl.frame = CGRect(x: ff.origin.x, y: ff.origin.y + ff.height + 12, width: self.view.frame.width - ff.origin.x, height: 30)
+        facesControl.insertSegment(with: <#T##UIImage?#>, at: <#T##Int#>, animated: <#T##Bool#>)
+        facesControl.isHidden = true
+        self.view.addSubview(facesControl)
 
         let tap = UITapGestureRecognizer(target: self, action: #selector(viewTapped))
         self.view.addGestureRecognizer(tap)
@@ -283,7 +295,7 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
 
     // MARK: Actions -------------------------------------------------------------------------------------------------
     @IBAction func sendButton(_ sender : UIButton) {
-             sendGhost()
+        sendGhost()
      }
 
     func sendGhost() {
@@ -323,7 +335,6 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
     @IBAction func makeFullScreen(button: UIButton) {
         requestPresentationStyle(.expanded)
         fullScreenButton.removeFromSuperview()
-//        getPicButton.backgroundColor = Shared.attentionColor(alpha: 1.0)
     }
 
     func viewTapped(tap : UITapGestureRecognizer) {
@@ -464,6 +475,18 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
         default:
             break
         }
+        if filterType == .Faces {
+            facesControl.isHidden = false
+
+        } else {
+            facesControl.isHidden = true
+        }
+    }
+
+    @IBAction func widthChanged(slider : UISlider) {
+        let settings = self.getSettings()
+        settings.blindSize = CGFloat(slider.value)
+        self.previewView.filterImage(settings: settings)
     }
 
     // MARK: Settings/UI -------------------------------------------------------------------------------------------------
@@ -478,7 +501,7 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
     func updateSettings(button: OptionsButton) {
         DispatchQueue.main.async {
            switch button.tag {
-            case 1:
+            case 1: // Effects button
                 let shared = Shared.sharedInstance
                 if shared.isExpired() && self.filterType.selectedSegmentIndex > 0 {
                     self.showQuestionAlert(title: "Evaluation Limit", question: "We hope you've enjoyed using the effects. Their evaluation use limit has been reached. Do you want to continue using effects on your GhostPics (and support our development)?", okTitle: "Yes", cancelTitle: "No", completion: { (accepted) in
@@ -516,6 +539,11 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
             let hideFilterSettings = inCompactStyle || (curFilterType == .None) || previewStyle
             self.speedTitle.isHidden = hideFilterSettings
             self.speed.isHidden = hideFilterSettings
+
+            let blindsStyle = curFilterType != .Blinds
+            self.width.isHidden = blindsStyle
+            self.smallTitle.isHidden = blindsStyle
+            self.bigTitle.isHidden = blindsStyle
 
             // Send button
             self.sendButton.isHidden = self.inPreviewMode || !self.previewView.hasImage()
