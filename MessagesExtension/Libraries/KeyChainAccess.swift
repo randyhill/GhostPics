@@ -1108,7 +1108,7 @@ private let UseOperationPrompt = String(kSecUseOperationPrompt)
 
 #if os(iOS)
     @available(iOS, introduced: 8.0, deprecated: 9.0, message: "Use a UseAuthenticationUI instead.")
-    private let UseNoAuthenticationUI = String(kSecUseNoAuthenticationUI)
+    private let UseNoAuthenticationUI = String(kSecUseAuthenticationUI)
 #endif
 
 @available(iOS 9.0, OSX 10.11, *)

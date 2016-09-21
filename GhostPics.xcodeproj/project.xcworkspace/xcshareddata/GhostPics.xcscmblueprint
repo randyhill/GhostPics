@@ -4,23 +4,16 @@
 
   },
   "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
-    "3300E6D3FFD4A36007D8EAA9C953DE77E053BD48" : 9223372036854775807,
-    "0531424E31F7460B12B3AD9808176889CCDF2C37" : 9223372036854775807
+    "3300E6D3FFD4A36007D8EAA9C953DE77E053BD48" : 9223372036854775807
   },
   "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "13513B6F-30E5-44D3-9511-FB04990D39CF",
   "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
-    "3300E6D3FFD4A36007D8EAA9C953DE77E053BD48" : "GhostPics\/",
-    "0531424E31F7460B12B3AD9808176889CCDF2C37" : "Superboard\/"
+    "3300E6D3FFD4A36007D8EAA9C953DE77E053BD48" : "GhostPics\/"
   },
   "DVTSourceControlWorkspaceBlueprintNameKey" : "GhostPics",
   "DVTSourceControlWorkspaceBlueprintVersion" : 204,
   "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "GhostPics.xcodeproj",
   "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
-    {
-      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/randyhill\/Superboard.git",
-      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
-      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "0531424E31F7460B12B3AD9808176889CCDF2C37"
-    },
     {
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/randyhill\/GhostPics.git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
