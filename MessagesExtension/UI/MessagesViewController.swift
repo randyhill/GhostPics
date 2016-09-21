@@ -61,8 +61,8 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
     @IBOutlet var smallTitle : UILabel!
     @IBOutlet var bigTitle : UILabel!
     @IBOutlet var width : UISlider!
+    @IBOutlet var facesControl : FacesControl!
     var fullScreenButton = UIButton()
-    let facesControl = UISegmentedControl()
 
     var globals = Shared.sharedInstance
     var store = StoreManager.sharedInstance
@@ -89,7 +89,7 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
 
         getPicButton?.layer.cornerRadius = 8.0
         previewView.delegate = self
-        filterType.addOptions(titles: ["None", "Flash", "Blinds", "Fade", "Dog"])
+        filterType.addOptions(titles: ["None", "Flash", "Blinds", "Fade", "Faces"])
         filterType.delegate = self
         speed.addOptions(titles: ["Fastest", "Fast", "Medium", "Slow"])
         speed.delegate = self
@@ -105,12 +105,8 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
             self.view.addSubview(fullScreenButton)
         }
 
-        facesControl.layer.cornerRadius = 8.0
-        let ff = filterType.frame
-        facesControl.frame = CGRect(x: ff.origin.x, y: ff.origin.y + ff.height + 12, width: self.view.frame.width - ff.origin.x, height: 30)
-        facesControl.insertSegment(with: <#T##UIImage?#>, at: <#T##Int#>, animated: <#T##Bool#>)
         facesControl.isHidden = true
-        self.view.addSubview(facesControl)
+        facesControl.delegate = self
 
         let tap = UITapGestureRecognizer(target: self, action: #selector(viewTapped))
         self.view.addGestureRecognizer(tap)
@@ -129,9 +125,12 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+
+        // Size dynamic controls just before we appear so we get correct sizes
         let fsWidth : CGFloat = 120.0
         fullScreenButton.frame = CGRect(x: (self.view.frame.width - fsWidth)/2, y: (self.view.frame.height - 40.0)/2, width: fsWidth, height: 40.0)
-     }
+        facesControl.sizeIcons()
+    }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -366,6 +365,12 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
         })
     }
 
+    func faceTapped(name: String) {
+        if let image = UIImage(named: name + "256") {
+            previewView.addFace(image: image)
+        }
+    }
+
     // MARK: Image Pickers -------------------------------------------------------------------------------------------------
 
     var picker = UIImagePickerController()
@@ -464,8 +469,8 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
         self.setUIMode(completion: nil)
     }
 
-    func setFilterTo(filterType : ImageFilterType) {
-        switch filterType {
+    func setFilterTo(type : ImageFilterType) {
+        switch type {
         case .Flash:
             speed.selectedSegmentIndex = 1
         case .Blinds:
@@ -475,9 +480,8 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
         default:
             break
         }
-        if filterType == .Faces {
+        if type == .Faces {
             facesControl.isHidden = false
-
         } else {
             facesControl.isHidden = true
         }
@@ -514,7 +518,7 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
                     if self.filterType.selectedSegmentIndex > 0 {
                         shared.effectsUsedCount += 1
                     }
-                    self.setFilterTo(filterType: ImageFilterType.fromInt(filterIndex: self.filterType.selectedSegmentIndex))
+                    self.setFilterTo(type: ImageFilterType.fromInt(filterIndex: self.filterType.selectedSegmentIndex))
                 }
             default:
                 break
@@ -536,7 +540,7 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
             self.filterTitle.isHidden = previewStyle || inCompactStyle
 
             // Filter settings
-            let hideFilterSettings = inCompactStyle || (curFilterType == .None) || previewStyle
+            let hideFilterSettings = inCompactStyle || (curFilterType == .None) || previewStyle || (curFilterType == .Faces)
             self.speedTitle.isHidden = hideFilterSettings
             self.speed.isHidden = hideFilterSettings
 

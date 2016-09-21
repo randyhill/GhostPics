@@ -8,22 +8,19 @@
 
 import UIKit
 
-//let kNoneFilterNotification = "kNoneFilterNotification"
-
 class PreviewView : UIView {
     private var animation : AnimationClass?
-    private var _baseImage : UIImage?
     private var runAgain : UIButton?
     private var inActivityFeedback = false
 
     var image : UIImage {
         get {
-            animation = AnimationClass(baseImage: _baseImage!, settings: SettingsObject())
+            animation = AnimationClass(baseImage: imageView.composite()!, settings: SettingsObject())
             return animation!.asImage()!
         }
     }
 
-    var imageView = UIImageView()
+    var imageView = ImageEditor()
     var message = ""
     var textView = UITextView()
     var activityView = UIActivityIndicatorView()
@@ -34,12 +31,9 @@ class PreviewView : UIView {
         super.init(coder: aDecoder)
         textView.font = UIFont.boldSystemFont(ofSize: 20.0)
         textView.backgroundColor = UIColor(red: 230/255.0, green: 230/255.0, blue: 230/255.0, alpha: 1.0)
-
         self.backgroundColor = Shared.backgroundColor(alpha: 1.0)
-
-
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(pictureTapped))
-        self.addGestureRecognizer(tapGesture)
+//        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(pictureTapped))
+//        self.addGestureRecognizer(tapGesture)
 
     }
 
@@ -78,7 +72,7 @@ class PreviewView : UIView {
     }
 
     func hasImage() -> Bool {
-        if _baseImage == nil {
+        if imageView.composite() == nil {
             return false
         }
         return true
@@ -120,10 +114,18 @@ class PreviewView : UIView {
         inActivityFeedback = false
     }
 
+    // MARK: Faces
+    func addFace(image: UIImage) {
+        let imageRect = CGRect(x: (frame.width - 64)/2, y: (frame.height - 64)/2, width: 64, height: 64)
+        let imageView = UIImageView(image: image)
+        imageView.frame = imageRect
+        self.addSubview(imageView)
+    }
+
     // MARK: Image Methods -------------------------------------------------------------------------------------------------
     func setImage(newImage : UIImage) {
         DispatchQueue.main.async {
-            self._baseImage = newImage
+            self.imageView.baseImage = newImage
             self.clearViews()
             self.addSubview(self.imageView)
             self.animation = AnimationClass(baseImage: newImage, settings: SettingsObject())
@@ -153,10 +155,10 @@ class PreviewView : UIView {
     func filterImage(settings: SettingsObject) {
         self.runAgain?.removeFromSuperview()
         self.runAgain = nil
-        if settings.filterType == .None {
+        if settings.filterType == .None || settings.filterType == .Faces {
             self.imageView.image = self.animation?.baseImage(alpha: 1.0)
         } else if settings.filterType == .Blinds {
-            self.animation = AnimationClass(baseImage: self._baseImage!, settings: settings)
+            self.animation = AnimationClass(baseImage: self.imageView.composite()!, settings: settings)
             self.imageView.image = self.animation?.asImage()!
         } else {
             runOnce(settings: settings)
@@ -180,7 +182,7 @@ class PreviewView : UIView {
             // Clear view before showing animation
             self.runAgain?.removeFromSuperview()
             self.runAgain = nil
-            self.animation = AnimationClass(baseImage: self._baseImage!, settings: settings)
+            self.animation = AnimationClass(baseImage: self.imageView.composite()!, settings: settings)
 
             // Now show animation after a short delay to show clear view
            Timer.scheduledTimer(withTimeInterval: startDelay, repeats: false) { (timer) in

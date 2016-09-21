@@ -99,7 +99,10 @@ class OptionsMenu {
 
         menu = UISegmentedControl()
         let font = UIFont.systemFont(ofSize: 18.0)
-        let width = self.width(font: font)
+        var width = self.width(font: font)
+        if button.superview!.frame.width < width {
+            width = button.superview!.frame.width
+        }
 
         // Stay on screen
         var adjustedX = topLeft.x

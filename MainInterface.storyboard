@@ -19,6 +19,15 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="528"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Okn-he-tGk" customClass="FacesControl" customModule="MessagesExtension" customModuleProvider="target">
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="40" id="dMF-wA-p3C"/>
+                                </constraints>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SaY-cy-MIG" customClass="PreviewView" customModule="MessagesExtension" customModuleProvider="target">
+                                <color key="backgroundColor" red="0.90196079019999997" green="0.90196079019999997" blue="0.90196079019999997" alpha="1" colorSpace="calibratedRGB"/>
+                            </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="AEb-o0-xVd">
                                 <subviews>
                                     <button opaque="NO" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" reversesTitleShadowWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Bao-ds-otS">
@@ -72,9 +81,6 @@
                                     <constraint firstItem="ouj-Cf-FIg" firstAttribute="top" secondItem="AEb-o0-xVd" secondAttribute="top" constant="1" id="lKp-Xi-wqY"/>
                                     <constraint firstItem="Bao-ds-otS" firstAttribute="leading" secondItem="AEb-o0-xVd" secondAttribute="leading" id="upT-Kj-9mM"/>
                                 </constraints>
-                            </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SaY-cy-MIG" customClass="PreviewView" customModule="MessagesExtension" customModuleProvider="target">
-                                <color key="backgroundColor" red="0.90196079019999997" green="0.90196079019999997" blue="0.90196079019999997" alpha="1" colorSpace="calibratedRGB"/>
                             </view>
                             <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Effects" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PEb-ta-QzN">
                                 <constraints>
@@ -166,7 +172,7 @@
                         </subviews>
                         <color key="backgroundColor" red="0.90196079019999997" green="0.90196079019999997" blue="0.90196079019999997" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
-                            <constraint firstItem="SaY-cy-MIG" firstAttribute="top" secondItem="hsy-9M-29d" secondAttribute="bottom" constant="36" id="1a0-Yu-vsy"/>
+                            <constraint firstItem="SaY-cy-MIG" firstAttribute="top" secondItem="hsy-9M-29d" secondAttribute="bottom" constant="46" id="1a0-Yu-vsy"/>
                             <constraint firstItem="DGI-Ho-b00" firstAttribute="top" secondItem="SaY-cy-MIG" secondAttribute="bottom" constant="8" id="2BZ-5U-5SC"/>
                             <constraint firstItem="PEb-ta-QzN" firstAttribute="leading" secondItem="iQV-Mb-dVQ" secondAttribute="leading" constant="6" id="8Kr-yi-Drg"/>
                             <constraint firstItem="Z86-RV-Wfn" firstAttribute="top" secondItem="hsy-9M-29d" secondAttribute="bottom" constant="8" id="9Az-3b-fDE"/>
@@ -174,13 +180,16 @@
                             <constraint firstItem="9CL-gk-ial" firstAttribute="top" secondItem="PEb-ta-QzN" secondAttribute="bottom" constant="-16" id="Cg3-BU-ZXi"/>
                             <constraint firstItem="SaY-cy-MIG" firstAttribute="trailing" secondItem="iQV-Mb-dVQ" secondAttribute="trailingMargin" constant="16" id="DL4-My-4Ky"/>
                             <constraint firstItem="AEb-o0-xVd" firstAttribute="top" secondItem="eda-mc-3jP" secondAttribute="bottom" constant="4" id="Fg3-rV-pbQ"/>
+                            <constraint firstAttribute="trailing" secondItem="Okn-he-tGk" secondAttribute="trailing" constant="5" id="NIh-hV-6yu"/>
                             <constraint firstItem="Nut-Tw-emq" firstAttribute="leading" secondItem="iQV-Mb-dVQ" secondAttribute="leading" constant="6" id="O03-Qa-yx4"/>
+                            <constraint firstItem="Okn-he-tGk" firstAttribute="leading" secondItem="iQV-Mb-dVQ" secondAttribute="leading" constant="4" id="SGm-Zp-Oiv"/>
                             <constraint firstItem="tJY-Ch-Xan" firstAttribute="top" secondItem="AEb-o0-xVd" secondAttribute="bottom" constant="18" id="Zda-yF-c2t"/>
                             <constraint firstItem="hsy-9M-29d" firstAttribute="top" secondItem="tJY-Ch-Xan" secondAttribute="bottom" constant="-30" id="bTh-Ez-uPv"/>
                             <constraint firstItem="lFw-rh-pLy" firstAttribute="top" secondItem="eda-mc-3jP" secondAttribute="bottom" constant="4" id="eGG-UR-GV8"/>
                             <constraint firstItem="lFw-rh-pLy" firstAttribute="trailing" secondItem="iQV-Mb-dVQ" secondAttribute="trailingMargin" constant="12" id="fQm-Bu-KV4"/>
                             <constraint firstItem="tJY-Ch-Xan" firstAttribute="leading" secondItem="PEb-ta-QzN" secondAttribute="trailing" constant="4" id="hBZ-7q-H8k"/>
                             <constraint firstItem="hsy-9M-29d" firstAttribute="leading" secondItem="9CL-gk-ial" secondAttribute="trailing" constant="4" id="iGv-eS-fk9"/>
+                            <constraint firstItem="Okn-he-tGk" firstAttribute="top" secondItem="Z86-RV-Wfn" secondAttribute="bottom" constant="-30" id="iuB-TC-ldt"/>
                             <constraint firstItem="Z86-RV-Wfn" firstAttribute="leading" secondItem="RMc-oF-h09" secondAttribute="trailing" constant="4" id="j7m-RA-DK4"/>
                             <constraint firstItem="N18-H1-IFL" firstAttribute="leading" secondItem="Z86-RV-Wfn" secondAttribute="trailing" constant="6" id="k6Z-fK-P77"/>
                             <constraint firstItem="RMc-oF-h09" firstAttribute="top" secondItem="PEb-ta-QzN" secondAttribute="bottom" constant="22" id="naK-mg-PRe"/>
@@ -198,6 +207,7 @@
                     <connections>
                         <outlet property="bigTitle" destination="N18-H1-IFL" id="g4x-ig-6u9"/>
                         <outlet property="cameraButton" destination="Bao-ds-otS" id="X97-hT-HgK"/>
+                        <outlet property="facesControl" destination="Okn-he-tGk" id="gFT-SI-8WK"/>
                         <outlet property="filterTitle" destination="PEb-ta-QzN" id="MkJ-9w-pBV"/>
                         <outlet property="filterType" destination="tJY-Ch-Xan" id="rtJ-tC-kUt"/>
                         <outlet property="getPicButton" destination="ouj-Cf-FIg" id="RCA-Ie-fQt"/>
