@@ -366,9 +366,7 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
     }
 
     func faceTapped(name: String) {
-        if let image = UIImage(named: name + "256") {
-            previewView.addFace(image: image)
-        }
+        previewView.addFace(name: name)
     }
 
     // MARK: Image Pickers -------------------------------------------------------------------------------------------------

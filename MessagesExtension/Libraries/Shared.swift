@@ -75,7 +75,7 @@ class Shared {
     // app data
     var imagesSentCount = 0
     var effectsUsedCount = 0
-    let evaluationEffectsLimit = 10
+    let evaluationEffectsLimit = 40
     var activated = false
     var didWalkthrough = false
 

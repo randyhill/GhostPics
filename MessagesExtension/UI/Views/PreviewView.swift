@@ -32,9 +32,10 @@ class PreviewView : UIView {
         textView.font = UIFont.boldSystemFont(ofSize: 20.0)
         textView.backgroundColor = UIColor(red: 230/255.0, green: 230/255.0, blue: 230/255.0, alpha: 1.0)
         self.backgroundColor = Shared.backgroundColor(alpha: 1.0)
-//        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(pictureTapped))
-//        self.addGestureRecognizer(tapGesture)
-
+        self.isUserInteractionEnabled = true
+        imageView.isUserInteractionEnabled = true
+        let tap = UITapGestureRecognizer(target: self, action: #selector(self.pictureTapped))
+        self.addGestureRecognizer(tap)
     }
 
     func initFromData(data : NSData) {
@@ -45,7 +46,7 @@ class PreviewView : UIView {
             self.sizeImageView()
             self.imageView.image = self.animation?.asImage()
             if let settings = self.animation?.settings {
-                if settings.filterType != .Blinds && settings.filterType != .None {
+                if settings.filterType == .Flash || settings.filterType == .Fade {
                     Timer.scheduledTimer(withTimeInterval: self.animation!.settings.duration, repeats: false, block: { (timer) in
                         self.imageView.image = nil
                     })
@@ -55,7 +56,7 @@ class PreviewView : UIView {
     }
 
     func asData() -> NSData? {
-        return animation!.asData()
+        return animation!.asData(image: imageView.composite()!)
     }
 
     func convert(length: Int, data: UnsafePointer<Int8>) -> [Int8] {
@@ -115,11 +116,8 @@ class PreviewView : UIView {
     }
 
     // MARK: Faces
-    func addFace(image: UIImage) {
-        let imageRect = CGRect(x: (frame.width - 64)/2, y: (frame.height - 64)/2, width: 64, height: 64)
-        let imageView = UIImageView(image: image)
-        imageView.frame = imageRect
-        self.addSubview(imageView)
+    func addFace(name: String) {
+        imageView.addFace(name : name)
     }
 
     // MARK: Image Methods -------------------------------------------------------------------------------------------------
@@ -155,7 +153,9 @@ class PreviewView : UIView {
     func filterImage(settings: SettingsObject) {
         self.runAgain?.removeFromSuperview()
         self.runAgain = nil
+        self.imageView.clearFaces()
         if settings.filterType == .None || settings.filterType == .Faces {
+            self.animation?.settings = settings
             self.imageView.image = self.animation?.baseImage(alpha: 1.0)
         } else if settings.filterType == .Blinds {
             self.animation = AnimationClass(baseImage: self.imageView.composite()!, settings: settings)
@@ -218,10 +218,7 @@ class PreviewView : UIView {
     }
 
     func pictureTapped() {
-        let settings = self.delegate!.getSettings()
-        if settings.filterType != .None {
-            self.runOnce(settings: settings)
-        }
+        imageView.deactivateFaces()
     }
 
     // MARK: Text Methods -------------------------------------------------------------------------------------------------

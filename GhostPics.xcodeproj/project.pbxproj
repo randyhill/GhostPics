@@ -40,6 +40,13 @@
 		D82477FF1D932639001EC865 /* PreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D82477CE1D932639001EC865 /* PreviewView.swift */; };
 		D82478041D93271A001EC865 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D82478031D93271A001EC865 /* Assets.xcassets */; };
 		D82478061D9327F0001EC865 /* ImageEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D82478051D9327F0001EC865 /* ImageEditor.swift */; };
+		D856D5041D934A1500739747 /* IEObjectCorner.swift in Sources */ = {isa = PBXBuildFile; fileRef = D856D5031D934A1500739747 /* IEObjectCorner.swift */; };
+		D856D5081D9444C700739747 /* closeIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = D856D5051D9444C700739747 /* closeIcon.png */; };
+		D856D5091D9444C700739747 /* closeIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D856D5061D9444C700739747 /* closeIcon@2x.png */; };
+		D856D50A1D9444C700739747 /* closeIcon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = D856D5071D9444C700739747 /* closeIcon@3x.png */; };
+		D856D50E1D94852500739747 /* GHP 40@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = D856D50B1D94852500739747 /* GHP 40@3x.png */; };
+		D856D50F1D94852500739747 /* GHP 40@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D856D50C1D94852500739747 /* GHP 40@2x.png */; };
+		D856D5101D94852500739747 /* GHP 40.png in Resources */ = {isa = PBXBuildFile; fileRef = D856D50D1D94852500739747 /* GHP 40.png */; };
 		D8B278241D78CBD100B8AC25 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D8B278231D78CBD100B8AC25 /* Assets.xcassets */; };
 		D8B2782B1D78CBD100B8AC25 /* MessagesExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = D8B2782A1D78CBD100B8AC25 /* MessagesExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		D8B278301D78CBD100B8AC25 /* Messages.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D8B2782F1D78CBD100B8AC25 /* Messages.framework */; };
@@ -104,6 +111,13 @@
 		D82477CE1D932639001EC865 /* PreviewView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreviewView.swift; sourceTree = "<group>"; };
 		D82478031D93271A001EC865 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = ../Assets.xcassets; sourceTree = "<group>"; };
 		D82478051D9327F0001EC865 /* ImageEditor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageEditor.swift; sourceTree = "<group>"; };
+		D856D5031D934A1500739747 /* IEObjectCorner.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IEObjectCorner.swift; sourceTree = "<group>"; };
+		D856D5051D9444C700739747 /* closeIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = closeIcon.png; sourceTree = "<group>"; };
+		D856D5061D9444C700739747 /* closeIcon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "closeIcon@2x.png"; sourceTree = "<group>"; };
+		D856D5071D9444C700739747 /* closeIcon@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "closeIcon@3x.png"; sourceTree = "<group>"; };
+		D856D50B1D94852500739747 /* GHP 40@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "GHP 40@3x.png"; path = "blue/GHP 40@3x.png"; sourceTree = "<group>"; };
+		D856D50C1D94852500739747 /* GHP 40@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "GHP 40@2x.png"; path = "blue/GHP 40@2x.png"; sourceTree = "<group>"; };
+		D856D50D1D94852500739747 /* GHP 40.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "GHP 40.png"; path = "blue/GHP 40.png"; sourceTree = "<group>"; };
 		D8AAD1201D89BB03004A2094 /* MessagesExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MessagesExtension.entitlements; sourceTree = "<group>"; };
 		D8B278201D78CBD100B8AC25 /* GhostPics.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GhostPics.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D8B278231D78CBD100B8AC25 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -128,6 +142,12 @@
 		D82477991D932639001EC865 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				D856D50B1D94852500739747 /* GHP 40@3x.png */,
+				D856D50C1D94852500739747 /* GHP 40@2x.png */,
+				D856D50D1D94852500739747 /* GHP 40.png */,
+				D856D5051D9444C700739747 /* closeIcon.png */,
+				D856D5061D9444C700739747 /* closeIcon@2x.png */,
+				D856D5071D9444C700739747 /* closeIcon@3x.png */,
 				D82478031D93271A001EC865 /* Assets.xcassets */,
 				D82478001D932654001EC865 /* Faces */,
 				D82477AD1D932639001EC865 /* camera.png */,
@@ -156,6 +176,7 @@
 		D82477C31D932639001EC865 /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				D8B278471D78CC4D00B8AC25 /* MainInterface.storyboard */,
 				D82477C41D932639001EC865 /* AboutController.swift */,
 				D82477C51D932639001EC865 /* AnimationFileClasses.swift */,
 				D82477C81D932639001EC865 /* MessagesViewController.swift */,
@@ -172,6 +193,7 @@
 				D82477CD1D932639001EC865 /* OptionsButton.swift */,
 				D82477CE1D932639001EC865 /* PreviewView.swift */,
 				D82478051D9327F0001EC865 /* ImageEditor.swift */,
+				D856D5031D934A1500739747 /* IEObjectCorner.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -236,7 +258,6 @@
 			isa = PBXGroup;
 			children = (
 				D8AAD1201D89BB03004A2094 /* MessagesExtension.entitlements */,
-				D8B278471D78CC4D00B8AC25 /* MainInterface.storyboard */,
 				D82477991D932639001EC865 /* Images */,
 				D82477BD1D932639001EC865 /* Libraries */,
 				D82477C31D932639001EC865 /* UI */,
@@ -349,11 +370,17 @@
 				D82477E91D932639001EC865 /* happydog.png in Resources */,
 				D8B278481D78CC4D00B8AC25 /* MainInterface.storyboard in Resources */,
 				D82477EF1D932639001EC865 /* snap32.png in Resources */,
+				D856D50F1D94852500739747 /* GHP 40@2x.png in Resources */,
 				D82477E31D932639001EC865 /* cat256.png in Resources */,
+				D856D50A1D9444C700739747 /* closeIcon@3x.png in Resources */,
 				D82477E71D932639001EC865 /* dog256.png in Resources */,
 				D82477EA1D932639001EC865 /* happydog256.png in Resources */,
+				D856D5081D9444C700739747 /* closeIcon.png in Resources */,
+				D856D5091D9444C700739747 /* closeIcon@2x.png in Resources */,
+				D856D50E1D94852500739747 /* GHP 40@3x.png in Resources */,
 				D82477EE1D932639001EC865 /* rotate.png in Resources */,
 				D82477EC1D932639001EC865 /* husky256.png in Resources */,
+				D856D5101D94852500739747 /* GHP 40.png in Resources */,
 				D82477E21D932639001EC865 /* cat.png in Resources */,
 				D82477E11D932639001EC865 /* camera.png in Resources */,
 				D82477EB1D932639001EC865 /* husky.png in Resources */,
@@ -381,6 +408,7 @@
 				D82477F71D932639001EC865 /* AnimationFileClasses.swift in Sources */,
 				D82478061D9327F0001EC865 /* ImageEditor.swift in Sources */,
 				D82477F41D932639001EC865 /* Shared.swift in Sources */,
+				D856D5041D934A1500739747 /* IEObjectCorner.swift in Sources */,
 				D82477FC1D932639001EC865 /* FacesControl.swift in Sources */,
 				D82477F21D932639001EC865 /* KeyChainAccess.swift in Sources */,
 				D82477F61D932639001EC865 /* AboutController.swift in Sources */,

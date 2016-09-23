@@ -30,7 +30,7 @@ enum ImageFilterType : Int {
     }
 
     static func isValid(intValue : Int ) -> Bool {
-        if intValue >= ImageFilterType.None.rawValue && intValue <= ImageFilterType.Fade.rawValue {
+        if intValue >= ImageFilterType.None.rawValue && intValue <= ImageFilterType.Faces.rawValue {
             return true
         }
         return false
@@ -88,9 +88,8 @@ struct AnimationHeader {
         self.type = settings.filterType
         self.duration = settings.duration
         self.imageSize = imageSize
-        //self.blindsSize = settings.blindsSize
+        self.blindsSize = settings.blindSize
         self.alpha = settings.alpha
-        //self.doRepeat = settings.doRepeat
         self.checkSum = calcCheckSum()
     }
 
@@ -103,9 +102,8 @@ struct AnimationHeader {
         settings.filterType = type
         settings.alpha = alpha
         settings.duration = duration
-        //settings.blindsSize = blindsSize
+        settings.blindSize = blindsSize
         settings.duration = duration
-        //settings.doRepeat = doRepeat
         return settings
     }
 }
@@ -121,12 +119,6 @@ class AnimationClass {
             return _baseImage?.size
         }
     }
-
-//    var doRepeat : Bool {
-//        get {
-//            return settings.doRepeat
-//        }
-//    }
 
     init(baseImage: UIImage, settings: SettingsObject) {
         self.settings = settings
@@ -156,9 +148,10 @@ class AnimationClass {
             createImages(baseImage: image, settings: header.asSettings())
         }
     }
+
     let jpegQuality : CGFloat = 0.7
-    func asData() -> NSData? {
-        if let imageData = UIImageJPEGRepresentation(_baseImage!, jpegQuality) {
+    func asData(image: UIImage) -> NSData? {
+        if let imageData = UIImageJPEGRepresentation(image, jpegQuality) {
             var header = AnimationHeader(settings: settings, imageSize: imageData.count)
             let headerData = encode(value: &header)
             let data = NSMutableData(data: headerData as Data)
