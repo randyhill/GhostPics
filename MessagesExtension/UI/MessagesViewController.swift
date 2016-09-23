@@ -245,6 +245,12 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
                 self.previewView.frame.origin.y = self.sendButton.frame.origin.y + self.sendButton.frame.height + 8
                 self.previewView.frame.size.height = self.view.frame.height - self.previewView.frame.origin.y - 8
 
+                // Image picker needs to be adjsuted so cancel button is visiable. Camera is done with it's own overlay.
+                if self.cameraOverlay == nil {
+                    self.picker.view.frame.origin.y -= 80
+                    self.picker.view.frame.size.height += 80
+
+                }
                 // Hide aboutscreen if it was open
                 if let about = self.aboutScreen {
                     about.dismiss(animated: true, completion: {
@@ -255,6 +261,12 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
                 // Let's open the image if it was sent to us while we were already open.
                 if let conversation = self.activeConversation, let message = conversation.selectedMessage, !self.inFileDownload {
                     self.openReceivedImage(message: message, conversation: conversation)
+                }
+
+                // Image picker needs to be adjsuted so cancel button is visiable. Camera is done with it's own overlay.
+               if self.cameraOverlay == nil {
+                    self.picker.view.frame.origin.y += 80
+                    self.picker.view.frame.size.height -= 80
                 }
 
                 self.fullScreenButton.removeFromSuperview()
@@ -378,6 +390,10 @@ class MessagesViewController: MSMessagesAppViewController, UIImagePickerControll
         picker.delegate = self
         fullScreenButton.removeFromSuperview()
         self.present(picker, animated: true, completion: {
+            if self.viewStyle != MSMessagesAppPresentationStyle.compact {
+                self.picker.view.frame.origin.y += 80
+                self.picker.view.frame.size.height -= 80
+            }
         })
     }
 
